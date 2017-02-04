@@ -2,7 +2,7 @@
 
 /*
 ==================
-Cmd_afjClanLogin_f
+Cmd_afjClanLogIn_f
 
 Allow a player to log in as a clan member
 ==================
@@ -36,7 +36,7 @@ void Cmd_afjClanLogIn_f(gentity_t *ent) {
 
 /*
 ==================
-Cmd_afjClanLogout_f
+Cmd_afjClanLogOut_f
 
 Allow a player to log out as a clan member
 ==================
@@ -48,6 +48,21 @@ void Cmd_afjClanLogOut_f(gentity_t *ent) {
 	}
 	trap->SendServerCommand(-1, va("print \"%s %s\n\"", ent->client->pers.netname, afj_clanLogOutMsg.string));
 	ent->client->pers.afjUser.IsClanMember = qfalse;
+}
+
+/*
+==================
+Cmd_afjOrigin_f
+
+Display current player origin
+==================
+*/
+void Cmd_afjOrigin_f(gentity_t *ent) {
+	if (trap->Argc() > 1 || ent->client->sess.sessionTeam == TEAM_SPECTATOR)
+	{
+		return;
+	}
+	trap->SendServerCommand(ent - g_entities, va("print \"Origin: %s\n\"", vtos(&ent->client->ps.origin)));
 }
 
 /*
