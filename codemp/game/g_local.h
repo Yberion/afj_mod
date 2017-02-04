@@ -44,7 +44,7 @@ extern vec3_t gPainPoint;
 //==================================================================
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"OpenJK"
+#define	GAMEVERSION	"afjmod"
 
 #define SECURITY_LOG "security.log"
 
@@ -469,7 +469,6 @@ typedef struct clientSession_s {
 	char		siegeClass[64];
 	int			duelTeam;
 	int			siegeDesiredTeam;
-
 	char		IP[NET_ADDRSTRMAXLEN];
 } clientSession_t;
 
@@ -497,7 +496,6 @@ typedef struct clientPersistant_s {
 	int			enterTime;			// level.time the client entered the game
 	playerTeamState_t teamState;	// status in teamplay games
 	qboolean	teamInfo;			// send team overlay updates?
-
 	int			connectTime;
 
 	char		saber1[MAX_QPATH], saber2[MAX_QPATH];
@@ -1373,10 +1371,10 @@ void Svcmd_GameMem_f( void );
 //
 // g_session.c
 //
-void G_ReadSessionData( gclient_t *client );
-void G_InitSessionData( gclient_t *client, char *userinfo, qboolean isBot );
+void G_ReadSessionData();
+void G_ReadClientSessionData(gclient_t *client);
+void G_InitClientSessionData(gclient_t *client, char *userinfo, qboolean isBot);
 
-void G_InitWorldSession( void );
 void G_WriteSessionData( void );
 
 //

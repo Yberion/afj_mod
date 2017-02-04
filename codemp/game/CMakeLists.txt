@@ -145,7 +145,9 @@ source_group("game" FILES ${MPGameGameFiles})
 set(MPGameFiles ${MPGameFiles} ${MPGameGameFiles})
 
 set(MPGameCommonFiles
+	"${MPDir}/qcommon/afj_cJSON_utils.c"
 	"${MPDir}/qcommon/q_shared.c"
+	"${MPDir}/qcommon/afj_cJSON_utils.h"
 	"${MPDir}/qcommon/disablewarnings.h"
 	"${MPDir}/qcommon/q_shared.h"
 	"${MPDir}/qcommon/tags.h"
@@ -154,6 +156,13 @@ set(MPGameCommonFiles
 	)
 source_group("common" FILES ${MPGameCommonFiles})
 set(MPGameFiles ${MPGameFiles} ${MPGameCommonFiles})
+
+set(MPcJSONFiles
+	"${MPDir}/cJSON/cJSON.c"
+	"${MPDir}/cJSON/cJSON.h"
+	)
+source_group("cJSON" FILES ${MPcJSONFiles})
+set(MPGameFiles ${MPGameFiles} ${MPcJSONFiles})
 
 set(MPGameCommonSafeFiles
 	${SharedCommonSafeFiles}

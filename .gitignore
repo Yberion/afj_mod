@@ -173,3 +173,5 @@ pip-log.txt
 #############
 *.o
 *.so
+7za.exe
+install.bat

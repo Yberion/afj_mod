@@ -2506,9 +2506,9 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 
 	// read or initialize the session data
 	if ( firstTime || level.newSession ) {
-		G_InitSessionData( client, userinfo, isBot );
+		G_InitClientSessionData( client, userinfo, isBot );
 	}
-	G_ReadSessionData( client );
+	G_ReadClientSessionData( client );
 
 	if (level.gametype == GT_SIEGE &&
 		(firstTime || level.newSession))
@@ -2644,7 +2644,7 @@ void ClientBegin( int clientNum, qboolean allowTeamReset ) {
 			ent->client->ps.persistant[ PERS_TEAM ] = ent->client->sess.sessionTeam;
 
 			preSess = ent->client->sess.sessionTeam;
-			G_ReadSessionData( ent->client );
+			G_ReadClientSessionData( ent->client );
 			ent->client->sess.sessionTeam = preSess;
 			G_WriteClientSessionData(ent->client);
 			if ( !ClientUserinfoChanged( clientNum ) )
