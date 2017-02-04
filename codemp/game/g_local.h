@@ -37,6 +37,8 @@ typedef struct gclient_s gclient_t;
 //npc stuff
 #include "b_public.h"
 
+#include "afj_cmds.h"
+
 extern int gPainMOD;
 extern int gPainHitLoc;
 extern vec3_t gPainPoint;
@@ -503,6 +505,8 @@ typedef struct clientPersistant_s {
 	int			vote, teamvote; // 0 = none, 1 = yes, 2 = no
 
 	char		guid[33];
+
+	afjUser_t	afjUser;
 } clientPersistant_t;
 
 typedef struct renderInfo_s
@@ -1520,6 +1524,7 @@ void Svcmd_ToggleAllowVote_f( void );
 // g_cvar.c
 #define XCVAR_PROTO
 	#include "g_xcvar.h"
+	#include "afj_xcvar.h"
 #undef XCVAR_PROTO
 void G_RegisterCvars( void );
 void G_UpdateCvars( void );

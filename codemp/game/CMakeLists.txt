@@ -31,6 +31,7 @@ if(WIN32)
 endif(WIN32)
 set(MPGameDefines ${MPSharedDefines} "_GAME" )
 set(MPGameGameFiles
+	"${MPDir}/game/afj_cmds.c"
 	"${MPDir}/game/ai_main.c"
 	"${MPDir}/game/ai_util.c"
 	"${MPDir}/game/ai_wpnav.c"
@@ -116,6 +117,8 @@ set(MPGameGameFiles
 	"${MPDir}/game/w_force.c"
 	"${MPDir}/game/w_saber.c"
 	"${MPDir}/game/WalkerNPC.c"
+	"${MPDir}/game/afj_cmds.h"
+	"${MPDir}/game/afj_xcvar.h"
 	"${MPDir}/game/ai.h"
 	"${MPDir}/game/ai_main.h"
 	"${MPDir}/game/anims.h"
