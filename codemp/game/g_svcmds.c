@@ -445,7 +445,6 @@ void	Svcmd_ForceTeam_f( void ) {
 	SetTeam( &g_entities[cl - level.clients], str );
 }
 
-char *ConcatArgs( int start );
 void Svcmd_Say_f( void ) {
 	char *p = NULL;
 	// don't let text be too long for malicious reasons

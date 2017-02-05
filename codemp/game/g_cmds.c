@@ -120,38 +120,6 @@ void Cmd_Score_f( gentity_t *ent ) {
 
 /*
 ==================
-ConcatArgs
-==================
-*/
-char	*ConcatArgs( int start ) {
-	int		i, c, tlen;
-	static char	line[MAX_STRING_CHARS];
-	int		len;
-	char	arg[MAX_STRING_CHARS];
-
-	len = 0;
-	c = trap->Argc();
-	for ( i = start ; i < c ; i++ ) {
-		trap->Argv( i, arg, sizeof( arg ) );
-		tlen = strlen( arg );
-		if ( len + tlen >= MAX_STRING_CHARS - 1 ) {
-			break;
-		}
-		memcpy( line + len, arg, tlen );
-		len += tlen;
-		if ( i != c - 1 ) {
-			line[len] = ' ';
-			len++;
-		}
-	}
-
-	line[len] = 0;
-
-	return line;
-}
-
-/*
-==================
 StringIsInteger
 ==================
 */

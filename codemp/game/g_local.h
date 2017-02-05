@@ -1125,6 +1125,7 @@ qboolean G_ActivateBehavior (gentity_t *self, int bset );
 void	G_TouchTriggers (gentity_t *ent);
 void	G_TouchSolids (gentity_t *ent);
 void	GetAnglesForDirection( const vec3_t p1, const vec3_t p2, vec3_t out );
+char	*ConcatArgs(int start);
 
 //
 // g_object.c
