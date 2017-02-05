@@ -1322,6 +1322,7 @@ void DeathmatchScoreboardMessage (gentity_t *client);
 // g_cmds.c
 //
 
+void G_LeaveVehicle(gentity_t *ent, qboolean ConCheck);
 //
 // g_pweapon.c
 //

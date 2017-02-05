@@ -488,6 +488,7 @@ void G_Kill( gentity_t *ent ) {
 		}
 	}
 
+	G_LeaveVehicle(ent, qfalse);
 	ent->flags &= ~FL_GODMODE;
 	ent->client->ps.stats[STAT_HEALTH] = ent->health = -999;
 	player_die (ent, ent, ent, 100000, MOD_SUICIDE);
@@ -896,7 +897,6 @@ If the client being followed leaves the game, or you just want to drop
 to free floating spectator mode
 =================
 */
-extern void G_LeaveVehicle( gentity_t *ent, qboolean ConCheck );
 void StopFollowing( gentity_t *ent ) {
 	int i=0;
 	ent->client->ps.persistant[ PERS_TEAM ] = TEAM_SPECTATOR;

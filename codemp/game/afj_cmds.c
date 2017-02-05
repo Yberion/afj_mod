@@ -63,7 +63,7 @@ void Cmd_afjCpMsg_f(gentity_t *ent)
 	char *msg, arg1[MAX_NETNAME] = "";
 
 	if ( trap->Argc() < 3 ) {
-		trap->SendServerCommand(ent - g_entities, "Usage:  /afjcpmsg <clientnum (-1 for everyone)> <message>\n" );
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjcpmsg <clientnum (-1 for everyone)> <message>\n" );
 		return;
 	}
 
@@ -104,7 +104,7 @@ Kick a player
 */
 void Cmd_afjKick_f(gentity_t *ent) {
 	if (trap->Argc() == 1) {
-		trap->SendServerCommand(ent - g_entities, "Usage:  /afjkick <clientnum>\n");
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjkick <clientnum>\n");
 		return;
 	}
 
@@ -120,6 +120,47 @@ void Cmd_afjKick_f(gentity_t *ent) {
 		return;
 	}
 	trap->DropClient(clientNum, reason);
+}
+
+/*
+==================
+Cmd_afjKill_f
+
+Kill a player
+==================
+*/
+void Cmd_Kill_f(gentity_t *ent);
+void Cmd_afjKill_f(gentity_t *ent) {
+	if (trap->Argc() < 2) {
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjkill <clientnum>\n");
+		return;
+	}
+
+	char arg1[64] = "";
+	int clientNum;
+	gentity_t *targetEnt = NULL;
+
+	trap->Argv(1, arg1, sizeof(arg1));
+
+	clientNum = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	if (clientNum == -1) {
+		return;
+	}
+
+	targetEnt = g_entities + clientNum;
+
+	if (targetEnt->client->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR || targetEnt->client->tempSpectate >= level.time)
+	{
+		return;
+	}
+
+	/*if (!!(targetEnt->client->ps.eFlags & EF_INVULNERABLE))
+	{
+		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", targetEnt->client->pers.netname, afj_killProtectMsg.string));
+		return;
+	}*/
+	Cmd_Kill_f(targetEnt);
+	trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", targetEnt->client->pers.netname, afj_killMsg.string));
 }
 
 /*
