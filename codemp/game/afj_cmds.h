@@ -4,6 +4,7 @@
 								{ "afjcpmsg",				Cmd_afjCpMsg_f,				CMD_NOINTERMISSION },\
 								{ "afjkick",				Cmd_afjKick_f,				0 },\
 								{ "afjorigin",				Cmd_afjOrigin_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
+								{ "afjprotect",				Cmd_afjProtect_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjstatus",				Cmd_afjStatus_f,			0 },
 
 typedef struct afjUser_s {
@@ -15,4 +16,5 @@ void Cmd_afjClanLogOut_f(gentity_t *ent);
 void Cmd_afjCpMsg_f(gentity_t *ent);
 void Cmd_afjKick_f(gentity_t *ent);
 void Cmd_afjOrigin_f(gentity_t *ent);
+void Cmd_afjProtect_f(gentity_t *ent);
 void Cmd_afjStatus_f(gentity_t *ent);

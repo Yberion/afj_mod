@@ -135,6 +135,38 @@ void Cmd_afjOrigin_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjProtect_f
+
+Protect or unprotect a player
+==================
+*/
+void Cmd_afjProtect_f(gentity_t *ent) {
+	char arg1[64] = "";
+	int targetClient;
+	gentity_t *targ;
+
+	// can protect: self, partial name, clientNum
+	trap->Argv(1, arg1, sizeof(arg1));
+
+	targetClient = (trap->Argc() > 1) ? G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT) : ent - g_entities;
+
+	if (targetClient == -1) {
+		return;
+	}
+
+	targ = &g_entities[targetClient];
+
+	targ->client->ps.eFlags ^= EF_INVULNERABLE;
+	targ->client->invulnerableTimer = !!(targ->client->ps.eFlags & EF_INVULNERABLE) ? 0x7FFFFFFF : level.time;
+
+	if (!!(targ->client->ps.eFlags&EF_INVULNERABLE))
+		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", targ->client->pers.netname, afj_protectMsg.string));
+	else
+		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", targ->client->pers.netname, afj_unProtectMsg.string));
+}
+
+/*
+==================
 Cmd_afjStatus_f
 
 Display current player
