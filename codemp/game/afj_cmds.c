@@ -8,6 +8,12 @@ Allow a player to log in as a clan member
 ==================
 */
 void Cmd_afjClanLogIn_f(gentity_t *ent) {
+	if (trap->Argc() < 2)
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjclanlogin <password>\n\"");
+		return;
+	}
+	
 	char	clanPassword[64] = "";
 	static int		lastTime = 0;
 
@@ -15,10 +21,6 @@ void Cmd_afjClanLogIn_f(gentity_t *ent) {
 	{
 		lastTime = level.time;
 
-		if (trap->Argc() > 2)
-		{
-			return;
-		}
 		trap->Argv(1, clanPassword, sizeof(clanPassword));
 
 		if (Q_stricmp(afj_clanPassword.string, clanPassword) == 0)
@@ -42,10 +44,6 @@ Allow a player to log out as a clan member
 ==================
 */
 void Cmd_afjClanLogOut_f(gentity_t *ent) {
-	if (trap->Argc() > 1)
-	{
-		return;
-	}
 	trap->SendServerCommand(-1, va("print \"%s %s\n\"", ent->client->pers.netname, afj_clanLogOutMsg.string));
 	ent->client->pers.afjUser.IsClanMember = qfalse;
 }
@@ -58,11 +56,7 @@ Display current player origin
 ==================
 */
 void Cmd_afjOrigin_f(gentity_t *ent) {
-	if (trap->Argc() > 1 || ent->client->sess.sessionTeam == TEAM_SPECTATOR)
-	{
-		return;
-	}
-	trap->SendServerCommand(ent - g_entities, va("print \"Origin: %s\n\"", vtos(&ent->client->ps.origin)));
+	trap->SendServerCommand(ent - g_entities, va("print \"Origin: %s\n\"", vtos(ent->client->ps.origin)));
 }
 
 /*
