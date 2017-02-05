@@ -13,6 +13,7 @@
 XCVAR_DEF( afj_clanLogInMsg,				"is now logged as a member of the clan",			NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_clanLogOutMsg,				"logged out of the clan",							NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_clanPassword,				"",													NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qfalse)
+XCVAR_DEF( afj_kickMsg,						"You've been kicked from the server",				NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_waitBeforeNextTry,			"Wait before the next try",							NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 
 #undef XCVAR_DEF

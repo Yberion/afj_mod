@@ -97,6 +97,33 @@ void Cmd_afjCpMsg_f(gentity_t *ent)
 
 /*
 ==================
+Cmd_afjKick_f
+
+Kick a player
+==================
+*/
+void Cmd_afjKick_f(gentity_t *ent) {
+	if (trap->Argc() == 1) {
+		trap->SendServerCommand(ent - g_entities, "Usage:  /afjkick <clientnum>\n");
+		return;
+	}
+
+	const char *reason = afj_kickMsg.string;
+	int clientNum;
+	char	arg1[64] = "";
+
+	trap->Argv(1, arg1, sizeof(arg1));
+
+	clientNum = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+
+	if (clientNum == -1) {
+		return;
+	}
+	trap->DropClient(clientNum, reason);
+}
+
+/*
+==================
 Cmd_afjOrigin_f
 
 Display current player origin
