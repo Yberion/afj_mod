@@ -71,6 +71,11 @@ extern vec3_t gPainPoint;
 #define	START_TIME_NAV_CALC			FRAMETIME*4 // time-delay after map start to connect waypoints and calc routes
 #define	START_TIME_FIND_WAYPOINT	FRAMETIME*5 // time-delay after map start after which it's okay to try to find your best waypoint
 
+#define FINDCL_SUBSTR				(1<<1)
+#define FINDCL_FIRSTMATCH			(1<<2)
+#define FINDCL_CASE					(1<<3)
+#define FINDCL_PRINT				(1<<4)
+
 // gentity->flags
 #define	FL_GODMODE				0x00000010
 #define	FL_NOTARGET				0x00000020
@@ -1126,6 +1131,8 @@ void	G_TouchTriggers (gentity_t *ent);
 void	G_TouchSolids (gentity_t *ent);
 void	GetAnglesForDirection( const vec3_t p1, const vec3_t p2, vec3_t out );
 char	*ConcatArgs(int start);
+
+int		G_ClientFromString(const gentity_t *ent, const char *match, uint32_t flags);
 
 //
 // g_object.c

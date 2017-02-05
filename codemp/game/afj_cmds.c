@@ -50,6 +50,53 @@ void Cmd_afjClanLogOut_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjCpMsg_f
+
+From japp (Raz0r)
+
+Display a message in the center of the screen
+/afjcpmsg <clientnum (-1 for everyone)> <message>
+==================
+*/
+void Cmd_afjCpMsg_f(gentity_t *ent)
+{
+	char *msg, arg1[MAX_NETNAME] = "";
+
+	if ( trap->Argc() < 3 ) {
+		trap->SendServerCommand(ent - g_entities, "Usage:  /afjcpmsg <clientnum (-1 for everyone)> <message>\n" );
+		return;
+	}
+
+	msg = ConcatArgs( 2 );
+	Q_ConvertLinefeeds( msg );
+
+	trap->Argv( 1, arg1, sizeof(arg1) );
+	if ( arg1[0] == '-' && arg1[1] == '1' ) {
+		// announce to everyone
+		trap->SendServerCommand(-1, va("cp \"%s\"", msg));
+		if (ent) {
+			trap->SendServerCommand(-1, va("print \"%s\n\"", msg));
+		}
+	}
+	else {
+		// announce to a certain client
+		const int targetClient = G_ClientFromString( ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT );
+
+		if ( targetClient == -1 ) {
+			return;
+		}
+
+		trap->SendServerCommand( targetClient, va( "cp \"%s\"", msg ) );
+		trap->SendServerCommand( targetClient, va( "print \"%s\n\"", msg ) );
+		if (ent) {
+			trap->SendServerCommand(ent - g_entities, va("cp\"Relay:\n%s\"", msg));
+			trap->SendServerCommand(ent - g_entities, va("print \"Relay:\n%s\n\"", msg));
+		}
+	}
+}
+
+/*
+==================
 Cmd_afjOrigin_f
 
 Display current player origin

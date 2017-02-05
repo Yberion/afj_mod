@@ -1139,3 +1139,78 @@ void *Q_LinearSearch( const void *key, const void *ptr, size_t count,
 	}
 	return NULL;
 }
+
+void Q_ConvertLinefeeds(char *string) {
+	qboolean doPass = qtrue;
+	char *r, *w; // read, write
+
+	while (doPass) {
+		doPass = qfalse;
+		r = w = string;
+		while (*r) {
+			if (*r == '\\' && *(r + 1) && *(r + 1) == 'n') {
+				doPass = qtrue;
+				*w = '\n';
+				r += 2;
+				w++;
+			}
+			else {
+				// Avoid writing the same data over itself
+				if (w != r)
+					*w = *r;
+				w++, r++;
+			}
+		}
+		// Add trailing NUL byte if string has shortened
+		if (w < r)
+			*w = '\0';
+	}
+}
+
+// true if s is an integer
+qboolean Q_StringIsInteger(const char *s) {
+	int i, len;
+	qboolean foundDigit = qfalse;
+
+	for (i = 0, len = strlen(s); i < len; i++) {
+		if (i == 0 && s[i] == '-') {
+			continue;
+		}
+		if (!isdigit(s[i])) {
+			return qfalse;
+		}
+
+		foundDigit = qtrue;
+	}
+
+	return foundDigit;
+}
+
+// removes extended ASCII and Q3 colour codes
+// use STRIP_*** for flags
+void Q_CleanString(char *string, uint32_t flags) {
+	qboolean doPass = qtrue;
+	char *r, *w; // read, write
+
+	while (doPass) {
+		doPass = qfalse;
+		r = w = string;
+		while (*r) {
+			if ((flags & STRIP_COLOUR) && Q_IsColorStringExt(r)) {
+				doPass = qtrue;
+				r += 2;
+			}
+			else if ((flags & STRIP_EXTASCII) && (*r < 0x20 || *r > 0x7E))
+				r++;
+			else {
+				// Avoid writing the same data over itself
+				if (w != r)
+					*w = *r;
+				w++, r++;
+			}
+		}
+		// Add trailing NUL byte if string has shortened
+		if (w < r)
+			*w = '\0';
+	}
+}

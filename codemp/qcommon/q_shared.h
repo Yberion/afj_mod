@@ -1911,3 +1911,10 @@ typedef int( *cmpFunc_t )(const void *a, const void *b);
 
 void *Q_LinearSearch( const void *key, const void *ptr, size_t count,
 	size_t size, cmpFunc_t cmp );
+
+void Q_ConvertLinefeeds(char *string);
+qboolean Q_StringIsInteger(const char *s);
+
+#define STRIP_COLOUR	(1<<0)
+#define STRIP_EXTASCII	(1<<1)
+void Q_CleanString(char *string, uint32_t flags);
