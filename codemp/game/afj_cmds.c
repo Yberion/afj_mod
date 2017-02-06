@@ -123,8 +123,28 @@ void Cmd_afjIgnore_f(gentity_t *ent) {
 		afj_ignoreMsg.string : afj_unIgnoreMsg.string));
 	
 	trap->SendServerCommand(ent - g_entities, va("print \"%s %s\n\"",
-		(ent->client->pers.afjUser.ignoreClient & (1 << clientNum)) ? "Ignoring" : "Unignoring",
+		(ent->client->pers.afjUser.ignoreClient & (1 << clientNum)) ? S_COLOR_YELLOW"Ignoring" : S_COLOR_GREEN"Unignoring",
 		g_entities[clientNum].client->pers.netname));
+}
+
+/*
+==================
+Cmd_afjIgnoreList_f
+
+List of ignored players
+==================
+*/
+void Cmd_afjIgnoreList_f(gentity_t *ent) {
+	trap->SendServerCommand(ent - g_entities, "print \""S_COLOR_YELLOW"Ignore list:\n\"");
+	trap->SendServerCommand(ent - g_entities, "print \"\n\"");
+	trap->SendServerCommand(ent - g_entities, "print \"ID Name                \n\"");
+	trap->SendServerCommand(ent - g_entities, "print \"-- --------------------\n\"");
+
+	for (int i = 0; i < level.maxclients; i++)
+	{
+		if (ent->client->pers.afjUser.ignoreClient & ( 1 << i ))
+			trap->SendServerCommand(ent - g_entities, va("print \"%2i %-20.20s\n\"", i, (g_entities + i)->client->pers.netname_nocolor));
+	}
 }
 
 /*
