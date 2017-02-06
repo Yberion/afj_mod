@@ -27,7 +27,8 @@ void G_WriteClientSessionData( const gclient_t *client ) {
 	cJSON_AddIntegerToObject( root, "siegeDesiredTeam", sess->siegeDesiredTeam );
 	cJSON_AddStringToObject( root, "siegeClass", *sess->siegeClass ? sess->siegeClass : "none" );
 	cJSON_AddStringToObject( root, "IP", sess->IP );
-	cJSON_AddBooleanToObject( root, "IsClanMember", client->pers.afjUser.IsClanMember );
+	cJSON_AddBooleanToObject( root, "isClanMember", client->pers.afjUser.isClanMember );
+	cJSON_AddIntegerToObject( root, "ignoreClient", client->pers.afjUser.ignoreClient );
 
 	trap->FS_Open( fileName, &f, FS_WRITE );
 
@@ -112,8 +113,11 @@ void G_ReadClientSessionData( gclient_t *client ) {
 			Q_strncpyz( sess->IP, tmp, sizeof(sess->IP) );
 		}
 	}
-	if ((object = cJSON_GetObjectItem(root, "IsClanMember"))) {
-		client->pers.afjUser.IsClanMember = cJSON_ToBoolean(object);
+	if ((object = cJSON_GetObjectItem(root, "isClanMember"))) {
+		client->pers.afjUser.isClanMember = cJSON_ToBoolean(object);
+	}
+	if ((object = cJSON_GetObjectItem(root, "ignoreClient"))) {
+		sess->wins = cJSON_ToInteger(object);
 	}
 	
 	client->ps.fd.saberAnimLevel = sess->saberLevel;

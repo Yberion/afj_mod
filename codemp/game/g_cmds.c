@@ -1513,6 +1513,10 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 	*/
 	//They've requested I take this out.
 
+	if (other->client->pers.afjUser.ignoreClient & (1 << (ent - g_entities))) {
+		return;
+	}
+
 	if (level.gametype == GT_SIEGE &&
 		ent->client && (ent->client->tempSpectate >= level.time || ent->client->sess.sessionTeam == TEAM_SPECTATOR) &&
 		other->client->sess.sessionTeam != TEAM_SPECTATOR &&

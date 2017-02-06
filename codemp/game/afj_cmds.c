@@ -26,7 +26,7 @@ void Cmd_afjClanLogIn_f(gentity_t *ent) {
 		if (Q_stricmp(afj_clanPassword.string, clanPassword) == 0)
 		{
 			trap->SendServerCommand(-1, va("print \"%s %s\n\"", ent->client->pers.netname, afj_clanLogInMsg.string));
-			ent->client->pers.afjUser.IsClanMember = qtrue;
+			ent->client->pers.afjUser.isClanMember = qtrue;
 		}
 	}
 	else
@@ -45,7 +45,7 @@ Allow a player to log out as a clan member
 */
 void Cmd_afjClanLogOut_f(gentity_t *ent) {
 	trap->SendServerCommand(-1, va("print \"%s %s\n\"", ent->client->pers.netname, afj_clanLogOutMsg.string));
-	ent->client->pers.afjUser.IsClanMember = qfalse;
+	ent->client->pers.afjUser.isClanMember = qfalse;
 }
 
 /*
@@ -60,17 +60,18 @@ Display a message in the center of the screen
 */
 void Cmd_afjCpMsg_f(gentity_t *ent)
 {
-	char *msg, arg1[MAX_NETNAME] = "";
-
 	if ( trap->Argc() < 3 ) {
 		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjcpmsg <clientnum (-1 for everyone)> <message>\n" );
 		return;
 	}
 
+	char *msg, arg1[MAX_NETNAME] = "";
+
 	msg = ConcatArgs( 2 );
 	Q_ConvertLinefeeds( msg );
 
 	trap->Argv( 1, arg1, sizeof(arg1) );
+
 	if ( arg1[0] == '-' && arg1[1] == '1' ) {
 		// announce to everyone
 		trap->SendServerCommand(-1, va("cp \"%s\"", msg));
@@ -93,6 +94,37 @@ void Cmd_afjCpMsg_f(gentity_t *ent)
 			trap->SendServerCommand(ent - g_entities, va("print \"Relay:\n%s\n\"", msg));
 		}
 	}
+}
+
+/*
+==================
+Cmd_afjIgnore_f
+
+Ignore a player
+==================
+*/
+void Cmd_afjIgnore_f(gentity_t *ent) {
+	if (trap->Argc() < 2) {
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjignore <clientnum>\n");
+		return;
+	}
+	int clientNum;
+	char	arg1[64] = "";
+
+	trap->Argv(1, arg1, sizeof(arg1));
+
+	clientNum = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+
+	if (clientNum == -1) {
+		return;
+	}
+	ent->client->pers.afjUser.ignoreClient ^= (1 << clientNum);
+	trap->SendServerCommand(clientNum, va("cp \"%s\n%s\n\"", ent->client->pers.netname, (ent->client->pers.afjUser.ignoreClient & (1 << clientNum)) ?
+		afj_ignoreMsg.string : afj_unIgnoreMsg.string));
+	
+	trap->SendServerCommand(ent - g_entities, va("print \"%s %s\n\"",
+		(ent->client->pers.afjUser.ignoreClient & (1 << clientNum)) ? "Ignoring" : "Unignoring",
+		g_entities[clientNum].client->pers.netname));
 }
 
 /*
@@ -233,7 +265,7 @@ void Cmd_afjStatus_f(gentity_t *ent) {
 		else
 			strcpy(state, va("%4i", cl->ps.ping < 999 ? cl->ps.ping : 999));
 
-		if (cl->pers.afjUser.IsClanMember)
+		if (cl->pers.afjUser.isClanMember)
 			strcpy(Member, "Yes");
 		else
 			memset(Member, 0, sizeof(Member));
