@@ -143,7 +143,7 @@ void Cmd_afjIgnoreList_f(gentity_t *ent) {
 	for (int i = 0; i < level.maxclients; i++)
 	{
 		if (ent->client->pers.afjUser.ignoreClient & ( 1 << i ))
-			trap->SendServerCommand(ent - g_entities, va("print \"%2i %-20.20s\n\"", i, (g_entities + i)->client->pers.netname_nocolor));
+			trap->SendServerCommand(ent - g_entities, va("print \"%2i %-20.20s\n\"", i, level.clients[i].pers.netname_nocolor));
 	}
 }
 
