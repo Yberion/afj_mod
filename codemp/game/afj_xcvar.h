@@ -13,6 +13,7 @@
 XCVAR_DEF( afj_clanLogInMsg,				"is now logged as a member of the clan",			NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_clanLogOutMsg,				"logged out of the clan",							NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_clanPassword,				"",													NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qfalse)
+XCVAR_DEF( afj_hookSpeed,					"5000",												NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_ignoreMsg,					"Ignored you",										NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_kickMsg,						"You've been kicked from the server",				NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_killMsg,						"You've been killed",								NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)

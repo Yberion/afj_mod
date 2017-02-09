@@ -800,6 +800,8 @@ struct gclient_s {
 	int			lastGenCmd;
 	int			lastGenCmdTime;
 
+	qboolean			hookHasBeenFired;
+
 	struct force {
 		int		regenDebounce;
 		int		drainDebounce;
@@ -1122,6 +1124,9 @@ void	G_Sound( gentity_t *ent, int channel, int soundIndex );
 void	G_SoundAtLoc( vec3_t loc, int channel, int soundIndex );
 void	G_EntitySound( gentity_t *ent, int channel, int soundIndex );
 void	TryUse( gentity_t *ent );
+void	Weapon_GrapplingHook_Fire(gentity_t *ent);
+void	Weapon_HookFree(gentity_t *ent);
+void	Weapon_HookThink(gentity_t *ent);
 void	G_SendG2KillQueue(void);
 void	G_KillG2Queue(int entNum);
 void	G_FreeEntity( gentity_t *e );
@@ -1312,6 +1317,7 @@ qboolean G_FilterPacket (char *from);
 // g_weapon.c
 //
 void FireWeapon( gentity_t *ent, qboolean altFire );
+gentity_t *	fire_grapple(gentity_t *self, vec3_t start, vec3_t dir);
 void BlowDetpacks(gentity_t *ent);
 void RemoveDetpacks(gentity_t *ent);
 

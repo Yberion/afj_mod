@@ -763,6 +763,56 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace ) {
 		}
 	}
 killProj:
+
+	if (!strcmp(ent->classname, "hook")) {
+		//	gentity_t	*nent = G_Spawn();
+		vec3_t		v;
+		int			i;
+
+		if (other->takedamage && other->client) {
+			//	G_AddEvent( nent, EV_DISRUPTOR_HIT, DirToByte( trace->plane.normal ) );
+			//	nent->s.otherEntityNum = other->s.number;
+			G_PlayEffect(EFFECT_STUNHIT, trace->endpos, trace->plane.normal);
+
+			ent->enemy = other;
+
+			for (i = 0; i < 3; i++)
+				v[i] = other->r.currentOrigin[i] + (other->r.mins[i] + other->r.maxs[i]) * 0.5f;
+			SnapVectorTowards(v, ent->s.pos.trBase);	//	Save net bandwidth
+		}
+		else {
+			VectorCopy(trace->endpos, v);
+			//	G_AddEvent( nent, EV_DISRUPTOR_HIT, DirToByte( trace->plane.normal ) );
+			G_PlayEffect(EFFECT_STUNHIT, trace->endpos, trace->plane.normal);
+			ent->enemy = NULL;
+		}
+
+		SnapVectorTowards(v, ent->s.pos.trBase);	//	Save net bandwidth
+
+		//	nent->freeAfterEvent = true;
+
+		//Change over to a normal entity right at the point of impact
+		//	nent->s.eType = ET_GENERAL;
+		//	ent->s.eType = ET_GENERAL;
+
+		G_SetOrigin(ent, v);
+		//	G_SetOrigin( nent, v );
+
+		ent->think = Weapon_HookThink;
+		ent->nextthink = level.time + FRAMETIME;
+
+		//	ent->parent->client->ps.pm_flags |= PMF_GRAPPLE_PULL;
+		//	ent->parent->client->ps.eFlags |= EF_GRAPPLE_SWING;
+		//	ent->genericValue10 = 1;
+		ent->parent->client->fireHeld = qfalse;
+		VectorCopy(ent->r.currentOrigin, ent->parent->client->ps.lastHitLoc);
+
+		trap->LinkEntity((sharedEntity_t *)ent);
+		//	trap->LinkEntity( (sharedEntity_t *)nent );
+
+		return;
+	}
+
 	// is it cheaper in bandwidth to just remove this ent and create a new
 	// one, rather than changing the missile into the explosion?
 
@@ -909,12 +959,22 @@ void G_RunMissile( gentity_t *ent ) {
 		}
 	}
 
+	if (ent->parent && ent->parent->client && ent->parent->client->hook && ent->parent->client->hook == ent
+		&& (ent->parent->client->ps.duelInProgress
+			/*|| BG_SaberInSpecial(ent->parent->client->ps.saberMove)*/
+			|| g_entities[tr.entityNum].client))
+	{
+		// not allowed to have hook out
+		Weapon_HookFree(ent);
+		return;
+	}
+
 	if ( tr.fraction != 1) {
 		// never explode or bounce on sky
 		if ( tr.surfaceFlags & SURF_NOIMPACT ) {
 			// If grapple, reset owner
-			if (ent->parent && ent->parent->client && ent->parent->client->hook == ent) {
-				ent->parent->client->hook = NULL;
+			if (ent->parent && ent->parent->client && ent->parent->client->hook && ent->parent->client->hook == ent) {
+				Weapon_HookFree(ent->parent->client->hook);
 			}
 
 			if ((ent->s.weapon == WP_SABER && ent->isSaberEntity) || isKnockedSaber)
@@ -1025,9 +1085,40 @@ passthrough:
 	G_RunThink( ent );
 }
 
-
 //=============================================================================
 
+void		VectorSnap(vec3_t v);
+gentity_t *fire_grapple(gentity_t *self, vec3_t start, vec3_t dir) {
+	gentity_t	*hook;
 
+	VectorNormalize(dir);
 
+	hook = CreateMissile(start, dir, afj_hookSpeed.integer, 10000, self, qfalse);//G_Spawn();
+	hook->classname = "hook";
+	hook->nextthink = level.time + 10000;
+	hook->think = Weapon_HookFree;
+	hook->s.eType = ET_MISSILE;
+	hook->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+	hook->s.weapon = WP_STUN_BATON;//WP_BRYAR_PISTOL
+	hook->r.ownerNum = self->s.number;
+	hook->methodOfDeath = MOD_STUN_BATON;
+	hook->clipmask = 267009/*MASK_SHOT*/; //From JA+
+	hook->parent = self;
+	hook->target_ent = NULL;
 
+	hook->s.pos.trType = TR_LINEAR;
+	hook->s.pos.trTime = level.time - afj_hookSpeed.integer;
+	hook->s.otherEntityNum = self->s.number;	//	Used to match beam in client
+
+	/*if (self->client->pers.adminData.isGhost) {
+		hook->r.svFlags |= SVF_SINGLECLIENT;
+		hook->r.singleClient = self->s.number;
+	}*/
+
+	VectorCopy(start, hook->s.pos.trBase);
+	VectorScale(dir, 800, hook->s.pos.trDelta);
+	VectorSnap(hook->s.pos.trDelta);	//	Save net bandwidth
+	VectorCopy(start, hook->r.currentOrigin);
+
+	return hook;
+}
