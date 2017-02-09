@@ -3,6 +3,7 @@
 								{ "afjclanlogin",			Cmd_afjClanLogIn_f,			0 },\
 								{ "afjclanlogout",			Cmd_afjClanLogOut_f,		0 },\
 								{ "afjcpmsg",				Cmd_afjCpMsg_f,				CMD_NOINTERMISSION },\
+								{ "afjdevmap",				Cmd_afjDevMap_f,			CMD_NOINTERMISSION },\
 								{ "afjfraglimit",			Cmd_afjFraglimit_f,			CMD_NOINTERMISSION },\
 								{ "afjignore",				Cmd_afjIgnore_f,			0 },\
 								{ "afjignorelist",			Cmd_afjIgnoreList_f,		0 },\
@@ -29,6 +30,7 @@ void Cmd_afjCapturelimit_f(gentity_t *ent);
 void Cmd_afjClanLogIn_f(gentity_t *ent);
 void Cmd_afjClanLogOut_f(gentity_t *ent);
 void Cmd_afjCpMsg_f(gentity_t *ent);
+void Cmd_afjDevMap_f(gentity_t *ent);
 void Cmd_afjFraglimit_f(gentity_t *ent);
 void Cmd_afjIgnore_f(gentity_t *ent);
 void Cmd_afjIgnoreList_f(gentity_t *ent);

@@ -120,6 +120,31 @@ void Cmd_afjCpMsg_f(gentity_t *ent)
 
 /*
 ==================
+Cmd_afjDevMap_f
+
+Change the map with cheat enabled
+==================
+*/
+void Cmd_afjDevMap_f(gentity_t *ent) {
+	if (!ent) {
+		trap->Print("Use: /devmap\n");
+		return;
+	}
+
+	if (trap->Argc() < 2) {
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjdevmap <map>\n");
+		return;
+	}
+
+	char map[MAX_QPATH] = "";
+
+	trap->Argv(1, map, sizeof(map));
+
+	trap->SendConsoleCommand(EXEC_APPEND, va("devmap %s\n", map));
+}
+
+/*
+==================
 Cmd_afjFraglimit_f
 
 Change the fraglimit
