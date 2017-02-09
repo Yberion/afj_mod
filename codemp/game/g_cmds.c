@@ -1513,7 +1513,7 @@ static void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, cons
 	*/
 	//They've requested I take this out.
 
-	if (other->client->pers.afjUser.ignoreClient & (1 << (ent - g_entities))) {
+	if (other->client->pers.afjUser.ignoredClients & (1 << (ent - g_entities))) {
 		return;
 	}
 

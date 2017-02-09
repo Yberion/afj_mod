@@ -15,7 +15,7 @@
 
 typedef struct afjUser_s {
 	qboolean	isClanMember;
-	int			ignoreClient;
+	int			ignoredClients;
 } afjUser_t;
 
 void Cmd_afjClanLogIn_f(gentity_t *ent);

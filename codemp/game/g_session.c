@@ -28,7 +28,7 @@ void G_WriteClientSessionData( const gclient_t *client ) {
 	cJSON_AddStringToObject( root, "siegeClass", *sess->siegeClass ? sess->siegeClass : "none" );
 	cJSON_AddStringToObject( root, "IP", sess->IP );
 	cJSON_AddBooleanToObject( root, "isClanMember", client->pers.afjUser.isClanMember );
-	cJSON_AddIntegerToObject( root, "ignoreClient", client->pers.afjUser.ignoreClient );
+	cJSON_AddIntegerToObject( root, "ignoredClients", client->pers.afjUser.ignoredClients);
 
 	trap->FS_Open( fileName, &f, FS_WRITE );
 
@@ -116,7 +116,7 @@ void G_ReadClientSessionData( gclient_t *client ) {
 	if ((object = cJSON_GetObjectItem(root, "isClanMember"))) {
 		client->pers.afjUser.isClanMember = cJSON_ToBoolean(object);
 	}
-	if ((object = cJSON_GetObjectItem(root, "ignoreClient"))) {
+	if ((object = cJSON_GetObjectItem(root, "ignoredClients"))) {
 		sess->wins = cJSON_ToInteger(object);
 	}
 	
