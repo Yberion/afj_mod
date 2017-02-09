@@ -23,6 +23,7 @@ XCVAR_DEF( afj_renameMsg,					"Got renamed",										NULL,				CVAR_ARCHIVE | CV
 XCVAR_DEF( afj_SilenceMsg,					"Has been silenced",								NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_unIgnoreMsg,					"Not ignoring you anymore",							NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_unProtectMsg,				"You've been unprotected",							NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
+XCVAR_DEF( afj_UnSilenceMsg,				"Has been unsilenced",								NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_waitBeforeNextTry,			"Wait before the next try",							NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 
 #undef XCVAR_DEF

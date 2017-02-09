@@ -12,7 +12,8 @@
 								{ "afjrename",				Cmd_afjRename_f,			CMD_NOINTERMISSION },\
 								{ "afjsilence",				Cmd_afjSilence_f,			0 },\
 								{ "afjstatus",				Cmd_afjStatus_f,			0 },\
-								{ "afjunignoreall",			Cmd_afjUnIgnoreAll_f,		0 },
+								{ "afjunignoreall",			Cmd_afjUnIgnoreAll_f,		0 },\
+								{ "afjunsilence",			Cmd_afjUnSilence_f,			0 },
 
 typedef struct afjUser_s {
 	qboolean	isClanMember;
@@ -34,3 +35,4 @@ void Cmd_afjRename_f(gentity_t *ent);
 void Cmd_afjSilence_f(gentity_t *ent);
 void Cmd_afjStatus_f(gentity_t *ent);
 void Cmd_afjUnIgnoreAll_f(gentity_t *ent);
+void Cmd_afjUnSilence_f(gentity_t *ent);

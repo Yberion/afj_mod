@@ -363,7 +363,7 @@ void Cmd_afjSilence_f(gentity_t *ent) {
 	}
 	if (level.clients[targetClient].pers.afjUser.isSilenced)
 	{
-		trap->SendServerCommand(ent - g_entities, "print \"Client already silenced\n");
+		trap->SendServerCommand(ent - g_entities, va("print \"%s already silenced\n", level.clients[targetClient].pers.netname_nocolor));
 		return;
 	}
 
@@ -433,4 +433,42 @@ void Cmd_afjUnIgnoreAll_f(gentity_t *ent) {
 		}
 	}
 	trap->SendServerCommand(ent - g_entities, va("print \"\n%i player(s) unignored\n\"", nbUnIgnored));
+}
+
+/*
+==================
+Cmd_afjUnSilence_f
+
+Unsilence a player
+==================
+*/
+void Cmd_afjUnSilence_f(gentity_t *ent) {
+	if (trap->Argc() < 2) {
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjunsilence <client>\n");
+		return;
+	}
+
+	char arg1[MAX_NETNAME] = "";
+	int targetClient;
+
+	trap->Argv(1, arg1, sizeof(arg1));
+
+	targetClient = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+
+	if (targetClient == -1) {
+		return;
+	}
+	if (!level.clients[targetClient].pers.afjUser.isSilenced)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s already unsilenced\n", level.clients[targetClient].pers.netname_nocolor));
+		return;
+	}
+
+	level.clients[targetClient].pers.afjUser.isSilenced = qfalse;
+
+	if (ent != g_entities + targetClient)
+		trap->SendServerCommand(ent - g_entities, va("print \"%s %s\n\"", level.clients[targetClient].pers.netname_nocolor, afj_UnSilenceMsg.string));
+
+	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClient].pers.netname, afj_UnSilenceMsg.string));
+	trap->SendServerCommand(targetClient, va("print \"%s %s\n\"", level.clients[targetClient].pers.netname_nocolor, afj_UnSilenceMsg.string));
 }
