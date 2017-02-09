@@ -812,7 +812,7 @@ void SetTeam( gentity_t *ent, char *s ) {
 	//
 	// decide if we will allow the change
 	//
-	if ( team == oldTeam && team != TEAM_SPECTATOR ) {
+	if ( team == oldTeam /*&& team != TEAM_SPECTATOR*/ ) {
 		return;
 	}
 

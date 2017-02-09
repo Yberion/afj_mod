@@ -145,6 +145,40 @@ void Cmd_afjDevMap_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjForceTeam_f
+
+Force a player to change his team
+==================
+*/
+void Cmd_afjForceTeam_f(gentity_t *ent) {
+	if (trap->Argc() < 3) {
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjforceteam <client> <team>\n");
+		return;
+	}
+
+	char arg1[64] = "", arg2[64] = "";
+	int targetClient;
+	gentity_t *targ;
+
+	trap->Argv(1, arg1, sizeof(arg1));
+	trap->Argv(2, arg2, sizeof(arg2));
+	
+	targetClient = (trap->Argc() > 1) ? G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT) : ent - g_entities;
+
+	if (targetClient == -1) {
+		return;
+	}
+
+	targ = &g_entities[targetClient];
+
+	if (targ->inuse && targ->client && targ->client->pers.connected)
+	{
+		SetTeam(targ, arg2);
+	}
+}
+
+/*
+==================
 Cmd_afjFraglimit_f
 
 Change the fraglimit
