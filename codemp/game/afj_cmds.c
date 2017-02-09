@@ -238,24 +238,27 @@ void Cmd_afjKill_f(gentity_t *ent) {
 	trap->Argv(1, arg1, sizeof(arg1));
 
 	clientNum = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	
 	if (clientNum == -1) {
 		return;
 	}
 
-	targetEnt = g_entities + clientNum;
-
-	if (targetEnt->client->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR || targetEnt->client->tempSpectate >= level.time)
+	if (level.clients[clientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[clientNum].tempSpectate >= level.time)
 	{
 		return;
 	}
+
+	targetEnt = g_entities + clientNum;
 
 	/*if (!!(targetEnt->client->ps.eFlags & EF_INVULNERABLE))
 	{
 		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", targetEnt->client->pers.netname, afj_killProtectMsg.string));
 		return;
 	}*/
+
 	Cmd_Kill_f(targetEnt);
 	trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", targetEnt->client->pers.netname, afj_killMsg.string));
+	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "killed\n\"", targetEnt->client->pers.netname_nocolor));
 }
 
 /*
@@ -344,9 +347,15 @@ void Cmd_afjProtect_f(gentity_t *ent) {
 	targ->client->invulnerableTimer = !!(targ->client->ps.eFlags & EF_INVULNERABLE) ? 0x7FFFFFFF : level.time;
 
 	if (!!(targ->client->ps.eFlags&EF_INVULNERABLE))
+	{
 		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", targ->client->pers.netname, afj_protectMsg.string));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "protected\n\"", targ->client->pers.netname_nocolor));
+	}
 	else
+	{
 		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", targ->client->pers.netname, afj_unProtectMsg.string));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "unprotected\n\"", targ->client->pers.netname_nocolor));
+	}	
 }
 
 /*
@@ -434,6 +443,7 @@ void Cmd_afjSilence_f(gentity_t *ent) {
 
 	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClient].pers.netname, afj_SilenceMsg.string));
 	trap->SendServerCommand(targetClient, va("print \"%s %s\n\"", level.clients[targetClient].pers.netname_nocolor, afj_SilenceMsg.string));
+	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "silenced\n\"", level.clients[targetClient].pers.netname_nocolor));
 }
 
 /*
