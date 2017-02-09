@@ -243,6 +243,29 @@ void Cmd_afjMap_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjMapRestart_f
+
+Restart the map
+==================
+*/
+void Cmd_afjMapRestart_f(gentity_t *ent) {
+	if (!ent) {
+		trap->Print("Use: /map_restart <time>\n");
+		return;
+	}
+
+	char time[64] = "";
+
+	if (trap->Argc() == 2)
+	{
+		trap->Argv(1, time, sizeof(time));
+	}
+	
+	trap->SendConsoleCommand(EXEC_APPEND, va("map_restart %s\n", time));
+}
+
+/*
+==================
 Cmd_afjOrigin_f
 
 Display current player origin
