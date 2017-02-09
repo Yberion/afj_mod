@@ -10,7 +10,8 @@
 								{ "afjorigin",				Cmd_afjOrigin_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjprotect",				Cmd_afjProtect_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjrename",				Cmd_afjRename_f,			CMD_NOINTERMISSION },\
-								{ "afjstatus",				Cmd_afjStatus_f,			0 },
+								{ "afjstatus",				Cmd_afjStatus_f,			0 },\
+								{ "afjunignoreall",			Cmd_afjUnIgnoreAll_f,		0 },
 
 typedef struct afjUser_s {
 	qboolean	isClanMember;
@@ -29,3 +30,4 @@ void Cmd_afjOrigin_f(gentity_t *ent);
 void Cmd_afjProtect_f(gentity_t *ent);
 void Cmd_afjRename_f(gentity_t *ent);
 void Cmd_afjStatus_f(gentity_t *ent);
+void Cmd_afjUnIgnoreAll_f(gentity_t *ent);

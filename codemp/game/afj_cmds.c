@@ -369,3 +369,23 @@ void Cmd_afjStatus_f(gentity_t *ent) {
 	}
 	trap->SendServerCommand(ent - g_entities, va("print \"\nTotal: %i\n\"", total));
 }
+
+/*
+==================
+Cmd_afjUnIgnoreAll_f
+
+Unignore all player
+==================
+*/
+void Cmd_afjUnIgnoreAll_f(gentity_t *ent) {
+	int nbUnIgnored = 0;
+	for (int i = 0; i < level.maxclients; i++)
+	{
+		if (ent->client->pers.afjUser.ignoreClient & (1 << i))
+		{
+			ent->client->pers.afjUser.ignoreClient &= ~(1 << i);
+			++nbUnIgnored;
+		}
+	}
+	trap->SendServerCommand(ent - g_entities, va("print \"\n%i player(s) unignored\n\"", nbUnIgnored));
+}
