@@ -1549,6 +1549,11 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 	char		location[64];
 	char		*locMsg = NULL;
 
+	if (ent->client->pers.afjUser.isSilenced)
+	{
+		return;
+	}
+
 	if ( level.gametype < GT_TEAM && mode == SAY_TEAM ) {
 		mode = SAY_ALL;
 	}

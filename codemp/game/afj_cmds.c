@@ -89,6 +89,7 @@ void Cmd_afjCpMsg_f(gentity_t *ent)
 
 		trap->SendServerCommand( targetClient, va( "cp \"%s\"", msg ) );
 		trap->SendServerCommand( targetClient, va( "print \"%s\n\"", msg ) );
+		
 		if (ent) {
 			trap->SendServerCommand(ent - g_entities, va("cp\"Relay:\n%s\"", msg));
 			trap->SendServerCommand(ent - g_entities, va("print \"Relay:\n%s\n\"", msg));
@@ -263,8 +264,8 @@ void Cmd_afjProtect_f(gentity_t *ent) {
 	int targetClient;
 	gentity_t *targ;
 
+	// can protect: self, partial name, clientNum
 	if (trap->Argc() > 1) {
-		// can protect: self, partial name, clientNum
 		trap->Argv(1, arg1, sizeof(arg1));
 		targetClient = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
 	}
@@ -311,6 +312,7 @@ void Cmd_afjRename_f(gentity_t *ent) {
 	trap->Argv(2, arg2, sizeof(arg2));
 
 	targetClient = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	
 	if (targetClient == -1) {
 		return;
 	}
@@ -334,6 +336,44 @@ void Cmd_afjRename_f(gentity_t *ent) {
 
 	trap->SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " %s %s\n\"", oldName, G_GetStringEdString("MP_SVGAME", "PLRENAME"), targ->client->pers.netname));
 	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", oldName, afj_renameMsg.string));
+}
+
+/*
+==================
+Cmd_afjSilence_f
+
+Silence a player
+==================
+*/
+void Cmd_afjSilence_f(gentity_t *ent) {
+	if (trap->Argc() < 2) {
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjsilence <client>\n");
+		return;
+	}
+
+	char arg1[MAX_NETNAME] = "";
+	int targetClient;
+
+	trap->Argv(1, arg1, sizeof(arg1));
+
+	targetClient = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+
+	if (targetClient == -1) {
+		return;
+	}
+	if (level.clients[targetClient].pers.afjUser.isSilenced)
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Client already silenced\n");
+		return;
+	}
+
+	level.clients[targetClient].pers.afjUser.isSilenced = qtrue;
+
+	if(ent != g_entities + targetClient)
+		trap->SendServerCommand(ent - g_entities, va("print \"%s %s\n\"", level.clients[targetClient].pers.netname_nocolor, afj_SilenceMsg.string));
+
+	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClient].pers.netname, afj_SilenceMsg.string));
+	trap->SendServerCommand(targetClient, va("print \"%s %s\n\"", level.clients[targetClient].pers.netname_nocolor, afj_SilenceMsg.string));
 }
 
 /*
