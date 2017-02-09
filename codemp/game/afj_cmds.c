@@ -2,6 +2,24 @@
 
 /*
 ==================
+Cmd_afjCapturelimit_f
+
+Change the capturelimit
+==================
+*/
+void Cmd_afjCapturelimit_f(gentity_t *ent) {
+	char capturelimit[64] = "";
+
+	if (trap->Argc() == 2)
+	{
+		trap->Argv(1, capturelimit, sizeof(capturelimit));
+	}
+
+	trap->SendConsoleCommand(EXEC_APPEND, va("capturelimit %s\n", capturelimit));
+}
+
+/*
+==================
 Cmd_afjClanLogIn_f
 
 Allow a player to log in as a clan member

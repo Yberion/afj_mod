@@ -1,5 +1,6 @@
 // WARNING: COMMANDS MUST BE SORTED IN ALPHABETICAL ORDER AND START WITH "afj"
-#define AFJ_COMMANDS_JAMPGAME	{ "afjclanlogin",			Cmd_afjClanLogIn_f,			0 },\
+#define AFJ_COMMANDS_JAMPGAME	{ "afjcapturelimit",		Cmd_afjCapturelimit_f,		CMD_NOINTERMISSION },\
+								{ "afjclanlogin",			Cmd_afjClanLogIn_f,			0 },\
 								{ "afjclanlogout",			Cmd_afjClanLogOut_f,		0 },\
 								{ "afjcpmsg",				Cmd_afjCpMsg_f,				CMD_NOINTERMISSION },\
 								{ "afjfraglimit",			Cmd_afjFraglimit_f,			CMD_NOINTERMISSION },\
@@ -24,6 +25,7 @@ typedef struct afjUser_s {
 	qboolean	isSilenced;
 } afjUser_t;
 
+void Cmd_afjCapturelimit_f(gentity_t *ent);
 void Cmd_afjClanLogIn_f(gentity_t *ent);
 void Cmd_afjClanLogOut_f(gentity_t *ent);
 void Cmd_afjCpMsg_f(gentity_t *ent);
