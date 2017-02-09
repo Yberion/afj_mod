@@ -1382,7 +1382,7 @@ static void ForceClientSkin( gclient_t *client, char *model, const char *skin ) 
 ClientCheckName
 ============
 */
-static void ClientCleanName( const char *in, char *out, int outSize )
+void ClientCleanName( const char *in, char *out, int outSize )
 {
 	int outpos = 0, colorlessLen = 0, spaces = 0, ats = 0;
 
@@ -2141,6 +2141,7 @@ qboolean ClientUserinfoChanged( int clientNum ) {
 	Q_strncpyz( oldname, client->pers.netname, sizeof( oldname ) );
 	s = Info_ValueForKey( userinfo, "name" );
 	ClientCleanName( s, client->pers.netname, sizeof( client->pers.netname ) );
+	
 	Q_strncpyz( client->pers.netname_nocolor, client->pers.netname, sizeof( client->pers.netname_nocolor ) );
 	Q_StripColor( client->pers.netname_nocolor );
 
@@ -2542,7 +2543,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 		}
 	}
 
-	// get and distribute relevent paramters
+	// get and distribute relevent parameters
 	if ( !ClientUserinfoChanged( clientNum ) )
 		return "Failed userinfo validation";
 

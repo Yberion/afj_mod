@@ -498,7 +498,7 @@ typedef struct clientPersistant_s {
 	qboolean	pmoveFixed;			//
 	char		netname[MAX_NETNAME];
 	char		netname_nocolor[MAX_NETNAME];
-	int			netnameTime;				// Last time the name was changed
+	int			netnameTime;		// Last time the name was changed
 	int			maxHealth;			// for handicapping
 	int			enterTime;			// level.time the client entered the game
 	playerTeamState_t teamState;	// status in teamplay games
@@ -664,6 +664,8 @@ struct gclient_s {
 
 	qboolean	fireHeld;			// used for hook
 	gentity_t	*hook;				// grapple hook if out
+	int			lastHookTime;		// last level.time the grapple hook was fired
+
 
 	int			switchTeamTime;		// time the player switched teams
 
@@ -1297,6 +1299,8 @@ qboolean SpotWouldTelefrag( gentity_t *spot );
 
 extern gentity_t *gJMSaberEnt;
 
+void ClientCleanName(const char *in, char *out, int outSize);
+
 //
 // g_svcmds.c
 //
@@ -1323,6 +1327,7 @@ void DeathmatchScoreboardMessage (gentity_t *client);
 //
 
 void G_LeaveVehicle(gentity_t *ent, qboolean ConCheck);
+
 //
 // g_pweapon.c
 //

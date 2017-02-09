@@ -55,13 +55,13 @@ Cmd_afjCpMsg_f
 From japp (Raz0r)
 
 Display a message in the center of the screen
-/afjcpmsg <clientnum (-1 for everyone)> <message>
+/afjcpmsg <client (-1 for everyone)> <message>
 ==================
 */
 void Cmd_afjCpMsg_f(gentity_t *ent)
 {
 	if ( trap->Argc() < 3 ) {
-		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjcpmsg <clientnum (-1 for everyone)> <message>\n" );
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjcpmsg <client (-1 for everyone)> <message>\n" );
 		return;
 	}
 
@@ -105,7 +105,7 @@ Ignore a player
 */
 void Cmd_afjIgnore_f(gentity_t *ent) {
 	if (trap->Argc() < 2) {
-		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjignore <clientnum>\n");
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjignore <client>\n");
 		return;
 	}
 	int clientNum;
@@ -156,7 +156,7 @@ Kick a player
 */
 void Cmd_afjKick_f(gentity_t *ent) {
 	if (trap->Argc() == 1) {
-		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjkick <clientnum>\n");
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjkick <client>\n");
 		return;
 	}
 
@@ -184,7 +184,7 @@ Kill a player
 void Cmd_Kill_f(gentity_t *ent);
 void Cmd_afjKill_f(gentity_t *ent) {
 	if (trap->Argc() < 2) {
-		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjkill <clientnum>\n");
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjkill <client>\n");
 		return;
 	}
 
@@ -256,6 +256,54 @@ void Cmd_afjProtect_f(gentity_t *ent) {
 		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", targ->client->pers.netname, afj_protectMsg.string));
 	else
 		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", targ->client->pers.netname, afj_unProtectMsg.string));
+}
+
+/*
+==================
+Cmd_afjRename_f
+
+Rename a player
+==================
+*/
+void Cmd_afjRename_f(gentity_t *ent) {
+	
+	if (trap->Argc() != 3) {
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjrename <client> <name>\n");
+		return;
+	}
+
+	char arg1[MAX_NETNAME] = "", arg2[MAX_NETNAME] = "", oldName[MAX_NETNAME] = "";
+	char tempInfo[MAX_INFO_STRING] = "";
+	int targetClient;
+	gentity_t *targ = NULL;
+
+	trap->Argv(1, arg1, sizeof(arg1));
+	trap->Argv(2, arg2, sizeof(arg2));
+
+	targetClient = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	if (targetClient == -1) {
+		return;
+	}
+
+	targ = g_entities + targetClient;
+
+	Q_strncpyz(oldName, targ->client->pers.netname, sizeof(oldName));
+	ClientCleanName(arg2, targ->client->pers.netname, sizeof(targ->client->pers.netname));
+
+	if (!strcmp(oldName, targ->client->pers.netname)) {
+		return;
+	}
+
+	trap->GetConfigstring(CS_PLAYERS + targetClient, tempInfo, sizeof(tempInfo));
+	Info_SetValueForKey(tempInfo, "n", targ->client->pers.netname);
+	trap->SetConfigstring(CS_PLAYERS + targetClient, tempInfo);
+
+	trap->GetUserinfo(targetClient, tempInfo, sizeof(tempInfo));
+	Info_SetValueForKey(tempInfo, "name", targ->client->pers.netname);
+	trap->SetUserinfo(targetClient, tempInfo);
+
+	trap->SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " %s %s\n\"", oldName, G_GetStringEdString("MP_SVGAME", "PLRENAME"), targ->client->pers.netname));
+	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", oldName, afj_renameMsg.string));
 }
 
 /*
