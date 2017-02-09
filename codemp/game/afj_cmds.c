@@ -217,6 +217,31 @@ void Cmd_afjKill_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjMap_f
+
+Change the map
+==================
+*/
+void Cmd_afjMap_f(gentity_t *ent) {
+	if (!ent) {
+		trap->Print("Use: /map\n");
+		return;
+	}
+
+	if (trap->Argc() < 2) {
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjmap <map>\n");
+		return;
+	}
+
+	char map[MAX_QPATH] = "";
+
+	trap->Argv(1, map, sizeof(map));
+
+	trap->SendConsoleCommand(EXEC_APPEND, va("map %s\n", map));
+}
+
+/*
+==================
 Cmd_afjOrigin_f
 
 Display current player origin
