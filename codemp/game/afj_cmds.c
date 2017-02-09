@@ -8,12 +8,15 @@ Change the capturelimit
 ==================
 */
 void Cmd_afjCapturelimit_f(gentity_t *ent) {
+	if (trap->Argc() < 2)
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjcapturelimit <limit>\n\"");
+		return;
+	}
+
 	char capturelimit[64] = "";
 
-	if (trap->Argc() == 2)
-	{
-		trap->Argv(1, capturelimit, sizeof(capturelimit));
-	}
+	trap->Argv(1, capturelimit, sizeof(capturelimit));
 
 	trap->SendConsoleCommand(EXEC_APPEND, va("capturelimit %s\n", capturelimit));
 }
@@ -123,12 +126,15 @@ Change the fraglimit
 ==================
 */
 void Cmd_afjFraglimit_f(gentity_t *ent) {
+	if (trap->Argc() < 2)
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjfraglimit <limit>\n\"");
+		return;
+	}
+	
 	char fraglimit[64] = "";
 
-	if (trap->Argc() == 2)
-	{
-		trap->Argv(1, fraglimit, sizeof(fraglimit));
-	}
+	trap->Argv(1, fraglimit, sizeof(fraglimit));
 
 	trap->SendConsoleCommand(EXEC_APPEND, va("fraglimit %s\n", fraglimit));
 }
@@ -192,7 +198,7 @@ Kick a player
 ==================
 */
 void Cmd_afjKick_f(gentity_t *ent) {
-	if (trap->Argc() == 1) {
+	if (trap->Argc() < 2) {
 		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjkick <client>\n");
 		return;
 	}
@@ -285,19 +291,14 @@ Restart the map
 ==================
 */
 void Cmd_afjMapRestart_f(gentity_t *ent) {
-	if (!ent) {
-		trap->Print("Use: /map_restart <time>\n");
-		return;
-	}
-
-	char time[64] = "";
+	char timeRestart[64] = "";
 
 	if (trap->Argc() == 2)
 	{
-		trap->Argv(1, time, sizeof(time));
+		trap->Argv(1, timeRestart, sizeof(timeRestart));
 	}
 	
-	trap->SendConsoleCommand(EXEC_APPEND, va("map_restart %s\n", time));
+	trap->SendConsoleCommand(EXEC_APPEND, va("map_restart %s\n", timeRestart));
 }
 
 /*
@@ -443,7 +444,6 @@ Display current player
 ==================
 */
 void Cmd_afjStatus_f(gentity_t *ent) {
-
 	gclient_t	*cl;
 	int	i, total = 0;
 	char state[32] = "", Member[2] = "";
@@ -482,12 +482,14 @@ Change the timelimit
 ==================
 */
 void Cmd_afjTimelimit_f(gentity_t *ent) {
+	if (trap->Argc() < 2)
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjtimelimit <limit>\n\"");
+		return;
+	}
 	char timelimit[64] = "";
 
-	if (trap->Argc() == 2)
-	{
-		trap->Argv(1, timelimit, sizeof(timelimit));
-	}
+	trap->Argv(1, timelimit, sizeof(timelimit));
 
 	trap->SendConsoleCommand(EXEC_APPEND, va("timelimit %s\n", timelimit));
 }
