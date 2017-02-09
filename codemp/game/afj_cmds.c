@@ -99,6 +99,24 @@ void Cmd_afjCpMsg_f(gentity_t *ent)
 
 /*
 ==================
+Cmd_afjFraglimit_f
+
+Change the fraglimit
+==================
+*/
+void Cmd_afjFraglimit_f(gentity_t *ent) {
+	char fraglimit[64] = "";
+
+	if (trap->Argc() == 2)
+	{
+		trap->Argv(1, fraglimit, sizeof(fraglimit));
+	}
+
+	trap->SendConsoleCommand(EXEC_APPEND, va("fraglimit %s\n", fraglimit));
+}
+
+/*
+==================
 Cmd_afjIgnore_f
 
 Ignore a player

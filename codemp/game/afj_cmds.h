@@ -2,6 +2,7 @@
 #define AFJ_COMMANDS_JAMPGAME	{ "afjclanlogin",			Cmd_afjClanLogIn_f,			0 },\
 								{ "afjclanlogout",			Cmd_afjClanLogOut_f,		0 },\
 								{ "afjcpmsg",				Cmd_afjCpMsg_f,				CMD_NOINTERMISSION },\
+								{ "afjfraglimit",			Cmd_afjFraglimit_f,			CMD_NOINTERMISSION },\
 								{ "afjignore",				Cmd_afjIgnore_f,			0 },\
 								{ "afjignorelist",			Cmd_afjIgnoreList_f,		0 },\
 								{ "afjkick",				Cmd_afjKick_f,				0 },\
@@ -13,7 +14,7 @@
 								{ "afjrename",				Cmd_afjRename_f,			CMD_NOINTERMISSION },\
 								{ "afjsilence",				Cmd_afjSilence_f,			0 },\
 								{ "afjstatus",				Cmd_afjStatus_f,			0 },\
-								{ "afjtimelimit",			Cmd_afjTimelimit_f,			0 },\
+								{ "afjtimelimit",			Cmd_afjTimelimit_f,			CMD_NOINTERMISSION },\
 								{ "afjunignoreall",			Cmd_afjUnIgnoreAll_f,		0 },\
 								{ "afjunsilence",			Cmd_afjUnSilence_f,			0 },
 
@@ -26,6 +27,7 @@ typedef struct afjUser_s {
 void Cmd_afjClanLogIn_f(gentity_t *ent);
 void Cmd_afjClanLogOut_f(gentity_t *ent);
 void Cmd_afjCpMsg_f(gentity_t *ent);
+void Cmd_afjFraglimit_f(gentity_t *ent);
 void Cmd_afjIgnore_f(gentity_t *ent);
 void Cmd_afjIgnoreList_f(gentity_t *ent);
 void Cmd_afjKick_f(gentity_t *ent);
