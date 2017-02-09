@@ -440,6 +440,24 @@ void Cmd_afjStatus_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjTimelimit_f
+
+Change the timelimit
+==================
+*/
+void Cmd_afjTimelimit_f(gentity_t *ent) {
+	char timelimit[64] = "";
+
+	if (trap->Argc() == 2)
+	{
+		trap->Argv(1, timelimit, sizeof(timelimit));
+	}
+
+	trap->SendConsoleCommand(EXEC_APPEND, va("timelimit %s\n", timelimit));
+}
+
+/*
+==================
 Cmd_afjUnIgnoreAll_f
 
 Unignore all player
