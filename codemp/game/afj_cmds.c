@@ -109,7 +109,7 @@ void Cmd_afjIgnore_f(gentity_t *ent) {
 		return;
 	}
 	int clientNum;
-	char	arg1[64] = "";
+	char	arg1[MAX_NETNAME] = "";
 
 	trap->Argv(1, arg1, sizeof(arg1));
 
@@ -162,7 +162,7 @@ void Cmd_afjKick_f(gentity_t *ent) {
 
 	const char *reason = afj_kickMsg.string;
 	int clientNum;
-	char	arg1[64] = "";
+	char	arg1[MAX_NETNAME] = "";
 
 	trap->Argv(1, arg1, sizeof(arg1));
 
@@ -188,7 +188,7 @@ void Cmd_afjKill_f(gentity_t *ent) {
 		return;
 	}
 
-	char arg1[64] = "";
+	char arg1[MAX_NETNAME] = "";
 	int clientNum;
 	gentity_t *targetEnt = NULL;
 
@@ -259,15 +259,20 @@ Protect or unprotect a player
 ==================
 */
 void Cmd_afjProtect_f(gentity_t *ent) {
-	char arg1[64] = "";
+	char arg1[MAX_NETNAME] = "";
 	int targetClient;
 	gentity_t *targ;
 
-	// can protect: self, partial name, clientNum
-	trap->Argv(1, arg1, sizeof(arg1));
-
-	targetClient = (trap->Argc() > 1) ? G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT) : ent - g_entities;
-
+	if (trap->Argc() > 1) {
+		// can protect: self, partial name, clientNum
+		trap->Argv(1, arg1, sizeof(arg1));
+		targetClient = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	}
+	else
+	{
+		targetClient =  ent - g_entities;
+	}
+	
 	if (targetClient == -1) {
 		return;
 	}
