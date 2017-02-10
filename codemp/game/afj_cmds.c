@@ -264,7 +264,7 @@ Change the gametype
 void Cmd_afjGametype_f(gentity_t *ent) {
 	if (trap->Argc() == 1)
 	{
-		if (!level.afjlevel.waitingNextGametype)
+		if (!level.afjLevel.waitingNextGametype)
 		{
 			trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjgametype <gametype>\n\"");
 			trap->SendServerCommand(ent - g_entities, va("print \"" S_COLOR_YELLOW "gametype unchanged " S_COLOR_WHITE "%s\n\"", BG_GetGametypeString(level.gametype)));
@@ -273,7 +273,7 @@ void Cmd_afjGametype_f(gentity_t *ent) {
 		else
 		{
 			trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjgametype <gametype>\n\"");
-			trap->SendServerCommand(ent - g_entities, va("print \"" S_COLOR_YELLOW "next gametype after restart " S_COLOR_WHITE "%s\n\"", BG_GetGametypeString(level.afjlevel.nextGametype)));
+			trap->SendServerCommand(ent - g_entities, va("print \"" S_COLOR_YELLOW "next gametype after restart " S_COLOR_WHITE "%s\n\"", BG_GetGametypeString(level.afjLevel.nextGametype)));
 			return;
 		}
 	}
@@ -300,9 +300,9 @@ void Cmd_afjGametype_f(gentity_t *ent) {
 	}
 
 	trap->SendConsoleCommand(EXEC_APPEND, va("g_gametype %d\n", gametypeNum));
-	level.afjlevel.nextGametype = gametypeNum;
-	level.afjlevel.waitingNextGametype = qtrue;
-	trap->SendServerCommand(ent - g_entities, va("print \"" S_COLOR_YELLOW "gametype changed to " S_COLOR_WHITE "%s " S_COLOR_YELLOW "restart needed\n\"", BG_GetGametypeString(level.afjlevel.nextGametype)));
+	level.afjLevel.nextGametype = gametypeNum;
+	level.afjLevel.waitingNextGametype = qtrue;
+	trap->SendServerCommand(ent - g_entities, va("print \"" S_COLOR_YELLOW "gametype changed to " S_COLOR_WHITE "%s " S_COLOR_YELLOW "restart needed\n\"", BG_GetGametypeString(level.afjLevel.nextGametype)));
 }
 
 /*
