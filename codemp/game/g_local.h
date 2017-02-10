@@ -897,6 +897,7 @@ typedef struct level_locals_s {
 	fileHandle_t	logFile;
 
 	// store latched cvars here that we want to get at often
+	afjLevel_t	afjlevel;
 	int			maxclients;
 
 	int			framenum;

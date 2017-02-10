@@ -200,6 +200,57 @@ void Cmd_afjFraglimit_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjGametype_f
+
+Change the gametype
+==================
+*/
+void Cmd_afjGametype_f(gentity_t *ent) {
+	if (trap->Argc() == 1)
+	{
+		if (!level.afjlevel.waitingNextGametype)
+		{
+			trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjgametype <gametype>\n\"");
+			trap->SendServerCommand(ent - g_entities, va("print \"" S_COLOR_YELLOW "gametype unchanged " S_COLOR_WHITE "%s\n\"", BG_GetGametypeString(level.gametype)));
+			return;
+		}
+		else
+		{
+			trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjgametype <gametype>\n\"");
+			trap->SendServerCommand(ent - g_entities, va("print \"" S_COLOR_YELLOW "next gametype after restart " S_COLOR_WHITE "%s\n\"", BG_GetGametypeString(level.afjlevel.nextGametype)));
+			return;
+		}
+	}
+
+	char argGametype[64] = "";
+	int gametypeNum, tempGametype;
+
+	trap->Argv(1, argGametype, sizeof(argGametype));
+
+	gametypeNum = BG_GetGametypeForString(argGametype);
+
+	if (gametypeNum == -1)
+	{
+		tempGametype = atoi(argGametype);
+		if (tempGametype >= 0 && tempGametype < GT_MAX_GAME_TYPE)
+		{
+			gametypeNum = tempGametype;
+		}
+		else
+		{
+			trap->SendServerCommand(ent - g_entities, va("print \"" S_COLOR_YELLOW "invalid gametype " S_COLOR_WHITE "%s\n\"", BG_GetGametypeString(gametypeNum)));
+			return;
+		}
+	}
+
+	trap->SendConsoleCommand(EXEC_APPEND, va("g_gametype %d\n", gametypeNum));
+	level.afjlevel.nextGametype = gametypeNum;
+	level.afjlevel.waitingNextGametype = qtrue;
+	trap->SendServerCommand(ent - g_entities, va("print \"" S_COLOR_YELLOW "gametype changed to " S_COLOR_WHITE "%s " S_COLOR_YELLOW "restart needed\n\"", BG_GetGametypeString(level.afjlevel.nextGametype)));
+}
+
+/*
+==================
 Cmd_afjIgnore_f
 
 Ignore a player
@@ -540,7 +591,7 @@ void Cmd_afjStatus_f(gentity_t *ent) {
 
 		trap->SendServerCommand(ent - g_entities, va("print \"%2i %4s %-20.20s "S_COLOR_GREEN"%6s\n\"", i, state, cl->pers.netname_nocolor, Member));
 	}
-	trap->SendServerCommand(ent - g_entities, va("print \"\nTotal: %i\n\"", total));
+	trap->SendServerCommand(ent - g_entities, va("print \"\nTotal: %d\n\"", total));
 }
 
 /*
@@ -580,7 +631,7 @@ void Cmd_afjUnIgnoreAll_f(gentity_t *ent) {
 			++nbUnIgnored;
 		}
 	}
-	trap->SendServerCommand(ent - g_entities, va("print \"\n%i player(s) unignored\n\"", nbUnIgnored));
+	trap->SendServerCommand(ent - g_entities, va("print \"\n%d player(s) unignored\n\"", nbUnIgnored));
 }
 
 /*
