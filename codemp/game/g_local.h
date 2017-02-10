@@ -1136,7 +1136,6 @@ qboolean	G_EntitiesFree( void );
 qboolean G_ActivateBehavior (gentity_t *self, int bset );
 
 void	G_TouchTriggers (gentity_t *ent);
-void	G_TouchSolids (gentity_t *ent);
 void	GetAnglesForDirection( const vec3_t p1, const vec3_t p2, vec3_t out );
 char	*ConcatArgs(int start);
 
@@ -1176,7 +1175,6 @@ qboolean G_RadiusDamage (vec3_t origin, gentity_t *attacker, float damage, float
 void body_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int meansOfDeath );
 void TossClientWeapon(gentity_t *self, vec3_t direction, float speed);
 void TossClientItems( gentity_t *self );
-void TossClientCubes( gentity_t *self );
 void ExplodeDeath( gentity_t *self );
 void G_CheckForDismemberment(gentity_t *ent, gentity_t *enemy, vec3_t point, int damage, int deathAnim, qboolean postDeath);
 extern int gGAvoidDismember;
@@ -1282,7 +1280,6 @@ void WP_FireGenericBlasterMissile( gentity_t *ent, vec3_t start, vec3_t dir, qbo
 qboolean LogAccuracyHit( gentity_t *target, gentity_t *attacker );
 void CalcMuzzlePoint ( gentity_t *ent, const vec3_t inForward, const vec3_t inRight, const vec3_t inUp, vec3_t muzzlePoint );
 void SnapVectorTowards( vec3_t v, vec3_t to );
-qboolean CheckGauntletAttack( gentity_t *ent );
 
 
 //
@@ -1326,7 +1323,6 @@ void RemoveDetpacks(gentity_t *ent);
 // p_hud.c
 //
 void MoveClientToIntermission (gentity_t *client);
-void G_SetStats (gentity_t *ent);
 void DeathmatchScoreboardMessage (gentity_t *client);
 
 //
@@ -1430,7 +1426,6 @@ qboolean G_BotConnect( int clientNum, qboolean restart );
 void G_AddBot(const char *name, float skill, const char *team, int delay, char *altname);
 void Svcmd_AddBot_f( void );
 void Svcmd_BotList_f( void );
-void BotInterbreedEndMatch( void );
 qboolean G_DoesMapSupportGametype(const char *mapname, int gametype);
 const char *G_RefreshNextMap(int gametype, qboolean forced);
 void G_LoadArenas( void );
