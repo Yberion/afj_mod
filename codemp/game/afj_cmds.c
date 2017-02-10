@@ -633,6 +633,56 @@ void Cmd_afjSilence_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjSlap_f
+
+Slap a player
+==================
+*/
+void Cmd_afjSlap_f(gentity_t *ent) {
+	if (trap->Argc() < 2) {
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjslap <client>\n");
+		return;
+	}
+	char	arg1[MAX_NETNAME] = "";
+	int		clientNum;
+	gentity_t *targ = NULL;
+	vec3_t newDirection = { 0.45, 0, 0 };
+	vec3_t angs;
+
+	trap->Argv(1, arg1, sizeof(arg1));
+
+	clientNum = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+
+	if (clientNum == -1) {
+		return;
+	}
+
+	targ = g_entities + clientNum;
+
+	if (targ->client->ps.forceHandExtend == HANDEXTEND_KNOCKDOWN)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "already knockdown\n", targ->client->pers.netname_nocolor));
+		return;
+	}
+
+	if (targ->client->hook) {
+		Weapon_HookFree(ent->client->hook);
+	}
+	
+	VectorCopy(targ->client->ps.viewangles, angs);
+	AngleVectors(angs, newDirection, NULL, NULL);
+	VectorInverse(newDirection);
+	//Add a little jump
+	newDirection[2] += 0.45;
+	G_Knockdown(targ);
+	G_Throw(targ, newDirection, 40);
+
+	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", targ->client->pers.netname, afj_SlapMsg.string));
+	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "slapped\n\"", targ->client->pers.netname_nocolor));
+}
+
+/*
+==================
 Cmd_afjStatus_f
 
 Display current player

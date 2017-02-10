@@ -1,5 +1,5 @@
 // WARNING: COMMANDS MUST BE SORTED IN ALPHABETICAL ORDER AND START WITH "afj"
-#define AFJ_COMMANDS_JAMPGAME	{ "afjaddbot",				Cmd_afjAddbot_f,		CMD_NOINTERMISSION },\
+#define AFJ_COMMANDS_JAMPGAME	{ "afjaddbot",				Cmd_afjAddbot_f,			CMD_NOINTERMISSION },\
 								{ "afjcapturelimit",		Cmd_afjCapturelimit_f,		CMD_NOINTERMISSION },\
 								{ "afjclanlogin",			Cmd_afjClanLogIn_f,			0 },\
 								{ "afjclanlogout",			Cmd_afjClanLogOut_f,		0 },\
@@ -18,6 +18,7 @@
 								{ "afjprotect",				Cmd_afjProtect_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjrename",				Cmd_afjRename_f,			CMD_NOINTERMISSION },\
 								{ "afjsilence",				Cmd_afjSilence_f,			0 },\
+								{ "afjslap",				Cmd_afjSlap_f,				CMD_NOINTERMISSION },\
 								{ "afjstatus",				Cmd_afjStatus_f,			0 },\
 								{ "afjtimelimit",			Cmd_afjTimelimit_f,			CMD_NOINTERMISSION },\
 								{ "afjunignoreall",			Cmd_afjUnIgnoreAll_f,		0 },\
@@ -54,6 +55,7 @@ void Cmd_afjOrigin_f(gentity_t *ent);
 void Cmd_afjProtect_f(gentity_t *ent);
 void Cmd_afjRename_f(gentity_t *ent);
 void Cmd_afjSilence_f(gentity_t *ent);
+void Cmd_afjSlap_f(gentity_t *ent);
 void Cmd_afjStatus_f(gentity_t *ent);
 void Cmd_afjTimelimit_f(gentity_t *ent);
 void Cmd_afjUnIgnoreAll_f(gentity_t *ent);

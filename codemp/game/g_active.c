@@ -3360,7 +3360,7 @@ void ClientThink_real( gentity_t *ent ) {
 			Weapon_HookFree(ent->client->hook);
 		}
 		else if (!ent->client->hook && pullGrapple && ent->client->ps.pm_type != PM_DEAD
-			/*&& !saberBusy*/)
+			/*&& !saberBusy*/ && ent->client->ps.forceHandExtend != HANDEXTEND_KNOCKDOWN)
 		{
 			Weapon_GrapplingHook_Fire(ent);
 		}

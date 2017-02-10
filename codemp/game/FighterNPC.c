@@ -29,7 +29,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 	#include "cgame/cg_local.h"
 #endif
 
-extern float DotToSpot( vec3_t spot, vec3_t from, vec3_t fromAngles );
 #ifdef _GAME //SP or gameside MP
 	extern vmCvar_t	cg_thirdPersonAlpha;
 	extern vec3_t playerMins;
