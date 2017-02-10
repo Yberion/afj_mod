@@ -2,6 +2,62 @@
 
 /*
 ==================
+Cmd_afjAddbot_f
+
+Add a bot
+Copy past of g_bot
+==================
+*/
+void Cmd_afjAddbot_f(gentity_t *ent) {
+	if (trap->Argc() < 2) {
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjaddbot <botname> [skill 1-5] [team] [msec delay] [altname]\n\"");
+		return;
+	}
+	
+	float			skill;
+	int				delay;
+	char			name[MAX_TOKEN_CHARS];
+	char			altname[MAX_TOKEN_CHARS];
+	char			string[MAX_TOKEN_CHARS];
+	char			team[MAX_TOKEN_CHARS];
+
+	// are bots enabled?
+	if (!trap->Cvar_VariableIntegerValue("bot_enable")) {
+		return;
+	}
+
+	// name
+	trap->Argv(1, name, sizeof(name));
+
+	// skill
+	trap->Argv(2, string, sizeof(string));
+	if (!string[0]) {
+		skill = 4;
+	}
+	else {
+		skill = atof(string);
+	}
+
+	// team
+	trap->Argv(3, team, sizeof(team));
+
+	// delay
+	trap->Argv(4, string, sizeof(string));
+	if (!string[0]) {
+		delay = 0;
+	}
+	else {
+		delay = atoi(string);
+	}
+
+	// alternative name
+	trap->Argv(5, altname, sizeof(altname));
+
+	G_AddBot(name, skill, team, delay, altname);
+}
+
+/*
+==================
 Cmd_afjCapturelimit_f
 
 Change the capturelimit
@@ -319,6 +375,19 @@ void Cmd_afjKick_f(gentity_t *ent) {
 
 	trap->Argv(1, arg1, sizeof(arg1));
 
+	if (!Q_stricmp(arg1, "allbots"))
+	{
+		if (G_CountBotPlayers(-1) == 0)
+		{
+			trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "No bots on this server\n");
+		}
+		else
+		{
+			G_KickAllBots();
+		}
+		//return;
+	}
+
 	clientNum = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
 
 	if (clientNum == -1) {
@@ -489,6 +558,12 @@ void Cmd_afjRename_f(gentity_t *ent) {
 
 	trap->Argv(1, arg1, sizeof(arg1));
 	trap->Argv(2, arg2, sizeof(arg2));
+
+	/*if (!Q_stricmp(arg2, "allbots"))
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"The name " S_COLOR_YELLOW "allbots" S_COLOR_WHITE " is reserved\n\"");
+		return;
+	}*/
 
 	targetClient = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
 	

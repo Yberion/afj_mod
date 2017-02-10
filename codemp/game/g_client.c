@@ -2167,6 +2167,15 @@ qboolean ClientUserinfoChanged( int clientNum ) {
 		}
 	}
 
+	/*if (!Q_stricmp(client->pers.netname, "allbots"))
+	{
+		trap->SendServerCommand(clientNum, "print \"The name " S_COLOR_YELLOW "allbots" S_COLOR_WHITE " is reserved\n\"");
+		Q_strncpyz(client->pers.netname, "Padawan", sizeof(client->pers.netname));
+		Q_strncpyz(client->pers.netname_nocolor, "Padawan", sizeof(client->pers.netname_nocolor));
+		Info_SetValueForKey(userinfo, "name", "Padawan");
+		trap->SetUserinfo(clientNum, userinfo);
+	}*/
+
 	// set model
 	Q_strncpyz( model, Info_ValueForKey( userinfo, "model" ), sizeof( model ) );
 

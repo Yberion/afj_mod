@@ -1347,6 +1347,7 @@ extern vmCvar_t g_ff_objectives;
 extern qboolean gDoSlowMoDuel;
 extern int gSlowMoDuelTime;
 
+void G_KickAllBots(void);
 void G_PowerDuelCount(int *loners, int *doubles, qboolean countSpec);
 
 void FindIntermissionPoint( void );
@@ -1419,12 +1420,14 @@ extern qboolean G_ClearLOS5( gentity_t *self, const vec3_t end );
 //
 // g_bot.c
 //
+int G_CountBotPlayers(int team);
 void G_InitBots( void );
 char *G_GetBotInfoByNumber( int num );
 char *G_GetBotInfoByName( const char *name );
 void G_CheckBotSpawn( void );
 void G_RemoveQueuedBotBegin( int clientNum );
 qboolean G_BotConnect( int clientNum, qboolean restart );
+void G_AddBot(const char *name, float skill, const char *team, int delay, char *altname);
 void Svcmd_AddBot_f( void );
 void Svcmd_BotList_f( void );
 void BotInterbreedEndMatch( void );

@@ -820,7 +820,7 @@ qboolean G_BotConnect( int clientNum, qboolean restart ) {
 G_AddBot
 ===============
 */
-static void G_AddBot( const char *name, float skill, const char *team, int delay, char *altname) {
+void G_AddBot( const char *name, float skill, const char *team, int delay, char *altname) {
 	gentity_t		*bot = NULL;
 	int				clientNum, preTeam = TEAM_FREE;
 	char			userinfo[MAX_INFO_STRING] = {0},
