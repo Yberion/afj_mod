@@ -520,6 +520,48 @@ void Cmd_afjNoclip_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjNotarget_f
+
+Make a player notarget
+==================
+*/
+void Cmd_afjNotarget_f(gentity_t *ent) {
+	char arg1[MAX_NETNAME] = "";
+	int targetClient;
+	gentity_t *targ;
+
+	// can protect: self, partial name, clientNum
+	if (trap->Argc() > 1) {
+		trap->Argv(1, arg1, sizeof(arg1));
+		targetClient = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	}
+	else
+	{
+		targetClient = ent - g_entities;
+	}
+
+	if (targetClient == -1) {
+		return;
+	}
+
+	targ = &g_entities[targetClient];
+
+	targ->flags ^= FL_NOTARGET;
+
+	if (!!(targ->flags & FL_NOTARGET))
+	{
+		trap->SendServerCommand(-1, va("cp \"%s\nnotarget ON\n\"", targ->client->pers.netname));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "notarget ON\n\"", targ->client->pers.netname_nocolor));
+	}
+	else
+	{
+		trap->SendServerCommand(-1, va("cp \"%s\nnotarget OFF\n\"", targ->client->pers.netname));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "notarget OFF\n\"", targ->client->pers.netname_nocolor));
+	}
+}
+
+/*
+==================
 Cmd_afjOrigin_f
 
 Display current player origin
