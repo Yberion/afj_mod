@@ -14,6 +14,7 @@
 								{ "afjkill",				Cmd_afjKill_f,				CMD_NOINTERMISSION },\
 								{ "afjmap",					Cmd_afjMap_f,				CMD_NOINTERMISSION },\
 								{ "afjmap_restart",			Cmd_afjMapRestart_f,		CMD_NOINTERMISSION },\
+								{ "afjnoclip",				Cmd_afjNoclip_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjorigin",				Cmd_afjOrigin_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjprotect",				Cmd_afjProtect_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjrename",				Cmd_afjRename_f,			CMD_NOINTERMISSION },\
@@ -51,6 +52,7 @@ void Cmd_afjKick_f(gentity_t *ent);
 void Cmd_afjKill_f(gentity_t *ent);
 void Cmd_afjMap_f(gentity_t *ent);
 void Cmd_afjMapRestart_f(gentity_t *ent);
+void Cmd_afjNoclip_f(gentity_t *ent);
 void Cmd_afjOrigin_f(gentity_t *ent);
 void Cmd_afjProtect_f(gentity_t *ent);
 void Cmd_afjRename_f(gentity_t *ent);

@@ -485,6 +485,41 @@ void Cmd_afjMapRestart_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjNoclip_f
+
+Make a player noclip
+==================
+*/
+void Cmd_afjNoclip_f(gentity_t *ent) {
+	char arg1[MAX_NETNAME] = "";
+	int targetClient;
+	gentity_t *targ;
+
+	// can noclip: self, partial name, clientNum
+	if (trap->Argc() > 1) {
+		trap->Argv(1, arg1, sizeof(arg1));
+		targetClient = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	}
+	else
+	{
+		targetClient = ent - g_entities;
+	}
+
+	if (targetClient == -1) {
+		return;
+	}
+
+	targ = &g_entities[targetClient];
+
+	targ->client->noclip = !targ->client->noclip;
+	trap->SendServerCommand(-1, va("cp \"%s\nnoclip %s\n\"", targ->client->pers.netname,
+		(targ->client->noclip) ? "ON" : "OFF"));
+	trap->SendServerCommand(ent - g_entities, va("print \"%s "S_COLOR_YELLOW"noclip %s\n\"", targ->client->pers.netname_nocolor,
+		(targ->client->noclip) ? "ON" : "OFF"));
+}
+
+/*
+==================
 Cmd_afjOrigin_f
 
 Display current player origin
@@ -525,7 +560,7 @@ void Cmd_afjProtect_f(gentity_t *ent) {
 	targ->client->ps.eFlags ^= EF_INVULNERABLE;
 	targ->client->invulnerableTimer = !!(targ->client->ps.eFlags & EF_INVULNERABLE) ? 0x7FFFFFFF : level.time;
 
-	if (!!(targ->client->ps.eFlags&EF_INVULNERABLE))
+	if (!!(targ->client->ps.eFlags & EF_INVULNERABLE))
 	{
 		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", targ->client->pers.netname, afj_protectMsg.string));
 		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "protected\n\"", targ->client->pers.netname_nocolor));
