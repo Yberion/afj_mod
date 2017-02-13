@@ -70,11 +70,11 @@ void Cmd_afjCapturelimit_f(gentity_t *ent) {
 		return;
 	}
 
-	char capturelimit[64] = "";
+	char arg1Capturelimit[64] = "";
 
-	trap->Argv(1, capturelimit, sizeof(capturelimit));
+	trap->Argv(1, arg1Capturelimit, sizeof(arg1Capturelimit));
 
-	trap->SendConsoleCommand(EXEC_APPEND, va("capturelimit %s\n", capturelimit));
+	trap->SendConsoleCommand(EXEC_APPEND, va("capturelimit %s\n", arg1Capturelimit));
 }
 
 /*
@@ -90,17 +90,17 @@ void Cmd_afjClanLogIn_f(gentity_t *ent) {
 		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjclanlogin <password>\n\"");
 		return;
 	}
-	
-	char	clanPassword[64] = "";
+
+	char			arg1ClanPassword[64] = "";
 	static int		lastTime = 0;
 
 	if (level.time > lastTime + 5000)
 	{
 		lastTime = level.time;
 
-		trap->Argv(1, clanPassword, sizeof(clanPassword));
+		trap->Argv(1, arg1ClanPassword, sizeof(arg1ClanPassword));
 
-		if (Q_stricmp(afj_clanPassword.string, clanPassword) == 0)
+		if (Q_stricmp(afj_clanPassword.string, arg1ClanPassword) == 0)
 		{
 			trap->SendServerCommand(-1, va("print \"%s %s\n\"", ent->client->pers.netname, afj_clanLogInMsg.string));
 			ent->client->pers.afjUser.isClanMember = qtrue;
@@ -110,7 +110,6 @@ void Cmd_afjClanLogIn_f(gentity_t *ent) {
 	{
 		trap->SendServerCommand(ent - g_entities, va("print \"%s\n\"", afj_waitBeforeNextTry.string));
 	}
-
 }
 
 /*
@@ -142,34 +141,34 @@ void Cmd_afjCpMsg_f(gentity_t *ent)
 		return;
 	}
 
-	char *msg, arg1[MAX_NETNAME] = "";
+	char *message, arg1Client[MAX_NETNAME] = "";
 
-	msg = ConcatArgs( 2 );
-	Q_ConvertLinefeeds( msg );
+	message = ConcatArgs( 2 );
+	Q_ConvertLinefeeds(message);
 
-	trap->Argv( 1, arg1, sizeof(arg1) );
+	trap->Argv( 1, arg1Client, sizeof(arg1Client) );
 
-	if ( arg1[0] == '-' && arg1[1] == '1' ) {
+	if (arg1Client[0] == '-' && arg1Client[1] == '1' ) {
 		// announce to everyone
-		trap->SendServerCommand(-1, va("cp \"%s\"", msg));
+		trap->SendServerCommand(-1, va("cp \"%s\"", message));
 		if (ent) {
-			trap->SendServerCommand(-1, va("print \"%s\n\"", msg));
+			trap->SendServerCommand(-1, va("print \"%s\n\"", message));
 		}
 	}
 	else {
 		// announce to a certain client
-		const int targetClient = G_ClientFromString( ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT );
+		const int targetClientNum = G_ClientFromString( ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT );
 
-		if ( targetClient == -1 ) {
+		if (targetClientNum == -1 ) {
 			return;
 		}
 
-		trap->SendServerCommand( targetClient, va( "cp \"%s\"", msg ) );
-		trap->SendServerCommand( targetClient, va( "print \"%s\n\"", msg ) );
+		trap->SendServerCommand( targetClientNum, va( "cp \"%s\"", message) );
+		trap->SendServerCommand( targetClientNum, va( "print \"%s\n\"", message) );
 		
 		if (ent) {
-			trap->SendServerCommand(ent - g_entities, va("cp\"Relay:\n%s\"", msg));
-			trap->SendServerCommand(ent - g_entities, va("print \"Relay:\n%s\n\"", msg));
+			trap->SendServerCommand(ent - g_entities, va("cp\"Relay:\n%s\"", message));
+			trap->SendServerCommand(ent - g_entities, va("print \"Relay:\n%s\n\"", message));
 		}
 	}
 }
@@ -192,11 +191,11 @@ void Cmd_afjDevMap_f(gentity_t *ent) {
 		return;
 	}
 
-	char map[MAX_QPATH] = "";
+	char arg1Map[MAX_QPATH] = "";
 
-	trap->Argv(1, map, sizeof(map));
+	trap->Argv(1, arg1Map, sizeof(arg1Map));
 
-	trap->SendConsoleCommand(EXEC_APPEND, va("devmap %s\n", map));
+	trap->SendConsoleCommand(EXEC_APPEND, va("devmap %s\n", arg1Map));
 }
 
 /*
@@ -212,24 +211,20 @@ void Cmd_afjForceTeam_f(gentity_t *ent) {
 		return;
 	}
 
-	char arg1[64] = "", arg2[64] = "";
-	int targetClient;
-	gentity_t *targ;
+	char arg1Client[64] = "", arg2Team[64] = "";
 
-	trap->Argv(1, arg1, sizeof(arg1));
-	trap->Argv(2, arg2, sizeof(arg2));
+	trap->Argv(1, arg1Client, sizeof(arg1Client));
+	trap->Argv(2, arg2Team, sizeof(arg2Team));
 	
-	targetClient = (trap->Argc() > 1) ? G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT) : ent - g_entities;
+	const int targetClientNum = (trap->Argc() > 1) ? G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT) : ent - g_entities;
 
-	if (targetClient == -1) {
+	if (targetClientNum == -1) {
 		return;
 	}
 
-	targ = &g_entities[targetClient];
-
-	if (targ->inuse && targ->client && targ->client->pers.connected)
+	if (level.gentities[targetClientNum].inuse && (g_entities + targetClientNum)->client && level.clients[targetClientNum].pers.connected)
 	{
-		SetTeam(targ, arg2);
+		SetTeam(g_entities + targetClientNum, arg2Team);
 	}
 }
 
@@ -247,11 +242,11 @@ void Cmd_afjFraglimit_f(gentity_t *ent) {
 		return;
 	}
 	
-	char fraglimit[64] = "";
+	char arg1Fraglimit[64] = "";
 
-	trap->Argv(1, fraglimit, sizeof(fraglimit));
+	trap->Argv(1, arg1Fraglimit, sizeof(arg1Fraglimit));
 
-	trap->SendConsoleCommand(EXEC_APPEND, va("fraglimit %s\n", fraglimit));
+	trap->SendConsoleCommand(EXEC_APPEND, va("fraglimit %s\n", arg1Fraglimit));
 }
 
 /*
@@ -278,16 +273,16 @@ void Cmd_afjGametype_f(gentity_t *ent) {
 		}
 	}
 
-	char argGametype[64] = "";
-	int gametypeNum, tempGametype;
+	char arg1Gametype[64] = "";
 
-	trap->Argv(1, argGametype, sizeof(argGametype));
+	trap->Argv(1, arg1Gametype, sizeof(arg1Gametype));
 
-	gametypeNum = BG_GetGametypeForString(argGametype);
+	int gametypeNum = BG_GetGametypeForString(arg1Gametype);
 
 	if (gametypeNum == -1)
 	{
-		tempGametype = atoi(argGametype);
+		int tempGametype = atoi(arg1Gametype);
+
 		if (tempGametype >= 0 && tempGametype < GT_MAX_GAME_TYPE)
 		{
 			gametypeNum = tempGametype;
@@ -317,23 +312,22 @@ void Cmd_afjIgnore_f(gentity_t *ent) {
 		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjignore <client>\n");
 		return;
 	}
-	int clientNum;
-	char	arg1[MAX_NETNAME] = "";
+	char	arg1Client[MAX_NETNAME] = "";
 
-	trap->Argv(1, arg1, sizeof(arg1));
+	trap->Argv(1, arg1Client, sizeof(arg1Client));
 
-	clientNum = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 
-	if (clientNum == -1) {
+	if (targetClientNum == -1) {
 		return;
 	}
-	ent->client->pers.afjUser.ignoredClients ^= (1 << clientNum);
-	trap->SendServerCommand(clientNum, va("cp \"%s\n%s\n\"", ent->client->pers.netname, (ent->client->pers.afjUser.ignoredClients & (1 << clientNum)) ?
+	ent->client->pers.afjUser.ignoredClients ^= (1 << targetClientNum);
+	trap->SendServerCommand(targetClientNum, va("cp \"%s\n%s\n\"", ent->client->pers.netname, (ent->client->pers.afjUser.ignoredClients & (1 << targetClientNum)) ?
 		afj_ignoreMsg.string : afj_unIgnoreMsg.string));
 	
 	trap->SendServerCommand(ent - g_entities, va("print \"%s %s\n\"",
-		(ent->client->pers.afjUser.ignoredClients & (1 << clientNum)) ? S_COLOR_YELLOW"Ignoring" : S_COLOR_GREEN"Unignoring",
-		g_entities[clientNum].client->pers.netname));
+		(ent->client->pers.afjUser.ignoredClients & (1 << targetClientNum)) ? S_COLOR_YELLOW"Ignoring" : S_COLOR_GREEN"Unignoring",
+		level.clients[targetClientNum].pers.netname));
 }
 
 /*
@@ -349,7 +343,7 @@ void Cmd_afjIgnoreList_f(gentity_t *ent) {
 	trap->SendServerCommand(ent - g_entities, "print \"ID Name                \n\"");
 	trap->SendServerCommand(ent - g_entities, "print \"-- --------------------\n\"");
 
-	for (int i = 0; i < level.maxclients; i++)
+	for (int i = 0; i < level.maxclients; ++i)
 	{
 		if (ent->client->pers.afjUser.ignoredClients & ( 1 << i ))
 			trap->SendServerCommand(ent - g_entities, va("print \"%2i %-20.20s\n\"", i, level.clients[i].pers.netname_nocolor));
@@ -368,14 +362,11 @@ void Cmd_afjKick_f(gentity_t *ent) {
 		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjkick <client>\n");
 		return;
 	}
+	char	arg1Client[MAX_NETNAME] = "";
 
-	const char *reason = afj_kickMsg.string;
-	int clientNum;
-	char	arg1[MAX_NETNAME] = "";
+	trap->Argv(1, arg1Client, sizeof(arg1Client));
 
-	trap->Argv(1, arg1, sizeof(arg1));
-
-	if (!Q_stricmp(arg1, "allbots"))
+	if (!Q_stricmp(arg1Client, "allbots"))
 	{
 		if (G_CountBotPlayers(-1) == 0)
 		{
@@ -388,12 +379,15 @@ void Cmd_afjKick_f(gentity_t *ent) {
 		//return;
 	}
 
-	clientNum = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 
-	if (clientNum == -1) {
+	if (targetClientNum == -1) {
 		return;
 	}
-	trap->DropClient(clientNum, reason);
+
+	const char *reasonOfKick = afj_kickMsg.string;
+
+	trap->DropClient(targetClientNum, reasonOfKick);
 }
 
 /*
@@ -404,40 +398,37 @@ Kill a player
 ==================
 */
 void Cmd_Kill_f(gentity_t *ent);
+
 void Cmd_afjKill_f(gentity_t *ent) {
 	if (trap->Argc() < 2) {
 		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjkill <client>\n");
 		return;
 	}
 
-	char arg1[MAX_NETNAME] = "";
-	int clientNum;
-	gentity_t *targetEnt = NULL;
+	char arg1Client[MAX_NETNAME] = "";
 
-	trap->Argv(1, arg1, sizeof(arg1));
+	trap->Argv(1, arg1Client, sizeof(arg1Client));
 
-	clientNum = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 	
-	if (clientNum == -1) {
+	if (targetClientNum == -1) {
 		return;
 	}
 
-	if (level.clients[clientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[clientNum].tempSpectate >= level.time)
+	if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
 	{
 		return;
 	}
 
-	targetEnt = g_entities + clientNum;
-
-	/*if (!!(targetEnt->client->ps.eFlags & EF_INVULNERABLE))
+	/*if (!!(level.clients[targetClientNum].ps.eFlags & EF_INVULNERABLE))
 	{
-		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", targetEnt->client->pers.netname, afj_killProtectMsg.string));
+		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_killProtectMsg.string));
 		return;
 	}*/
 
-	Cmd_Kill_f(targetEnt);
-	trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", targetEnt->client->pers.netname, afj_killMsg.string));
-	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "killed\n\"", targetEnt->client->pers.netname_nocolor));
+	Cmd_Kill_f(g_entities + targetClientNum);
+	trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_killMsg.string));
+	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "killed\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 }
 
 /*
@@ -458,11 +449,11 @@ void Cmd_afjMap_f(gentity_t *ent) {
 		return;
 	}
 
-	char map[MAX_QPATH] = "";
+	char arg1Map[MAX_QPATH] = "";
 
-	trap->Argv(1, map, sizeof(map));
+	trap->Argv(1, arg1Map, sizeof(arg1Map));
 
-	trap->SendConsoleCommand(EXEC_APPEND, va("map %s\n", map));
+	trap->SendConsoleCommand(EXEC_APPEND, va("map %s\n", arg1Map));
 }
 
 /*
@@ -473,14 +464,14 @@ Restart the map
 ==================
 */
 void Cmd_afjMapRestart_f(gentity_t *ent) {
-	char timeRestart[64] = "";
+	char arg1TimeRestart[64] = "";
 
 	if (trap->Argc() == 2)
 	{
-		trap->Argv(1, timeRestart, sizeof(timeRestart));
+		trap->Argv(1, arg1TimeRestart, sizeof(arg1TimeRestart));
 	}
 	
-	trap->SendConsoleCommand(EXEC_APPEND, va("map_restart %s\n", timeRestart));
+	trap->SendConsoleCommand(EXEC_APPEND, va("map_restart %s\n", arg1TimeRestart));
 }
 
 /*
@@ -491,31 +482,29 @@ Make a player noclip
 ==================
 */
 void Cmd_afjNoclip_f(gentity_t *ent) {
-	char arg1[MAX_NETNAME] = "";
-	int targetClient;
-	gentity_t *targ;
+	char arg1Client[MAX_NETNAME] = "";
+	int targetClientNum;
 
 	// can noclip: self, partial name, clientNum
-	if (trap->Argc() > 1) {
-		trap->Argv(1, arg1, sizeof(arg1));
-		targetClient = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	if (trap->Argc() > 1)
+	{
+		trap->Argv(1, arg1Client, sizeof(arg1Client));
+		targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 	}
 	else
 	{
-		targetClient = ent - g_entities;
+		targetClientNum = ent - g_entities;
 	}
 
-	if (targetClient == -1) {
+	if (targetClientNum == -1) {
 		return;
 	}
 
-	targ = &g_entities[targetClient];
-
-	targ->client->noclip = !targ->client->noclip;
-	trap->SendServerCommand(-1, va("cp \"%s\nnoclip %s\n\"", targ->client->pers.netname,
-		(targ->client->noclip) ? "ON" : "OFF"));
-	trap->SendServerCommand(ent - g_entities, va("print \"%s "S_COLOR_YELLOW"noclip %s\n\"", targ->client->pers.netname_nocolor,
-		(targ->client->noclip) ? "ON" : "OFF"));
+	level.clients[targetClientNum].noclip = !level.clients[targetClientNum].noclip;
+	trap->SendServerCommand(-1, va("cp \"%s\nnoclip %s\n\"", level.clients[targetClientNum].pers.netname,
+		(level.clients[targetClientNum].noclip) ? "ON" : "OFF"));
+	trap->SendServerCommand(ent - g_entities, va("print \"%s "S_COLOR_YELLOW"noclip %s\n\"", level.clients[targetClientNum].pers.netname_nocolor,
+		(level.clients[targetClientNum].noclip) ? "ON" : "OFF"));
 }
 
 /*
@@ -526,37 +515,35 @@ Make a player notarget
 ==================
 */
 void Cmd_afjNotarget_f(gentity_t *ent) {
-	char arg1[MAX_NETNAME] = "";
-	int targetClient;
-	gentity_t *targ;
+	char arg1Client[MAX_NETNAME] = "";
+	int targetClientNum;
 
-	// can protect: self, partial name, clientNum
-	if (trap->Argc() > 1) {
-		trap->Argv(1, arg1, sizeof(arg1));
-		targetClient = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	// can notarget: self, partial name, clientNum
+	if (trap->Argc() > 1)
+	{
+		trap->Argv(1, arg1Client, sizeof(arg1Client));
+		targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 	}
 	else
 	{
-		targetClient = ent - g_entities;
+		targetClientNum = ent - g_entities;
 	}
 
-	if (targetClient == -1) {
+	if (targetClientNum == -1) {
 		return;
 	}
 
-	targ = &g_entities[targetClient];
+	level.gentities[targetClientNum].flags ^= FL_NOTARGET;
 
-	targ->flags ^= FL_NOTARGET;
-
-	if (!!(targ->flags & FL_NOTARGET))
+	if (!!(level.gentities[targetClientNum].flags & FL_NOTARGET))
 	{
-		trap->SendServerCommand(-1, va("cp \"%s\nnotarget ON\n\"", targ->client->pers.netname));
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "notarget ON\n\"", targ->client->pers.netname_nocolor));
+		trap->SendServerCommand(-1, va("cp \"%s\nnotarget ON\n\"", level.clients[targetClientNum].pers.netname));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "notarget ON\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 	}
 	else
 	{
-		trap->SendServerCommand(-1, va("cp \"%s\nnotarget OFF\n\"", targ->client->pers.netname));
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "notarget OFF\n\"", targ->client->pers.netname_nocolor));
+		trap->SendServerCommand(-1, va("cp \"%s\nnotarget OFF\n\"", level.clients[targetClientNum].pers.netname));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "notarget OFF\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 	}
 }
 
@@ -579,38 +566,36 @@ Protect or unprotect a player
 ==================
 */
 void Cmd_afjProtect_f(gentity_t *ent) {
-	char arg1[MAX_NETNAME] = "";
-	int targetClient;
-	gentity_t *targ;
+	char arg1Client[MAX_NETNAME] = "";
+	int targetClientNum;
 
 	// can protect: self, partial name, clientNum
-	if (trap->Argc() > 1) {
-		trap->Argv(1, arg1, sizeof(arg1));
-		targetClient = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	if (trap->Argc() > 1)
+	{
+		trap->Argv(1, arg1Client, sizeof(arg1Client));
+		targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 	}
 	else
 	{
-		targetClient =  ent - g_entities;
+		targetClientNum =  ent - g_entities;
 	}
 	
-	if (targetClient == -1) {
+	if (targetClientNum == -1) {
 		return;
 	}
 
-	targ = &g_entities[targetClient];
+	level.clients[targetClientNum].ps.eFlags ^= EF_INVULNERABLE;
+	level.clients[targetClientNum].invulnerableTimer = !!(level.clients[targetClientNum].ps.eFlags & EF_INVULNERABLE) ? 0x7FFFFFFF : level.time;
 
-	targ->client->ps.eFlags ^= EF_INVULNERABLE;
-	targ->client->invulnerableTimer = !!(targ->client->ps.eFlags & EF_INVULNERABLE) ? 0x7FFFFFFF : level.time;
-
-	if (!!(targ->client->ps.eFlags & EF_INVULNERABLE))
+	if (!!(level.clients[targetClientNum].ps.eFlags & EF_INVULNERABLE))
 	{
-		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", targ->client->pers.netname, afj_protectMsg.string));
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "protected\n\"", targ->client->pers.netname_nocolor));
+		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_protectMsg.string));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "protected\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 	}
 	else
 	{
-		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", targ->client->pers.netname, afj_unProtectMsg.string));
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "unprotected\n\"", targ->client->pers.netname_nocolor));
+		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_unProtectMsg.string));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "unprotected\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 	}	
 }
 
@@ -622,19 +607,15 @@ Rename a player
 ==================
 */
 void Cmd_afjRename_f(gentity_t *ent) {
-	
 	if (trap->Argc() != 3) {
 		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjrename <client> <name>\n");
 		return;
 	}
 
-	char arg1[MAX_NETNAME] = "", arg2[MAX_NETNAME] = "", oldName[MAX_NETNAME] = "";
-	char tempInfo[MAX_INFO_STRING] = "";
-	int targetClient;
-	gentity_t *targ = NULL;
+	char arg1Client[MAX_NETNAME] = "", arg2Name[MAX_NETNAME] = "";
 
-	trap->Argv(1, arg1, sizeof(arg1));
-	trap->Argv(2, arg2, sizeof(arg2));
+	trap->Argv(1, arg1Client, sizeof(arg1Client));
+	trap->Argv(2, arg2Name, sizeof(arg2Name));
 
 	/*if (!Q_stricmp(arg2, "allbots"))
 	{
@@ -642,30 +623,30 @@ void Cmd_afjRename_f(gentity_t *ent) {
 		return;
 	}*/
 
-	targetClient = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 	
-	if (targetClient == -1) {
+	if (targetClientNum == -1) {
 		return;
 	}
 
-	targ = g_entities + targetClient;
+	char tempInfo[MAX_INFO_STRING] = "", oldName[MAX_NETNAME] = "";
 
-	Q_strncpyz(oldName, targ->client->pers.netname, sizeof(oldName));
-	ClientCleanName(arg2, targ->client->pers.netname, sizeof(targ->client->pers.netname));
+	Q_strncpyz(oldName, level.clients[targetClientNum].pers.netname, sizeof(oldName));
+	ClientCleanName(arg2Name, level.clients[targetClientNum].pers.netname, sizeof(level.clients[targetClientNum].pers.netname));
 
-	if (!strcmp(oldName, targ->client->pers.netname)) {
+	if (!strcmp(oldName, level.clients[targetClientNum].pers.netname)) {
 		return;
 	}
 
-	trap->GetConfigstring(CS_PLAYERS + targetClient, tempInfo, sizeof(tempInfo));
-	Info_SetValueForKey(tempInfo, "n", targ->client->pers.netname);
-	trap->SetConfigstring(CS_PLAYERS + targetClient, tempInfo);
+	trap->GetConfigstring(CS_PLAYERS + targetClientNum, tempInfo, sizeof(tempInfo));
+	Info_SetValueForKey(tempInfo, "n", level.clients[targetClientNum].pers.netname);
+	trap->SetConfigstring(CS_PLAYERS + targetClientNum, tempInfo);
 
-	trap->GetUserinfo(targetClient, tempInfo, sizeof(tempInfo));
-	Info_SetValueForKey(tempInfo, "name", targ->client->pers.netname);
-	trap->SetUserinfo(targetClient, tempInfo);
+	trap->GetUserinfo(targetClientNum, tempInfo, sizeof(tempInfo));
+	Info_SetValueForKey(tempInfo, "name", level.clients[targetClientNum].pers.netname);
+	trap->SetUserinfo(targetClientNum, tempInfo);
 
-	trap->SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " %s %s\n\"", oldName, G_GetStringEdString("MP_SVGAME", "PLRENAME"), targ->client->pers.netname));
+	trap->SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " %s %s\n\"", oldName, G_GetStringEdString("MP_SVGAME", "PLRENAME"), level.clients[targetClientNum].pers.netname));
 	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", oldName, afj_renameMsg.string));
 }
 
@@ -682,30 +663,29 @@ void Cmd_afjSilence_f(gentity_t *ent) {
 		return;
 	}
 
-	char arg1[MAX_NETNAME] = "";
-	int targetClient;
+	char arg1Client[MAX_NETNAME] = "";
 
-	trap->Argv(1, arg1, sizeof(arg1));
+	trap->Argv(1, arg1Client, sizeof(arg1Client));
 
-	targetClient = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 
-	if (targetClient == -1) {
+	if (targetClientNum == -1) {
 		return;
 	}
-	if (level.clients[targetClient].pers.afjUser.isSilenced)
+	if (level.clients[targetClientNum].pers.afjUser.isSilenced)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s already silenced\n", level.clients[targetClient].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s already silenced\n", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
-	level.clients[targetClient].pers.afjUser.isSilenced = qtrue;
+	level.clients[targetClientNum].pers.afjUser.isSilenced = qtrue;
 
-	if(ent != g_entities + targetClient)
-		trap->SendServerCommand(ent - g_entities, va("print \"%s %s\n\"", level.clients[targetClient].pers.netname_nocolor, afj_SilenceMsg.string));
+	if(ent != g_entities + targetClientNum)
+		trap->SendServerCommand(ent - g_entities, va("print \"%s %s\n\"", level.clients[targetClientNum].pers.netname_nocolor, afj_SilenceMsg.string));
 
-	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClient].pers.netname, afj_SilenceMsg.string));
-	trap->SendServerCommand(targetClient, va("print \"%s %s\n\"", level.clients[targetClient].pers.netname_nocolor, afj_SilenceMsg.string));
-	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "silenced\n\"", level.clients[targetClient].pers.netname_nocolor));
+	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_SilenceMsg.string));
+	trap->SendServerCommand(targetClientNum, va("print \"%s %s\n\"", level.clients[targetClientNum].pers.netname_nocolor, afj_SilenceMsg.string));
+	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "silenced\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 }
 
 /*
@@ -720,42 +700,39 @@ void Cmd_afjSlap_f(gentity_t *ent) {
 		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjslap <client>\n");
 		return;
 	}
-	char	arg1[MAX_NETNAME] = "";
-	int		clientNum;
-	gentity_t *targ = NULL;
-	vec3_t newDirection = { 0.45, 0, 0 };
-	vec3_t angs;
+	char	arg1Client[MAX_NETNAME] = "";
 
-	trap->Argv(1, arg1, sizeof(arg1));
+	trap->Argv(1, arg1Client, sizeof(arg1Client));
 
-	clientNum = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 
-	if (clientNum == -1) {
+	if (targetClientNum == -1) {
 		return;
 	}
 
-	targ = g_entities + clientNum;
-
-	if (targ->client->ps.forceHandExtend == HANDEXTEND_KNOCKDOWN)
+	if (level.clients[targetClientNum].ps.forceHandExtend == HANDEXTEND_KNOCKDOWN)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "already knockdown\n", targ->client->pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "already knockdown\n", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
-	if (targ->client->hook) {
-		Weapon_HookFree(ent->client->hook);
+	if (level.clients[targetClientNum].hook) {
+		Weapon_HookFree(level.clients[targetClientNum].hook);
 	}
+
+	vec3_t	newDirection = { 0.45, 0, 0 };
+	vec3_t	angles;
 	
-	VectorCopy(targ->client->ps.viewangles, angs);
-	AngleVectors(angs, newDirection, NULL, NULL);
+	VectorCopy(level.clients[targetClientNum].ps.viewangles, angles);
+	AngleVectors(angles, newDirection, NULL, NULL);
 	VectorInverse(newDirection);
 	//Add a little jump
 	newDirection[2] += 0.45;
-	G_Knockdown(targ);
-	G_Throw(targ, newDirection, 40);
+	G_Knockdown(g_entities + targetClientNum);
+	G_Throw(g_entities + targetClientNum, newDirection, 40);
 
-	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", targ->client->pers.netname, afj_SlapMsg.string));
-	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "slapped\n\"", targ->client->pers.netname_nocolor));
+	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_SlapMsg.string));
+	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "slapped\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 }
 
 /*
@@ -766,32 +743,32 @@ Display current player
 ==================
 */
 void Cmd_afjStatus_f(gentity_t *ent) {
-	gclient_t	*cl;
-	int	i, total = 0;
-	char state[32] = "", member[32] = "";
+	int		total = 0;
 
 	trap->SendServerCommand(ent - g_entities, "print \"\n\"");
 	trap->SendServerCommand(ent - g_entities, "print \"ID Ping Name                 Member\n\"");
 	trap->SendServerCommand(ent - g_entities, "print \"-- ---- -------------------- ------\n\"");
 
-	for (i = 0, cl = level.clients; i < level.maxclients; i++, cl++)
+	for (int i = 0; i < level.maxclients; ++i)
 	{
-		if (cl->pers.connected == CON_DISCONNECTED)
+		char	state[32] = "", member[32] = "";
+
+		if (level.clients[i].pers.connected == CON_DISCONNECTED)
 			continue;
 
-		if (cl->pers.connected == CON_CONNECTING)
+		if (level.clients[i].pers.connected == CON_CONNECTING)
 			Q_strncpyz(state, "CNCT", sizeof(state));
 		else
-			Q_strncpyz(state, va("%4i", cl->ps.ping < 999 ? cl->ps.ping : 999), sizeof(state));
+			Q_strncpyz(state, va("%4i", level.clients[i].ps.ping < 999 ? level.clients[i].ps.ping : 999), sizeof(state));
 
-		if (cl->pers.afjUser.isClanMember)
+		if (level.clients[i].pers.afjUser.isClanMember)
 			Q_strncpyz(member, "Yes", sizeof(member));
 		else
 			memset(member, 0, sizeof(member));
 
 		total += 1;
 
-		trap->SendServerCommand(ent - g_entities, va("print \"%2i %4s %-20.20s "S_COLOR_GREEN"%6s\n\"", i, state, cl->pers.netname_nocolor, member));
+		trap->SendServerCommand(ent - g_entities, va("print \"%2i %4s %-20.20s "S_COLOR_GREEN"%6s\n\"", i, state, level.clients[i].pers.netname_nocolor, member));
 	}
 	trap->SendServerCommand(ent - g_entities, va("print \"\nTotal: %d\n\"", total));
 }
@@ -809,11 +786,11 @@ void Cmd_afjTimelimit_f(gentity_t *ent) {
 		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjtimelimit <limit>\n\"");
 		return;
 	}
-	char timelimit[64] = "";
+	char arg1Timelimit[64] = "";
 
-	trap->Argv(1, timelimit, sizeof(timelimit));
+	trap->Argv(1, arg1Timelimit, sizeof(arg1Timelimit));
 
-	trap->SendConsoleCommand(EXEC_APPEND, va("timelimit %s\n", timelimit));
+	trap->SendConsoleCommand(EXEC_APPEND, va("timelimit %s\n", arg1Timelimit));
 }
 
 /*
@@ -849,27 +826,26 @@ void Cmd_afjUnSilence_f(gentity_t *ent) {
 		return;
 	}
 
-	char arg1[MAX_NETNAME] = "";
-	int targetClient;
+	char arg1Client[MAX_NETNAME] = "";
 
-	trap->Argv(1, arg1, sizeof(arg1));
+	trap->Argv(1, arg1Client, sizeof(arg1Client));
 
-	targetClient = G_ClientFromString(ent, arg1, FINDCL_SUBSTR | FINDCL_PRINT);
+	const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 
-	if (targetClient == -1) {
+	if (targetClientNum == -1) {
 		return;
 	}
-	if (!level.clients[targetClient].pers.afjUser.isSilenced)
+	if (!level.clients[targetClientNum].pers.afjUser.isSilenced)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s already unsilenced\n", level.clients[targetClient].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s already unsilenced\n", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
-	level.clients[targetClient].pers.afjUser.isSilenced = qfalse;
+	level.clients[targetClientNum].pers.afjUser.isSilenced = qfalse;
 
-	if (ent != g_entities + targetClient)
-		trap->SendServerCommand(ent - g_entities, va("print \"%s %s\n\"", level.clients[targetClient].pers.netname_nocolor, afj_UnSilenceMsg.string));
+	if (ent != g_entities + targetClientNum)
+		trap->SendServerCommand(ent - g_entities, va("print \"%s %s\n\"", level.clients[targetClientNum].pers.netname_nocolor, afj_UnSilenceMsg.string));
 
-	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClient].pers.netname, afj_UnSilenceMsg.string));
-	trap->SendServerCommand(targetClient, va("print \"%s %s\n\"", level.clients[targetClient].pers.netname_nocolor, afj_UnSilenceMsg.string));
+	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_UnSilenceMsg.string));
+	trap->SendServerCommand(targetClientNum, va("print \"%s %s\n\"", level.clients[targetClientNum].pers.netname_nocolor, afj_UnSilenceMsg.string));
 }
