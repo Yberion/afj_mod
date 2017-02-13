@@ -775,6 +775,126 @@ void Cmd_afjStatus_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjTele_f
+
+Teleport a player
+==================
+*/
+void Cmd_afjTele_f(gentity_t *ent) {
+	if (trap->Argc() == 2)
+	{
+		char arg1Client[MAX_NETNAME] = "";
+
+		trap->Argv(1, arg1Client, sizeof(arg1Client));
+
+		const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR);
+
+		if (targetClientNum == -1 || ent == (g_entities + targetClientNum)) {
+			return;
+		}
+
+		if (level.gentities[targetClientNum].inuse)
+		{
+			vec3_t teleportPosition, angles;
+			trace_t tr;
+			VectorCopy(level.clients[targetClientNum].ps.viewangles, angles);
+			angles[0] = angles[2] = 0.0f;
+			AngleVectors(angles, angles, NULL, NULL);
+			VectorMA(level.clients[targetClientNum].ps.origin, 64.0f, angles, teleportPosition);
+			trap->Trace(&tr, level.clients[targetClientNum].ps.origin, NULL, NULL, teleportPosition, targetClientNum, CONTENTS_SOLID, qfalse, 0, 0);
+			if (tr.fraction < 1.0f) {
+				VectorMA(tr.endpos, 32.0f, tr.plane.normal, teleportPosition);
+			}
+			else
+			{
+				VectorCopy(tr.endpos, teleportPosition);
+			}
+			TeleportPlayer(ent, teleportPosition, ent->client->ps.viewangles);
+			trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", ent->client->pers.netname, afj_TeleportMsg.string));
+			trap->SendServerCommand(ent - g_entities, va("print \"Teleporting to %s\n\"", level.clients[targetClientNum].pers.netname_nocolor));
+		}
+	}
+	else if (trap->Argc() == 3)
+	{
+		char arg1Client1[MAX_NETNAME] = "", arg2Client2[MAX_NETNAME] = "";
+
+		trap->Argv(1, arg1Client1, sizeof(arg1Client1));
+		trap->Argv(2, arg2Client2, sizeof(arg2Client2));
+
+		const int targetClientNum1 = G_ClientFromString(ent, arg1Client1, FINDCL_SUBSTR);
+		const int targetClientNum2 = G_ClientFromString(ent, arg2Client2, FINDCL_SUBSTR);
+
+		if (targetClientNum1 == -1 || targetClientNum2 == -1 || targetClientNum1 == targetClientNum2) {
+			return;
+		}
+
+		if (level.gentities[targetClientNum1].inuse && level.gentities[targetClientNum2].inuse)
+		{
+			vec3_t teleportPosition, angles;
+			trace_t tr;
+			VectorCopy(level.clients[targetClientNum2].ps.viewangles, angles);
+			angles[0] = angles[2] = 0.0f;
+			AngleVectors(angles, angles, NULL, NULL);
+			VectorMA(level.clients[targetClientNum2].ps.origin, 64.0f, angles, teleportPosition);
+			trap->Trace(&tr, level.clients[targetClientNum2].ps.origin, NULL, NULL, teleportPosition, targetClientNum2, CONTENTS_SOLID, qfalse, 0, 0);
+			if (tr.fraction < 1.0f) {
+				VectorMA(tr.endpos, 32.0f, tr.plane.normal, teleportPosition);
+			}
+			else
+			{
+				VectorCopy(tr.endpos, teleportPosition);
+			}
+			TeleportPlayer(g_entities + targetClientNum1, teleportPosition, level.clients[targetClientNum1].ps.viewangles);
+			trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", level.clients[targetClientNum1].pers.netname, afj_TeleportMsg.string));
+			trap->SendServerCommand(ent - g_entities, va("print \"Teleporting %s to %s\n\"", level.clients[targetClientNum1].pers.netname_nocolor, level.clients[targetClientNum2].pers.netname_nocolor));
+		}
+	}
+	else if (trap->Argc() == 4 && ent)
+	{
+		vec3_t teleportPosition;
+		char arg1PositionX[8] = "", arg2PositionY[8] = "", arg3PositionZ[8] = "";
+
+		trap->Argv(1, arg1PositionX, sizeof(arg1PositionX));
+		trap->Argv(2, arg2PositionY, sizeof(arg2PositionY));
+		trap->Argv(3, arg3PositionZ, sizeof(arg3PositionZ));
+
+		VectorSet(teleportPosition, (float)atof(arg1PositionX), (float)atof(arg2PositionY), (float)atof(arg3PositionZ));
+
+		TeleportPlayer(ent, teleportPosition, ent->client->ps.viewangles);
+		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", ent->client->pers.netname, afj_TeleportMsg.string));
+	}
+	else if (trap->Argc() >= 5)
+	{
+		char arg1Client[MAX_NETNAME] = "";
+
+		trap->Argv(1, arg1Client, sizeof(arg1Client));
+
+		const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR);
+
+		if (targetClientNum == -1) {
+			return;
+		}
+
+		if (level.gentities[targetClientNum].inuse)
+		{
+			vec3_t teleportPosition;
+			char arg2PositionX[8] = "", arg3PositionY[8] = "", arg4PositionZ[8] = "";
+
+			trap->Argv(2, arg2PositionX, sizeof(arg2PositionX));
+			trap->Argv(3, arg3PositionY, sizeof(arg3PositionY));
+			trap->Argv(4, arg4PositionZ, sizeof(arg4PositionZ));
+
+			VectorSet(teleportPosition, (float)atof(arg2PositionX), (float)atof(arg3PositionY), (float)atof(arg4PositionZ));
+
+			TeleportPlayer(g_entities + targetClientNum, teleportPosition, level.clients[targetClientNum].ps.viewangles);
+			trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_TeleportMsg.string));
+			trap->SendServerCommand(ent - g_entities, va("print \"Teleporting %s to %s\n\"", level.clients[targetClientNum].pers.netname_nocolor, vtos(teleportPosition)));
+		}
+	}
+}
+
+/*
+==================
 Cmd_afjTimelimit_f
 
 Change the timelimit
