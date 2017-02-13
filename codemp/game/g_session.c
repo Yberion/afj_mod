@@ -117,7 +117,7 @@ void G_ReadClientSessionData( gclient_t *client ) {
 		client->pers.afjUser.isClanMember = cJSON_ToBoolean(object);
 	}
 	if ((object = cJSON_GetObjectItem(root, "ignoredClients"))) {
-		sess->wins = cJSON_ToInteger(object);
+		client->pers.afjUser.ignoredClients = cJSON_ToInteger(object);
 	}
 	
 	client->ps.fd.saberAnimLevel = sess->saberLevel;
