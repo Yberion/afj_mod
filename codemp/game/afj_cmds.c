@@ -787,7 +787,7 @@ void Cmd_afjTele_f(gentity_t *ent) {
 
 		trap->Argv(1, arg1Client, sizeof(arg1Client));
 
-		const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR);
+		const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 
 		if (targetClientNum == -1 || ent == (g_entities + targetClientNum)) {
 			return;
@@ -821,8 +821,8 @@ void Cmd_afjTele_f(gentity_t *ent) {
 		trap->Argv(1, arg1Client1, sizeof(arg1Client1));
 		trap->Argv(2, arg2Client2, sizeof(arg2Client2));
 
-		const int targetClientNum1 = G_ClientFromString(ent, arg1Client1, FINDCL_SUBSTR);
-		const int targetClientNum2 = G_ClientFromString(ent, arg2Client2, FINDCL_SUBSTR);
+		const int targetClientNum1 = G_ClientFromString(ent, arg1Client1, FINDCL_SUBSTR | FINDCL_PRINT);
+		const int targetClientNum2 = G_ClientFromString(ent, arg2Client2, FINDCL_SUBSTR | FINDCL_PRINT);
 
 		if (targetClientNum1 == -1 || targetClientNum2 == -1 || targetClientNum1 == targetClientNum2) {
 			return;
@@ -869,7 +869,7 @@ void Cmd_afjTele_f(gentity_t *ent) {
 
 		trap->Argv(1, arg1Client, sizeof(arg1Client));
 
-		const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR);
+		const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 
 		if (targetClientNum == -1) {
 			return;
