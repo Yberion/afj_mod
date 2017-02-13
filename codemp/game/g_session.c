@@ -29,6 +29,7 @@ void G_WriteClientSessionData( const gclient_t *client ) {
 	cJSON_AddStringToObject( root, "IP", sess->IP );
 	cJSON_AddBooleanToObject( root, "isClanMember", client->pers.afjUser.isClanMember );
 	cJSON_AddIntegerToObject( root, "ignoredClients", client->pers.afjUser.ignoredClients);
+	cJSON_AddBooleanToObject( root, "isSilenced", client->pers.afjUser.isSilenced);
 
 	trap->FS_Open( fileName, &f, FS_WRITE );
 
@@ -118,6 +119,9 @@ void G_ReadClientSessionData( gclient_t *client ) {
 	}
 	if ((object = cJSON_GetObjectItem(root, "ignoredClients"))) {
 		client->pers.afjUser.ignoredClients = cJSON_ToInteger(object);
+	}
+	if ((object = cJSON_GetObjectItem(root, "isSilenced"))) {
+		client->pers.afjUser.isSilenced = cJSON_ToBoolean(object);
 	}
 	
 	client->ps.fd.saberAnimLevel = sess->saberLevel;
