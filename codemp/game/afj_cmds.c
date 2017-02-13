@@ -768,7 +768,7 @@ Display current player
 void Cmd_afjStatus_f(gentity_t *ent) {
 	gclient_t	*cl;
 	int	i, total = 0;
-	char state[32] = "", Member[2] = "";
+	char state[32] = "", member[32] = "";
 
 	trap->SendServerCommand(ent - g_entities, "print \"\n\"");
 	trap->SendServerCommand(ent - g_entities, "print \"ID Ping Name                 Member\n\"");
@@ -780,18 +780,18 @@ void Cmd_afjStatus_f(gentity_t *ent) {
 			continue;
 
 		if (cl->pers.connected == CON_CONNECTING)
-			strcpy(state, "CNCT");
+			Q_strncpyz(state, "CNCT", sizeof(state));
 		else
-			strcpy(state, va("%4i", cl->ps.ping < 999 ? cl->ps.ping : 999));
+			Q_strncpyz(state, va("%4i", cl->ps.ping < 999 ? cl->ps.ping : 999), sizeof(state));
 
 		if (cl->pers.afjUser.isClanMember)
-			strcpy(Member, "Yes");
+			Q_strncpyz(member, "Yes", sizeof(member));
 		else
-			memset(Member, 0, sizeof(Member));
+			memset(member, 0, sizeof(member));
 
 		total += 1;
 
-		trap->SendServerCommand(ent - g_entities, va("print \"%2i %4s %-20.20s "S_COLOR_GREEN"%6s\n\"", i, state, cl->pers.netname_nocolor, Member));
+		trap->SendServerCommand(ent - g_entities, va("print \"%2i %4s %-20.20s "S_COLOR_GREEN"%6s\n\"", i, state, cl->pers.netname_nocolor, member));
 	}
 	trap->SendServerCommand(ent - g_entities, va("print \"\nTotal: %d\n\"", total));
 }

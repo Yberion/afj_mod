@@ -443,7 +443,7 @@ qboolean Q_isnan (float f)
 #endif
 }
 
-#ifdef _MSC_VER
+#ifdef _MSC_VER // windows
 
 #include <float.h>
 #pragma fenv_access( on )
@@ -452,7 +452,7 @@ static float roundfloat(float n) {
 	return (n < 0.0f) ? ceilf(n - 0.5f) : floorf(n + 0.5f);
 }
 
-#else
+#else // linux, mac
 
 #include <fenv.h>
 
@@ -475,9 +475,9 @@ void VectorSnap(vec3_t v) {
 	int oldround = fegetround();
 	fesetround(FE_TONEAREST);
 
-	v[0] = roundfloat(v[0]);
-	v[1] = roundfloat(v[1]);
-	v[2] = roundfloat(v[2]);
+	v[0] = nearbyint(v[0]);
+	v[1] = nearbyint(v[1]);
+	v[2] = nearbyint(v[2]);
 
 	fesetround(oldround);
 #endif

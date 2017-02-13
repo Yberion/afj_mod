@@ -1,6 +1,6 @@
 #include "g_local.h"
 #include "cJSON/cJSON.h"
-#include "qcommon\afj_cJSON_utils.h"
+#include "qcommon/afj_cJSON_utils.h"
 
 // session data is the only data that stays persistant across level loads and tournament restarts.
 
