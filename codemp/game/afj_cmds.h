@@ -18,6 +18,7 @@
 								{ "afjnotarget",			Cmd_afjNotarget_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjorigin",				Cmd_afjOrigin_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjprotect",				Cmd_afjProtect_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
+								{ "afjrefusetele",			Cmd_afjRefuseTele_f,		0 },\
 								{ "afjrename",				Cmd_afjRename_f,			CMD_NOINTERMISSION },\
 								{ "afjsilence",				Cmd_afjSilence_f,			0 },\
 								{ "afjslap",				Cmd_afjSlap_f,				CMD_NOINTERMISSION },\
@@ -31,6 +32,7 @@ typedef struct afjUser_s {
 	qboolean	isClanMember;
 	int			ignoredClients;
 	qboolean	isSilenced;
+	qboolean	refuseTele;
 } afjUser_t;
 
 typedef struct afjLevel_s {
@@ -58,6 +60,7 @@ void Cmd_afjNoclip_f(gentity_t *ent);
 void Cmd_afjNotarget_f(gentity_t *ent);
 void Cmd_afjOrigin_f(gentity_t *ent);
 void Cmd_afjProtect_f(gentity_t *ent);
+void Cmd_afjRefuseTele_f(gentity_t *ent);
 void Cmd_afjRename_f(gentity_t *ent);
 void Cmd_afjSilence_f(gentity_t *ent);
 void Cmd_afjSlap_f(gentity_t *ent);

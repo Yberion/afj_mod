@@ -601,6 +601,18 @@ void Cmd_afjProtect_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjRefuseTele_f
+
+Refuse futur teleport
+==================
+*/
+void Cmd_afjRefuseTele_f(gentity_t *ent) {
+	ent->client->pers.afjUser.refuseTele = !ent->client->pers.afjUser.refuseTele;
+	trap->SendServerCommand(ent - g_entities, va("print \"refusetele "S_COLOR_YELLOW"%s\n\"", (ent->client->pers.afjUser.refuseTele) ? "ON" : "OFF"));
+}
+
+/*
+==================
 Cmd_afjRename_f
 
 Rename a player
@@ -780,6 +792,19 @@ Cmd_afjTele_f
 Teleport a player
 ==================
 */
+qboolean isTeleportAllowed_f(gentity_t *player)
+{
+	if (player->client->pers.afjUser.refuseTele)
+	{
+		trap->SendServerCommand(player - g_entities, va("print \"%s: "S_COLOR_YELLOW"%s\n\"", player->client->pers.netname_nocolor, afj_RefuseTeleportMsg.string));
+		return qfalse;
+	}
+	else
+	{
+		return qtrue;
+	}
+}
+
 void Cmd_afjTele_f(gentity_t *ent) {
 	if (trap->Argc() == 2)
 	{
@@ -828,6 +853,11 @@ void Cmd_afjTele_f(gentity_t *ent) {
 			return;
 		}
 
+		if (!isTeleportAllowed_f(g_entities + targetClientNum1))
+		{
+			return;
+		}
+
 		if (level.gentities[targetClientNum1].inuse && level.gentities[targetClientNum2].inuse)
 		{
 			vec3_t teleportPosition, angles;
@@ -872,6 +902,11 @@ void Cmd_afjTele_f(gentity_t *ent) {
 		const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 
 		if (targetClientNum == -1) {
+			return;
+		}
+
+		if (!isTeleportAllowed_f(g_entities + targetClientNum))
+		{
 			return;
 		}
 
