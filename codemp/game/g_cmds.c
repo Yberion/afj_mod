@@ -3358,6 +3358,9 @@ int cmdcmp( const void *a, const void *b ) {
 
 command_t commands[] = {
 	{ "addbot",				Cmd_AddBot_f,				0 },
+#define EMOTE( x ) { "am" #x, Cmd_Emote_##x, CMD_NOINTERMISSION | CMD_ALIVE },
+	#include "afj_emotes.h"
+#undef EMOTE
 	AFJ_COMMANDS_JAMPGAME
 	{ "callteamvote",		Cmd_CallTeamVote_f,			CMD_NOINTERMISSION },
 	{ "callvote",			Cmd_CallVote_f,				CMD_NOINTERMISSION },

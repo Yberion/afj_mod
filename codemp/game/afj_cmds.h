@@ -1,3 +1,7 @@
+#ifndef __AFJ_CMDS_H__
+#define __AFJ_CMDS_H__
+
+
 // WARNING: COMMANDS MUST BE SORTED IN ALPHABETICAL ORDER AND START WITH "afj"
 #define AFJ_COMMANDS_JAMPGAME	{ "afjaddbot",				Cmd_afjAddbot_f,			CMD_NOINTERMISSION },\
 								{ "afjcapturelimit",		Cmd_afjCapturelimit_f,		CMD_NOINTERMISSION },\
@@ -69,3 +73,8 @@ void Cmd_afjTele_f(gentity_t *ent);
 void Cmd_afjTimelimit_f(gentity_t *ent);
 void Cmd_afjUnIgnoreAll_f(gentity_t *ent);
 void Cmd_afjUnSilence_f(gentity_t *ent);
+#define EMOTE( x ) void Cmd_Emote_##x( gentity_t *ent );
+#include "afj_emotes.h"
+#undef EMOTE
+
+#endif // !__AFJ_CMDS_H__

@@ -807,6 +807,11 @@ struct gclient_s {
 		int		drainDebounce;
 		int		lightningDebounce;
 	} force;
+
+	struct {
+		qboolean			freeze;
+		animNumber_t		nextAnim;
+	} emote;
 };
 
 //Interest points
