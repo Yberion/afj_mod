@@ -433,6 +433,18 @@ void Cmd_afjKill_f(gentity_t *ent) {
 
 /*
 ==================
+cmd_afjKnockMeDown_f
+
+Knock down self
+==================
+*/
+void Cmd_afjKnockMeDown_f(gentity_t *ent)
+{
+	G_Knockdown(ent);
+}
+
+/*
+==================
 Cmd_afjMap_f
 
 Change the map
