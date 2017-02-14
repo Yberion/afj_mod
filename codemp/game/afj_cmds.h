@@ -1,6 +1,4 @@
-#ifndef __AFJ_CMDS_H__
-#define __AFJ_CMDS_H__
-
+#pragma once
 
 // WARNING: COMMANDS MUST BE SORTED IN ALPHABETICAL ORDER AND START WITH "afj"
 #define AFJ_COMMANDS_JAMPGAME	{ "afjaddbot",				Cmd_afjAddbot_f,			CMD_NOINTERMISSION },\
@@ -16,6 +14,7 @@
 								{ "afjignorelist",			Cmd_afjIgnoreList_f,		0 },\
 								{ "afjkick",				Cmd_afjKick_f,				0 },\
 								{ "afjkill",				Cmd_afjKill_f,				CMD_NOINTERMISSION },\
+								{ "afjknockmedown",			Cmd_afjKnockMeDown_f,		CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjmap",					Cmd_afjMap_f,				CMD_NOINTERMISSION },\
 								{ "afjmap_restart",			Cmd_afjMapRestart_f,		CMD_NOINTERMISSION },\
 								{ "afjnoclip",				Cmd_afjNoclip_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
@@ -58,6 +57,7 @@ void Cmd_afjIgnore_f(gentity_t *ent);
 void Cmd_afjIgnoreList_f(gentity_t *ent);
 void Cmd_afjKick_f(gentity_t *ent);
 void Cmd_afjKill_f(gentity_t *ent);
+void Cmd_afjKnockMeDown_f(gentity_t *ent);
 void Cmd_afjMap_f(gentity_t *ent);
 void Cmd_afjMapRestart_f(gentity_t *ent);
 void Cmd_afjNoclip_f(gentity_t *ent);
@@ -76,5 +76,3 @@ void Cmd_afjUnSilence_f(gentity_t *ent);
 #define EMOTE( x ) void Cmd_Emote_##x( gentity_t *ent );
 #include "afj_emotes.h"
 #undef EMOTE
-
-#endif // !__AFJ_CMDS_H__

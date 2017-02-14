@@ -10,7 +10,7 @@
 	#define XCVAR_DEF( name, defVal, update, flags, announce ) { & name , #name , defVal , update , flags , announce },
 #endif
 
-XCVAR_DEF( afj_allowDropSaber,				"Allow a player to drop his saber or not",			NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
+XCVAR_DEF( afj_allowDropSaber,				"1",												NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_clanLogInMsg,				"is now logged as a member of the clan",			NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_clanLogOutMsg,				"logged out of the clan",							NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_clanPassword,				"",													NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qfalse)

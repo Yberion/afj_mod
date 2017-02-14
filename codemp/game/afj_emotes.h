@@ -1,3 +1,5 @@
+#pragma once
+
 EMOTE(aimgun)
 EMOTE(hiltthrow1)
 EMOTE(hiltthrow2)

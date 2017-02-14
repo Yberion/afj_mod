@@ -1611,6 +1611,10 @@ void G_SetTauntAnim( gentity_t *ent, int taunt )
 	{ //hack, don't do while moving
 		return;
 	}
+	
+	/*
+	/* Allow taunt in all gametype
+	/*
 	if ( taunt != TAUNT_TAUNT )
 	{//normal taunt always allowed
 		if ( level.gametype != GT_DUEL && level.gametype != GT_POWERDUEL )
@@ -1618,6 +1622,7 @@ void G_SetTauntAnim( gentity_t *ent, int taunt )
 			return;
 		}
 	}
+	*/
 
 	// fix: rocket lock bug
 	BG_ClearRocketLock(&ent->client->ps);
@@ -3360,7 +3365,7 @@ void ClientThink_real( gentity_t *ent ) {
 			Weapon_HookFree(ent->client->hook);
 		}
 		else if (!ent->client->hook && pullGrapple && ent->client->ps.pm_type != PM_DEAD
-			/*&& !saberBusy*/ && ent->client->ps.forceHandExtend != HANDEXTEND_KNOCKDOWN)
+			/*&& !saberBusy*/ && ent->client->ps.forceHandExtend != HANDEXTEND_KNOCKDOWN && !ent->client->emote.freeze && ent->client->ps.forceHandExtend != HANDEXTEND_TAUNT)
 		{
 			Weapon_GrapplingHook_Fire(ent);
 		}
@@ -3384,8 +3389,6 @@ void ClientThink_real( gentity_t *ent ) {
 			}
 		}
 	}
-
-
 
 	// use the snapped origin for linking so it matches client predicted versions
 	VectorCopy( ent->s.pos.trBase, ent->r.currentOrigin );
@@ -3418,7 +3421,7 @@ void ClientThink_real( gentity_t *ent ) {
 
 	// leave emotes
 	if (ent->client->emote.freeze) {
-		const qboolean wantsOut = ent->client->pers.cmd.upmove != 0 || (ent->client->pers.cmd.buttons & BUTTON_USE);
+		const qboolean wantsOut = ent->client->pers.cmd.upmove != 0 || ent->client->pers.cmd.buttons & BUTTON_USE || ent->client->pers.cmd.buttons & BUTTON_ATTACK;
 		const qboolean animDone = ent->client->ps.forceHandExtendTime <= level.time
 			&& ent->client->ps.forceHandExtendTime != INT32_MAX;
 		const qboolean infinite = ent->client->ps.forceHandExtendTime == INT32_MAX;

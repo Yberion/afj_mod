@@ -2,20 +2,19 @@
 #include "bg_saga.h"
 #include "bg_public.h"
 
-#define EMF_NONE						(0x00u)
-#define EMF_STATIC						(0x01u) // hold animation on torso + legs, don't allow movement
-#define EMF_HOLD						(0x02u) // hold animation on torso
-#define EMF_HOLSTER						(0x04u) // forcibly deactivate saber
+#define EMF_NONE						(0<<0)
+#define EMF_STATIC						(1<<0) // hold animation on torso + legs, don't allow movement
+#define EMF_HOLD						(1<<1) // hold animation on torso
+#define EMF_HOLSTER						(1<<2) // forcibly deactivate saber
 
 qboolean BG_InKnockDown(int anim);
-void G_Knockdown(gentity_t *victim);
 void saberKnockDown(gentity_t *saberent, gentity_t *saberOwner, gentity_t *other);
 qboolean saberKnockOutOfHand(gentity_t *saberent, gentity_t *saberOwner, vec3_t velocity);
 
 typedef struct emote_s {
-	const char *name;
-	animNumber_t animLoop, animLeave;
-	uint32_t flags;
+	const char		*name;
+	animNumber_t	animLoop, animLeave;
+	uint32_t		flags;
 } emote_t;
 
 static const emote_t emotes[] = {
@@ -84,7 +83,7 @@ static qboolean SetEmote(gentity_t *ent, const emote_t *emote) {
 
 	if (emote->flags & EMF_STATIC) {
 		// emotes that require you to be standing still
-		VectorClear(&ent->client->ps.velocity);
+		VectorClear(ent->client->ps.velocity);
 		handExtend = HANDEXTEND_DODGE;
 	}
 	if (emote->flags & EMF_HOLD) {
