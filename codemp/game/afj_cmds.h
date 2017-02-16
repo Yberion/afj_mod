@@ -7,6 +7,7 @@
 								{ "afjclanlogout",			Cmd_afjClanLogOut_f,		0 },\
 								{ "afjcpmsg",				Cmd_afjCpMsg_f,				CMD_NOINTERMISSION },\
 								{ "afjdevmap",				Cmd_afjDevMap_f,			CMD_NOINTERMISSION },\
+								{ "afjdropsaber",			cmd_afjDropSaber_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjforceteam",			Cmd_afjForceTeam_f,			CMD_NOINTERMISSION },\
 								{ "afjfraglimit",			Cmd_afjFraglimit_f,			CMD_NOINTERMISSION },\
 								{ "afjgametype",			Cmd_afjGametype_f,			CMD_NOINTERMISSION },\
@@ -50,6 +51,7 @@ void Cmd_afjClanLogIn_f(gentity_t *ent);
 void Cmd_afjClanLogOut_f(gentity_t *ent);
 void Cmd_afjCpMsg_f(gentity_t *ent);
 void Cmd_afjDevMap_f(gentity_t *ent);
+void cmd_afjDropSaber_f(gentity_t *ent);
 void Cmd_afjForceTeam_f(gentity_t *ent);
 void Cmd_afjFraglimit_f(gentity_t *ent);
 void Cmd_afjGametype_f(gentity_t *ent);

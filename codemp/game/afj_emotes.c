@@ -8,8 +8,6 @@
 #define EMF_HOLSTER						(1<<2) // forcibly deactivate saber
 
 qboolean BG_InKnockDown(int anim);
-void saberKnockDown(gentity_t *saberent, gentity_t *saberOwner, gentity_t *other);
-qboolean saberKnockOutOfHand(gentity_t *saberent, gentity_t *saberOwner, vec3_t velocity);
 
 typedef struct emote_s {
 	const char		*name;

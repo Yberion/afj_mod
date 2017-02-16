@@ -1459,6 +1459,7 @@ void ForceSeeing( gentity_t *self );
 void ForceThrow( gentity_t *self, qboolean pull );
 void ForceTelepathy(gentity_t *self);
 qboolean Jedi_DodgeEvasion( gentity_t *self, gentity_t *shooter, trace_t *tr, int hitLoc );
+void saberKnockDown(gentity_t *saberent, gentity_t *saberOwner, gentity_t *other);
 
 // g_log.c
 void QDECL G_LogWeaponPickup(int client, int weaponid);

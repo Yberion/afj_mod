@@ -2640,8 +2640,6 @@ int G_ItemUsable(playerState_t *ps, int forcedUse)
 	}
 }
 
-void saberKnockDown(gentity_t *saberent, gentity_t *saberOwner, gentity_t *other);
-
 void Cmd_ToggleSaber_f(gentity_t *ent)
 {
 	if (ent->client->ps.fd.forceGripCripple)

@@ -200,6 +200,32 @@ void Cmd_afjDevMap_f(gentity_t *ent) {
 
 /*
 ==================
+cmd_afjDropSaber_f
+
+Drop saber self
+==================
+*/
+qboolean saberKnockOutOfHand(gentity_t *saberent, gentity_t *saberOwner, vec3_t velocity);
+void cmd_afjDropSaber_f(gentity_t *ent)
+{
+	if (!afj_allowDropSaber.integer)
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "afjdropsaber not allowed\n");
+		return;
+	}
+	if (!ent->client->ps.saberEntityNum) {
+		return;
+	}
+	if (ent->client->ps.saberInFlight) {
+		// turn it off in midair
+		saberKnockDown(g_entities + ent->client->ps.saberEntityNum, ent, ent);
+		return;
+	}
+	saberKnockOutOfHand(g_entities + ent->client->ps.saberEntityNum, ent, ent->client->ps.velocity);
+}
+
+/*
+==================
 Cmd_afjForceTeam_f
 
 Force a player to change his team
