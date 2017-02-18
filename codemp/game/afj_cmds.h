@@ -20,6 +20,7 @@
 								{ "afjmap_restart",			Cmd_afjMapRestart_f,		CMD_NOINTERMISSION },\
 								{ "afjnoclip",				Cmd_afjNoclip_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjnotarget",			Cmd_afjNotarget_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
+								{ "afjnpc",					Cmd_NPC_f,					CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjorigin",				Cmd_afjOrigin_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjprotect",				Cmd_afjProtect_f,			CMD_NOINTERMISSION },\
 								{ "afjrefusetele",			Cmd_afjRefuseTele_f,		0 },\
@@ -67,6 +68,7 @@ void Cmd_afjMap_f(gentity_t *ent);
 void Cmd_afjMapRestart_f(gentity_t *ent);
 void Cmd_afjNoclip_f(gentity_t *ent);
 void Cmd_afjNotarget_f(gentity_t *ent);
+void Cmd_NPC_f(gentity_t *ent);
 void Cmd_afjOrigin_f(gentity_t *ent);
 void Cmd_afjProtect_f(gentity_t *ent);
 void Cmd_afjRefuseTele_f(gentity_t *ent);

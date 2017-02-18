@@ -605,6 +605,17 @@ void Cmd_afjNotarget_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjNpc_f
+
+NPC command
+==================
+*/
+void Cmd_afjNpc_f(gentity_t *ent) {
+	void Cmd_NPC_f(ent);
+}
+
+/*
+==================
 Cmd_afjOrigin_f
 
 Display current player origin
@@ -1249,5 +1260,5 @@ void cmd_afjWake_f(gentity_t *ent)
 	level.clients[targetClientNum].pers.afjUser.isSlept = qfalse;
 
 	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_WakeMsg.string));
-	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is awake\n\"", level.clients[targetClientNum].pers.netname_nocolor));
+	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is now awake\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 }
