@@ -423,7 +423,7 @@ Cmd_afjKill_f
 Kill a player
 ==================
 */
-void Cmd_Kill_f(gentity_t *ent);
+void G_Kill(gentity_t *ent);
 
 void Cmd_afjKill_f(gentity_t *ent) {
 	if (trap->Argc() < 2) {
@@ -452,13 +452,20 @@ void Cmd_afjKill_f(gentity_t *ent) {
 		return;
 	}
 
+	if (level.clients[targetClientNum].pers.afjUser.isSlept)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is slept, you can't kill this client\n", level.clients[targetClientNum].pers.netname_nocolor));
+		return;
+	}
+
 	/*if (!!(level.clients[targetClientNum].ps.eFlags & EF_INVULNERABLE))
 	{
 		trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_killProtectMsg.string));
 		return;
 	}*/
 
-	Cmd_Kill_f(g_entities + targetClientNum);
+	G_Kill(g_entities + targetClientNum);
+
 	trap->SendServerCommand(-1, va("cp \"%s\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_killMsg.string));
 	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "killed\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 }
@@ -795,6 +802,12 @@ void Cmd_afjSlap_f(gentity_t *ent) {
 		return;
 	}
 
+	if (level.clients[targetClientNum].pers.afjUser.isSlept)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is slept, you can't slap this client\n", level.clients[targetClientNum].pers.netname_nocolor));
+		return;
+	}
+
 	if (level.clients[targetClientNum].ps.forceHandExtend == HANDEXTEND_KNOCKDOWN)
 	{
 		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "already knockdown\n", level.clients[targetClientNum].pers.netname_nocolor));
@@ -818,6 +831,69 @@ void Cmd_afjSlap_f(gentity_t *ent) {
 
 	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_SlapMsg.string));
 	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "slapped\n\"", level.clients[targetClientNum].pers.netname_nocolor));
+}
+
+/*
+==================
+cmd_afjSleep_f
+
+Sleep a player
+==================
+*/
+void WP_DeactivateSaber(gentity_t *self, qboolean clearLength);
+
+void cmd_afjSleep_f(gentity_t *ent)
+{
+	if (trap->Argc() < 2)
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjsleep <client>\n\"");
+		return;
+	}
+	char	arg1Client[MAX_NETNAME] = "";
+
+	trap->Argv(1, arg1Client, sizeof(arg1Client));
+
+	const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
+
+	if (targetClientNum == -1) {
+		return;
+	}
+
+	if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum].pers.netname_nocolor));
+		return;
+	}
+
+	if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
+		return;
+	}
+
+	if (level.clients[targetClientNum].pers.afjUser.isSlept)
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "Player is already slept\n");
+		return;
+	}
+
+	WP_DeactivateSaber(&level.gentities[targetClientNum], qtrue);
+
+	if (level.clients[targetClientNum].hook) {
+		Weapon_HookFree(level.clients[targetClientNum].hook);
+	}
+
+	VectorScale(level.clients[targetClientNum].ps.velocity, 0.5, level.clients[targetClientNum].ps.velocity);
+
+	BG_ClearRocketLock(&level.clients[targetClientNum].ps);
+
+	level.clients[targetClientNum].ps.forceHandExtend = HANDEXTEND_KNOCKDOWN;
+	level.clients[targetClientNum].ps.forceHandExtendTime = INT32_MAX;
+	level.clients[targetClientNum].ps.forceDodgeAnim = 0;
+	level.clients[targetClientNum].pers.afjUser.isSlept = qtrue;
+
+	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_SleepMsg.string));
+	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "slept\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 }
 
 /*
@@ -1124,4 +1200,6 @@ void Cmd_afjUnSilence_f(gentity_t *ent) {
 
 	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_UnSilenceMsg.string));
 	trap->SendServerCommand(targetClientNum, va("print \"%s %s\n\"", level.clients[targetClientNum].pers.netname_nocolor, afj_UnSilenceMsg.string));
+}
+
 }

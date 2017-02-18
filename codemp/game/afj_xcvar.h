@@ -24,6 +24,7 @@ XCVAR_DEF( afj_RefuseTeleportMsg,			"Teleport refused",									NULL,				CVAR_AR
 XCVAR_DEF( afj_renameMsg,					"Got renamed",										NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_SilenceMsg,					"Has been silenced",								NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_SlapMsg,						"Has been slapped",									NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
+XCVAR_DEF( afj_SleepMsg,					"Has been slept",									NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_TeleportMsg,					"Has been teleported",								NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_unIgnoreMsg,					"Not ignoring you anymore",							NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_unProtectMsg,				"You've been unprotected",							NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)

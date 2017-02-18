@@ -4445,6 +4445,9 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 	if (targ->client && (targ->client->ps.eFlags & EF_TALK))
 		return;
 
+	if (targ->client && (targ->client->pers.afjUser.isSlept))
+		return;
+
 	if (targ && targ->damageRedirect)
 	{
 		G_Damage(&g_entities[targ->damageRedirectTo], inflictor, attacker, dir, point, damage, dflags, mod);

@@ -500,6 +500,12 @@ Cmd_Kill_f
 =================
 */
 void Cmd_Kill_f( gentity_t *ent ) {
+	if (ent->client->pers.afjUser.isSlept)
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "You are sleeping, you can't kill yourself\n");
+		return;
+	}
+
 	G_Kill( ent );
 }
 

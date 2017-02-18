@@ -26,6 +26,7 @@
 								{ "afjrename",				Cmd_afjRename_f,			CMD_NOINTERMISSION },\
 								{ "afjsilence",				Cmd_afjSilence_f,			0 },\
 								{ "afjslap",				Cmd_afjSlap_f,				CMD_NOINTERMISSION },\
+								{ "afjsleep",				cmd_afjSleep_f,				CMD_NOINTERMISSION },\
 								{ "afjstatus",				Cmd_afjStatus_f,			0 },\
 								{ "afjtele",				Cmd_afjTele_f,				CMD_NOINTERMISSION },\
 								{ "afjtimelimit",			Cmd_afjTimelimit_f,			CMD_NOINTERMISSION },\
@@ -37,6 +38,7 @@ typedef struct afjUser_s {
 	int			ignoredClients;
 	qboolean	isSilenced;
 	qboolean	refuseTele;
+	qboolean	isSlept;
 } afjUser_t;
 
 typedef struct afjLevel_s {
@@ -70,6 +72,7 @@ void Cmd_afjRefuseTele_f(gentity_t *ent);
 void Cmd_afjRename_f(gentity_t *ent);
 void Cmd_afjSilence_f(gentity_t *ent);
 void Cmd_afjSlap_f(gentity_t *ent);
+void cmd_afjSleep_f(gentity_t *ent);
 void Cmd_afjStatus_f(gentity_t *ent);
 void Cmd_afjTele_f(gentity_t *ent);
 void Cmd_afjTimelimit_f(gentity_t *ent);
