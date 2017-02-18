@@ -947,6 +947,28 @@ void Cmd_afjStatus_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjStatusIp_f
+
+Display current player ip
+==================
+*/
+void Cmd_afjStatusIp_f(gentity_t *ent)
+{
+	trap->SendServerCommand(ent - g_entities, "print \"\n\"");
+	trap->SendServerCommand(ent - g_entities, "print \"ID Name                 IP\n\"");
+	trap->SendServerCommand(ent - g_entities, "print \"-- -------------------- ------------------------------------------------\n\"");
+
+	for (int i = 0; i < level.maxclients; ++i)
+	{
+		if (level.clients[i].pers.connected == CON_DISCONNECTED)
+			continue;
+
+		trap->SendServerCommand(ent - g_entities, va("print \"%2i %-20.20s %-48.48s\n\"", i, level.clients[i].pers.netname_nocolor, level.clients[i].sess.IP));
+	}
+}
+
+/*
+==================
 Cmd_afjTele_f
 
 Teleport a player
