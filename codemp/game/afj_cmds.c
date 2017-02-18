@@ -1202,4 +1202,52 @@ void Cmd_afjUnSilence_f(gentity_t *ent) {
 	trap->SendServerCommand(targetClientNum, va("print \"%s %s\n\"", level.clients[targetClientNum].pers.netname_nocolor, afj_UnSilenceMsg.string));
 }
 
+/*
+==================
+cmd_afjWake_f
+
+Awake a player
+==================
+*/
+void cmd_afjWake_f(gentity_t *ent)
+{
+	if (trap->Argc() < 2)
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjwake <client>\n\"");
+		return;
+	}
+	char	arg1Client[MAX_NETNAME] = "";
+
+	trap->Argv(1, arg1Client, sizeof(arg1Client));
+
+	const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
+
+	if (targetClientNum == -1) {
+		return;
+	}
+
+	if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum].pers.netname_nocolor));
+		return;
+	}
+
+	if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
+		return;
+	}
+
+	if (!level.clients[targetClientNum].pers.afjUser.isSlept)
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "Player is already awake\n");
+		return;
+	}
+
+	level.clients[targetClientNum].ps.forceHandExtendTime = level.time + BG_AnimLength(level.gentities[targetClientNum].localAnimIndex, BOTH_GETUP1);
+	level.clients[targetClientNum].ps.forceDodgeAnim = BOTH_GETUP1;
+	level.clients[targetClientNum].pers.afjUser.isSlept = qfalse;
+
+	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_WakeMsg.string));
+	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is awake\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 }

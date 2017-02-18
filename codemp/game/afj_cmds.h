@@ -31,7 +31,8 @@
 								{ "afjtele",				Cmd_afjTele_f,				CMD_NOINTERMISSION },\
 								{ "afjtimelimit",			Cmd_afjTimelimit_f,			CMD_NOINTERMISSION },\
 								{ "afjunignoreall",			Cmd_afjUnIgnoreAll_f,		0 },\
-								{ "afjunsilence",			Cmd_afjUnSilence_f,			0 },
+								{ "afjunsilence",			Cmd_afjUnSilence_f,			0 },\
+								{ "afjwake",				cmd_afjWake_f,				0 },
 
 typedef struct afjUser_s {
 	qboolean	isClanMember;
@@ -78,6 +79,7 @@ void Cmd_afjTele_f(gentity_t *ent);
 void Cmd_afjTimelimit_f(gentity_t *ent);
 void Cmd_afjUnIgnoreAll_f(gentity_t *ent);
 void Cmd_afjUnSilence_f(gentity_t *ent);
+void cmd_afjWake_f(gentity_t *ent);
 #define EMOTE( x ) void Cmd_Emote_##x( gentity_t *ent );
 #include "afj_emotes.h"
 #undef EMOTE
