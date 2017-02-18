@@ -633,6 +633,12 @@ void Cmd_afjProtect_f(gentity_t *ent) {
 		return;
 	}
 
+	if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum].pers.netname_nocolor));
+		return;
+	}
+
 	if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
 	{
 		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
@@ -777,6 +783,12 @@ void Cmd_afjSlap_f(gentity_t *ent) {
 		return;
 	}
 
+	if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum].pers.netname_nocolor));
+		return;
+	}
+
 	if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
 	{
 		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
@@ -879,6 +891,12 @@ void Cmd_afjTele_f(gentity_t *ent) {
 			return;
 		}
 
+		if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
+		{
+			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum].pers.netname_nocolor));
+			return;
+		}
+
 		if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
 		{
 			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
@@ -920,6 +938,12 @@ void Cmd_afjTele_f(gentity_t *ent) {
 			return;
 		}
 
+		if (level.clients[targetClientNum1].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum1].tempSpectate >= level.time)
+		{
+			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum1].pers.netname_nocolor));
+			return;
+		}
+
 		if (level.clients[targetClientNum1].ps.pm_type & PM_DEAD)
 		{
 			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum1].pers.netname_nocolor));
@@ -954,6 +978,12 @@ void Cmd_afjTele_f(gentity_t *ent) {
 	}
 	else if (trap->Argc() == 4 && ent)
 	{
+		if (ent->client->sess.sessionTeam == TEAM_SPECTATOR || ent->client->tempSpectate >= level.time)
+		{
+			trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "You are a spectator\n");
+			return;
+		}
+
 		if (ent->client->ps.pm_type & PM_DEAD)
 		{
 			trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "You are dead\n");
@@ -981,6 +1011,12 @@ void Cmd_afjTele_f(gentity_t *ent) {
 		const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 
 		if (targetClientNum == -1) {
+			return;
+		}
+
+		if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
+		{
+			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum].pers.netname_nocolor));
 			return;
 		}
 
