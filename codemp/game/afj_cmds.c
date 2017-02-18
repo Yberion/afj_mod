@@ -441,6 +441,12 @@ void Cmd_afjKill_f(gentity_t *ent) {
 		return;
 	}
 
+	if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
+		return;
+	}
+
 	if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
 	{
 		return;
@@ -466,6 +472,11 @@ Knock down self
 */
 void Cmd_afjKnockMeDown_f(gentity_t *ent)
 {
+	if (ent->client->ps.pm_type & PM_DEAD)
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "You are dead\n");
+		return;
+	}
 	G_Knockdown(ent);
 }
 
@@ -622,6 +633,12 @@ void Cmd_afjProtect_f(gentity_t *ent) {
 		return;
 	}
 
+	if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
+		return;
+	}
+
 	level.clients[targetClientNum].ps.eFlags ^= EF_INVULNERABLE;
 	level.clients[targetClientNum].invulnerableTimer = !!(level.clients[targetClientNum].ps.eFlags & EF_INVULNERABLE) ? 0x7FFFFFFF : level.time;
 
@@ -760,6 +777,12 @@ void Cmd_afjSlap_f(gentity_t *ent) {
 		return;
 	}
 
+	if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
+		return;
+	}
+
 	if (level.clients[targetClientNum].ps.forceHandExtend == HANDEXTEND_KNOCKDOWN)
 	{
 		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "already knockdown\n", level.clients[targetClientNum].pers.netname_nocolor));
@@ -856,6 +879,12 @@ void Cmd_afjTele_f(gentity_t *ent) {
 			return;
 		}
 
+		if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
+		{
+			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
+			return;
+		}
+
 		if (level.gentities[targetClientNum].inuse)
 		{
 			vec3_t teleportPosition, angles;
@@ -891,6 +920,12 @@ void Cmd_afjTele_f(gentity_t *ent) {
 			return;
 		}
 
+		if (level.clients[targetClientNum1].ps.pm_type & PM_DEAD)
+		{
+			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum1].pers.netname_nocolor));
+			return;
+		}
+
 		if (!isTeleportAllowed_f(g_entities + targetClientNum1))
 		{
 			return;
@@ -919,6 +954,12 @@ void Cmd_afjTele_f(gentity_t *ent) {
 	}
 	else if (trap->Argc() == 4 && ent)
 	{
+		if (ent->client->ps.pm_type & PM_DEAD)
+		{
+			trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "You are dead\n");
+			return;
+		}
+
 		vec3_t teleportPosition;
 		char arg1PositionX[8] = "", arg2PositionY[8] = "", arg3PositionZ[8] = "";
 
@@ -940,6 +981,12 @@ void Cmd_afjTele_f(gentity_t *ent) {
 		const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 
 		if (targetClientNum == -1) {
+			return;
+		}
+
+		if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
+		{
+			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
 			return;
 		}
 
