@@ -58,6 +58,38 @@ void Cmd_afjAddbot_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjBan_f
+
+Ban a client
+==================
+*/
+void AddIP(char *str);
+
+void Cmd_afjBan_f(gentity_t *ent) {
+	if (trap->Argc() < 2)
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjban <client>\n\"");
+		return;
+	}
+	char arg1Client[MAX_NETNAME] = "";
+
+	trap->Argv(1, arg1Client, sizeof(arg1Client));
+
+	const int targetClientNum = (trap->Argc() > 1) ? G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT) : ent - g_entities;
+
+	if (targetClientNum == -1) {
+		return;
+	}
+
+	if (G_FilterPacket(level.clients[targetClientNum].sess.IP)) {
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is already banned\n\"", level.clients[targetClientNum].sess.IP));
+		return;
+	}
+
+	AddIP(level.clients[targetClientNum].sess.IP);
+	trap->SendServerCommand(ent - g_entities, va("print \"%s (%s) " S_COLOR_YELLOW "is now banned\n\"", level.clients[targetClientNum].pers.netname_nocolor, level.clients[targetClientNum].sess.IP));
+}
+
 Cmd_afjCapturelimit_f
 
 Change the capturelimit

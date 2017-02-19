@@ -185,7 +185,7 @@ qboolean G_FilterPacket( char *from ) {
 AddIP
 =================
 */
-static void AddIP( char *str ) {
+void AddIP( char *str ) {
 	int i;
 
 	for ( i=0; i<numIPFilters; i++ ) {
