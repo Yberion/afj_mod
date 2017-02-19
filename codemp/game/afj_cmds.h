@@ -25,6 +25,7 @@
 								{ "afjorigin",				Cmd_afjOrigin_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjprotect",				Cmd_afjProtect_f,			CMD_NOINTERMISSION },\
 								{ "afjrefusetele",			Cmd_afjRefuseTele_f,		0 },\
+								{ "afjremoveip",			Cmd_afjRemoveIp_f,			CMD_NOINTERMISSION },\
 								{ "afjrename",				Cmd_afjRename_f,			CMD_NOINTERMISSION },\
 								{ "afjsilence",				Cmd_afjSilence_f,			0 },\
 								{ "afjslap",				Cmd_afjSlap_f,				CMD_NOINTERMISSION },\
@@ -75,6 +76,7 @@ void Cmd_NPC_f(gentity_t *ent);
 void Cmd_afjOrigin_f(gentity_t *ent);
 void Cmd_afjProtect_f(gentity_t *ent);
 void Cmd_afjRefuseTele_f(gentity_t *ent);
+void Cmd_afjRemoveIp_f(gentity_t *ent);
 void Cmd_afjRename_f(gentity_t *ent);
 void Cmd_afjSilence_f(gentity_t *ent);
 void Cmd_afjSlap_f(gentity_t *ent);

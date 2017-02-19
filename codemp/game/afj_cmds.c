@@ -724,6 +724,32 @@ void Cmd_afjRefuseTele_f(gentity_t *ent) {
 
 /*
 ==================
+Cmd_afjRemoveIp_f
+
+Remove a banned ip
+==================
+*/
+void Cmd_afjRemoveIp_f(gentity_t *ent) {
+	if (trap->Argc() < 2)
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjremoveip <client>\n\"");
+		return;
+	}
+	char arg1Ip[48] = "";
+
+	trap->Argv(1, arg1Ip, sizeof(arg1Ip));
+
+	if (!G_FilterPacket(arg1Ip)) {
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "isn't banned\n\"", arg1Ip));
+		return;
+	}
+
+	trap->SendConsoleCommand(EXEC_APPEND, va("removeip %s\n", arg1Ip));
+	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is now unbanned\n\"", arg1Ip));
+}
+
+/*
+==================
 Cmd_afjRename_f
 
 Rename a player
