@@ -658,7 +658,7 @@ NPC command
 ==================
 */
 void Cmd_afjNpc_f(gentity_t *ent) {
-	void Cmd_NPC_f(ent);
+	Cmd_NPC_f(ent);
 }
 
 /*
