@@ -90,6 +90,21 @@ void Cmd_afjBan_f(gentity_t *ent) {
 	trap->SendServerCommand(ent - g_entities, va("print \"%s (%s) " S_COLOR_YELLOW "is now banned\n\"", level.clients[targetClientNum].pers.netname_nocolor, level.clients[targetClientNum].sess.IP));
 }
 
+/*
+==================
+Cmd_afjBanListIp_f
+
+Display banned ip
+==================
+*/
+void Svcmd_ListIP_ClientPrint_f(gentity_t *ent);
+
+void Cmd_afjBanListIp_f(gentity_t *ent) {
+	Svcmd_ListIP_ClientPrint_f(ent);
+}
+
+/*
+==================
 Cmd_afjCapturelimit_f
 
 Change the capturelimit

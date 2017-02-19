@@ -3,6 +3,7 @@
 // WARNING: COMMANDS MUST BE SORTED IN ALPHABETICAL ORDER AND START WITH "afj"
 #define AFJ_COMMANDS_JAMPGAME	{ "afjaddbot",				Cmd_afjAddbot_f,			CMD_NOINTERMISSION },\
 								{ "afjban",					Cmd_afjBan_f,				CMD_NOINTERMISSION },\
+								{ "afjbanlistip",			Cmd_afjBanListIp_f,			0 },\
 								{ "afjcapturelimit",		Cmd_afjCapturelimit_f,		CMD_NOINTERMISSION },\
 								{ "afjclanlogin",			Cmd_afjClanLogIn_f,			0 },\
 								{ "afjclanlogout",			Cmd_afjClanLogOut_f,		0 },\
@@ -54,6 +55,7 @@ typedef struct afjLevel_s {
 
 void Cmd_afjAddbot_f(gentity_t *ent);
 void Cmd_afjBan_f(gentity_t *ent);
+void Cmd_afjBanListIp_f(gentity_t *ent);
 void Cmd_afjCapturelimit_f(gentity_t *ent);
 void Cmd_afjClanLogIn_f(gentity_t *ent);
 void Cmd_afjClanLogOut_f(gentity_t *ent);

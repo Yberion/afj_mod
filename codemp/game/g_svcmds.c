@@ -299,6 +299,22 @@ void Svcmd_ListIP_f (void)
 	trap->Print ("%i bans.\n", count);
 }
 
+void Svcmd_ListIP_ClientPrint_f(gentity_t *ent)
+{
+	int		i, count = 0;
+	byteAlias_t b;
+
+	for (i = 0; i < numIPFilters; i++) {
+		if (ipFilters[i].compare == 0xffffffffu)
+			continue;
+
+		b.ui = ipFilters[i].compare;
+		trap->SendServerCommand(ent - g_entities, va("print \"%i.%i.%i.%i\n", b.b[0], b.b[1], b.b[2], b.b[3]));
+		count++;
+	}
+	trap->SendServerCommand(ent - g_entities, va("print \"%i bans.\n", count));
+}
+
 /*
 ===================
 Svcmd_EntityList_f
