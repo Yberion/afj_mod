@@ -3367,6 +3367,11 @@ void ClientSpawn(gentity_t *ent) {
 	// clear entity values
 	client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
 	client->ps.eFlags = flags;
+
+	if (client->pers.afjUser.hasPowers) {
+		client->ps.eFlags |= EF_BODYPUSH;
+	}
+
 	client->mGameFlags = gameFlags;
 
 	client->ps.groundEntityNum = ent->s.groundEntityNum = ENTITYNUM_NONE;
@@ -3533,7 +3538,7 @@ void ClientSpawn(gentity_t *ent) {
 
 	if (level.gametype != GT_SIEGE)
 	{
-		if (ent->client->pers.afjUser.hasWeapon)
+		if (ent->client->pers.afjUser.hasWeapons)
 		{
 			giveAllWeaponsStatus(ent);
 		}

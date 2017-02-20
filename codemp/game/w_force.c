@@ -415,9 +415,28 @@ void WP_InitForcePowers( gentity_t *ent ) {
 			ent->client->ps.fd.forcePowerSelected = 0;
 	}
 
-	for ( /*i=0*/; i<NUM_FORCE_POWERS; i++ )
+	for ( /*i=0*/; i < NUM_FORCE_POWERS; i++)
+	{
 		ent->client->ps.fd.forcePowerBaseLevel[i] = ent->client->ps.fd.forcePowerLevel[i];
+	}
+
 	ent->client->ps.fd.forceUsingAdded = 0;
+
+	if (ent->client->pers.afjUser.hasPowers)
+	{
+		ent->client->pers.afjUser.oldForcePowersKnown = ent->client->ps.fd.forcePowersKnown;
+
+		for (int i = 0; i < NUM_FORCE_POWERS; ++i)
+		{
+			ent->client->pers.afjUser.oldForcePowerBaseLevel[i] = ent->client->ps.fd.forcePowerBaseLevel[i];
+			ent->client->ps.fd.forcePowerBaseLevel[i] = 3;
+			ent->client->pers.afjUser.oldForcePowerLevel[i] = ent->client->ps.fd.forcePowerLevel[i];
+			ent->client->ps.fd.forcePowerLevel[i] = 3;
+			ent->client->ps.fd.forcePowersKnown |= (1 << i);
+		}
+
+		ent->client->ps.eFlags |= EF_BODYPUSH;
+	}
 }
 
 void WP_SpawnInitForcePowers( gentity_t *ent )

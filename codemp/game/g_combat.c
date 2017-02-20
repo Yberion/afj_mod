@@ -2679,7 +2679,7 @@ extern void RunEmplacedWeapon( gentity_t *ent, usercmd_t **ucmd );
 		}
 	}
 
-	if (!self->client->ps.fallingToDeath && !self->client->pers.afjUser.hasWeapon) {
+	if (!self->client->ps.fallingToDeath && !self->client->pers.afjUser.hasWeapons) {
 		if (self->s.eType != ET_NPC)
 		{
 			TossClientItems( self );

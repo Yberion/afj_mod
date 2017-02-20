@@ -24,6 +24,7 @@
 								{ "afjnotarget",			Cmd_afjNotarget_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjnpc",					Cmd_NPC_f,					CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjorigin",				Cmd_afjOrigin_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
+								{ "afjempower",				Cmd_afjEmpower_f,			CMD_NOINTERMISSION },\
 								{ "afjprotect",				Cmd_afjProtect_f,			CMD_NOINTERMISSION },\
 								{ "afjrefusetele",			Cmd_afjRefuseTele_f,		0 },\
 								{ "afjremoveip",			Cmd_afjRemoveIp_f,			CMD_NOINTERMISSION },\
@@ -46,9 +47,13 @@ typedef struct afjUser_s {
 	qboolean	isSilenced;
 	qboolean	refuseTele;
 	qboolean	isSlept;
-	qboolean	hasWeapon;
+	qboolean	hasWeapons;
 	int			oldWeapons;
 	int			oldAmmo[MAX_AMMO];
+	qboolean	hasPowers;
+	int			oldForcePowerBaseLevel[NUM_FORCE_POWERS];
+	int			oldForcePowerLevel[NUM_FORCE_POWERS];
+	int			oldForcePowersKnown;
 } afjUser_t;
 
 typedef struct afjLevel_s {
@@ -80,6 +85,7 @@ void Cmd_afjNoclip_f(gentity_t *ent);
 void Cmd_afjNotarget_f(gentity_t *ent);
 void Cmd_NPC_f(gentity_t *ent);
 void Cmd_afjOrigin_f(gentity_t *ent);
+void Cmd_afjEmpower_f(gentity_t *ent);
 void Cmd_afjProtect_f(gentity_t *ent);
 void Cmd_afjRefuseTele_f(gentity_t *ent);
 void Cmd_afjRemoveIp_f(gentity_t *ent);
