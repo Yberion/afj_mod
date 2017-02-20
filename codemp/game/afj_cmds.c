@@ -75,7 +75,7 @@ void Cmd_afjBan_f(gentity_t *ent) {
 
 	trap->Argv(1, arg1Client, sizeof(arg1Client));
 
-	const int targetClientNum = (trap->Argc() > 1) ? G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT) : ent - g_entities;
+	const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 
 	if (targetClientNum == -1) {
 		return;
@@ -247,13 +247,13 @@ void Cmd_afjDevMap_f(gentity_t *ent) {
 
 /*
 ==================
-cmd_afjDropSaber_f
+Cmd_afjDropSaber_f
 
 Drop saber self
 ==================
 */
 qboolean saberKnockOutOfHand(gentity_t *saberent, gentity_t *saberOwner, vec3_t velocity);
-void cmd_afjDropSaber_f(gentity_t *ent)
+void Cmd_afjDropSaber_f(gentity_t *ent)
 {
 	if (!afj_allowDropSaber.integer)
 	{
@@ -284,12 +284,12 @@ void Cmd_afjForceTeam_f(gentity_t *ent) {
 		return;
 	}
 
-	char arg1Client[64] = "", arg2Team[64] = "";
+	char arg1Client[MAX_NETNAME] = "", arg2Team[64] = "";
 
 	trap->Argv(1, arg1Client, sizeof(arg1Client));
 	trap->Argv(2, arg2Team, sizeof(arg2Team));
 	
-	const int targetClientNum = (trap->Argc() > 1) ? G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT) : ent - g_entities;
+	const int targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
 
 	if (targetClientNum == -1) {
 		return;
@@ -519,7 +519,7 @@ void Cmd_afjKill_f(gentity_t *ent) {
 
 /*
 ==================
-cmd_afjKnockMeDown_f
+Cmd_afjKnockMeDown_f
 
 Knock down self
 ==================
@@ -919,14 +919,14 @@ void Cmd_afjSlap_f(gentity_t *ent) {
 
 /*
 ==================
-cmd_afjSleep_f
+Cmd_afjSleep_f
 
 Sleep a player
 ==================
 */
 void WP_DeactivateSaber(gentity_t *self, qboolean clearLength);
 
-void cmd_afjSleep_f(gentity_t *ent)
+void Cmd_afjSleep_f(gentity_t *ent)
 {
 	if (trap->Argc() < 2)
 	{
@@ -1260,7 +1260,7 @@ Unignore all player
 */
 void Cmd_afjUnIgnoreAll_f(gentity_t *ent) {
 	int nbUnIgnored = 0;
-	for (int i = 0; i < level.maxclients; i++)
+	for (int i = 0; i < level.maxclients; ++i)
 	{
 		if (ent->client->pers.afjUser.ignoredClients & (1 << i))
 		{
@@ -1310,12 +1310,12 @@ void Cmd_afjUnSilence_f(gentity_t *ent) {
 
 /*
 ==================
-cmd_afjWake_f
+Cmd_afjWake_f
 
 Awake a player
 ==================
 */
-void cmd_afjWake_f(gentity_t *ent)
+void Cmd_afjWake_f(gentity_t *ent)
 {
 	if (trap->Argc() < 2)
 	{

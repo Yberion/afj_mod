@@ -9,7 +9,7 @@
 								{ "afjclanlogout",			Cmd_afjClanLogOut_f,		0 },\
 								{ "afjcpmsg",				Cmd_afjCpMsg_f,				CMD_NOINTERMISSION },\
 								{ "afjdevmap",				Cmd_afjDevMap_f,			CMD_NOINTERMISSION },\
-								{ "afjdropsaber",			cmd_afjDropSaber_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
+								{ "afjdropsaber",			Cmd_afjDropSaber_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
 								{ "afjforceteam",			Cmd_afjForceTeam_f,			CMD_NOINTERMISSION },\
 								{ "afjfraglimit",			Cmd_afjFraglimit_f,			CMD_NOINTERMISSION },\
 								{ "afjgametype",			Cmd_afjGametype_f,			CMD_NOINTERMISSION },\
@@ -30,14 +30,14 @@
 								{ "afjrename",				Cmd_afjRename_f,			CMD_NOINTERMISSION },\
 								{ "afjsilence",				Cmd_afjSilence_f,			0 },\
 								{ "afjslap",				Cmd_afjSlap_f,				CMD_NOINTERMISSION },\
-								{ "afjsleep",				cmd_afjSleep_f,				CMD_NOINTERMISSION },\
+								{ "afjsleep",				Cmd_afjSleep_f,				CMD_NOINTERMISSION },\
 								{ "afjstatus",				Cmd_afjStatus_f,			0 },\
 								{ "afjstatusip",			Cmd_afjStatusIp_f,			0 },\
 								{ "afjtele",				Cmd_afjTele_f,				CMD_NOINTERMISSION },\
 								{ "afjtimelimit",			Cmd_afjTimelimit_f,			CMD_NOINTERMISSION },\
 								{ "afjunignoreall",			Cmd_afjUnIgnoreAll_f,		0 },\
 								{ "afjunsilence",			Cmd_afjUnSilence_f,			0 },\
-								{ "afjwake",				cmd_afjWake_f,				0 },
+								{ "afjwake",				Cmd_afjWake_f,				0 },\
 								{ "afjweapon",				Cmd_afjWeapon_f,			CMD_NOINTERMISSION },
 
 typedef struct afjUser_s {
@@ -65,7 +65,7 @@ void Cmd_afjClanLogIn_f(gentity_t *ent);
 void Cmd_afjClanLogOut_f(gentity_t *ent);
 void Cmd_afjCpMsg_f(gentity_t *ent);
 void Cmd_afjDevMap_f(gentity_t *ent);
-void cmd_afjDropSaber_f(gentity_t *ent);
+void Cmd_afjDropSaber_f(gentity_t *ent);
 void Cmd_afjForceTeam_f(gentity_t *ent);
 void Cmd_afjFraglimit_f(gentity_t *ent);
 void Cmd_afjGametype_f(gentity_t *ent);
@@ -86,14 +86,14 @@ void Cmd_afjRemoveIp_f(gentity_t *ent);
 void Cmd_afjRename_f(gentity_t *ent);
 void Cmd_afjSilence_f(gentity_t *ent);
 void Cmd_afjSlap_f(gentity_t *ent);
-void cmd_afjSleep_f(gentity_t *ent);
+void Cmd_afjSleep_f(gentity_t *ent);
 void Cmd_afjStatus_f(gentity_t *ent);
 void Cmd_afjStatusIp_f(gentity_t *ent);
 void Cmd_afjTele_f(gentity_t *ent);
 void Cmd_afjTimelimit_f(gentity_t *ent);
 void Cmd_afjUnIgnoreAll_f(gentity_t *ent);
 void Cmd_afjUnSilence_f(gentity_t *ent);
-void cmd_afjWake_f(gentity_t *ent);
+void Cmd_afjWake_f(gentity_t *ent);
 void Cmd_afjWeapon_f(gentity_t *ent);
 #define EMOTE( x ) void Cmd_Emote_##x( gentity_t *ent );
 #include "afj_emotes.h"
