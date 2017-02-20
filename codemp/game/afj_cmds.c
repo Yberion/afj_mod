@@ -1357,3 +1357,73 @@ void cmd_afjWake_f(gentity_t *ent)
 	trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_WakeMsg.string));
 	trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is now awake\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 }
+
+/*
+==================
+Cmd_afjWeapon_f
+
+Give or remove all weapon with 999 ammo to a player
+==================
+*/
+void giveAllWeaponsStatus(gentity_t *target)
+{
+	target->client->pers.afjUser.oldWeapons = target->client->ps.stats[STAT_WEAPONS];
+	target->client->ps.stats[STAT_WEAPONS] = (1 << (LAST_USEABLE_WEAPON + 1)) - (1 << WP_NONE);
+
+	for (int i = AMMO_BLASTER; i < AMMO_MAX; ++i)
+	{
+		target->client->pers.afjUser.oldAmmo[i] = target->client->ps.ammo[i];
+		target->client->ps.ammo[i] = 999;
+	}
+
+	target->client->pers.afjUser.hasWeapon = qtrue;
+}
+
+void removeAllWeaponsStatus(gentity_t *target)
+{
+	target->client->ps.weapon = WP_SABER;
+	target->client->ps.stats[STAT_WEAPONS] = target->client->pers.afjUser.oldWeapons;
+	
+	for (int i = AMMO_BLASTER; i < AMMO_MAX; ++i)
+	{
+		target->client->ps.ammo[i] = target->client->pers.afjUser.oldAmmo[i];
+	}
+
+	target->client->pers.afjUser.hasWeapon = qfalse;
+}
+
+void Cmd_afjWeapon_f(gentity_t *ent) {
+	char arg1Client[MAX_NETNAME] = "";
+	int targetClientNum;
+
+	trap->Argv(1, arg1Client, sizeof(arg1Client));
+
+	if (trap->Argc() > 1)
+	{
+		trap->Argv(1, arg1Client, sizeof(arg1Client));
+		targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
+	}
+	else
+	{
+		targetClientNum = ent - g_entities;
+	}
+
+	if (targetClientNum == -1) {
+		return;
+	}
+
+	if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum].pers.netname_nocolor));
+		return;
+	}
+
+	if (!level.clients[targetClientNum].pers.afjUser.hasWeapon)
+	{
+		giveAllWeaponsStatus(&level.gentities[targetClientNum]);
+	}
+	else
+	{
+		removeAllWeaponsStatus(&level.gentities[targetClientNum]);
+	}
+}

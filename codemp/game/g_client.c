@@ -3097,6 +3097,7 @@ Initializes all non-persistant parts of playerState
 ============
 */
 extern qboolean WP_HasForcePowers( const playerState_t *ps );
+void giveAllWeaponsStatus(gentity_t *target);
 void ClientSpawn(gentity_t *ent) {
 	int					i = 0, index = 0, saveSaberNum = ENTITYNUM_NONE, wDisable = 0, savedSiegeIndex = 0, maxHealth = 100;
 	vec3_t				spawn_origin, spawn_angles;
@@ -3527,6 +3528,14 @@ void ClientSpawn(gentity_t *ent) {
 		else
 		{
 			client->ps.weapon = WP_MELEE;
+		}
+	}
+
+	if (level.gametype != GT_SIEGE)
+	{
+		if (ent->client->pers.afjUser.hasWeapon)
+		{
+			giveAllWeaponsStatus(ent);
 		}
 	}
 

@@ -38,6 +38,7 @@
 								{ "afjunignoreall",			Cmd_afjUnIgnoreAll_f,		0 },\
 								{ "afjunsilence",			Cmd_afjUnSilence_f,			0 },\
 								{ "afjwake",				cmd_afjWake_f,				0 },
+								{ "afjweapon",				Cmd_afjWeapon_f,			CMD_NOINTERMISSION },
 
 typedef struct afjUser_s {
 	qboolean	isClanMember;
@@ -45,6 +46,9 @@ typedef struct afjUser_s {
 	qboolean	isSilenced;
 	qboolean	refuseTele;
 	qboolean	isSlept;
+	qboolean	hasWeapon;
+	int			oldWeapons;
+	int			oldAmmo[MAX_AMMO];
 } afjUser_t;
 
 typedef struct afjLevel_s {
@@ -90,6 +94,7 @@ void Cmd_afjTimelimit_f(gentity_t *ent);
 void Cmd_afjUnIgnoreAll_f(gentity_t *ent);
 void Cmd_afjUnSilence_f(gentity_t *ent);
 void cmd_afjWake_f(gentity_t *ent);
+void Cmd_afjWeapon_f(gentity_t *ent);
 #define EMOTE( x ) void Cmd_Emote_##x( gentity_t *ent );
 #include "afj_emotes.h"
 #undef EMOTE

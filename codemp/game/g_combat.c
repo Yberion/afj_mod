@@ -480,7 +480,7 @@ void AddScore( gentity_t *ent, vec3_t origin, int score )
 
 /*
 =================
-TossClientItems
+TossClientWeapon
 
 rww - Toss the weapon away from the player in the specified direction
 =================
@@ -2679,7 +2679,7 @@ extern void RunEmplacedWeapon( gentity_t *ent, usercmd_t **ucmd );
 		}
 	}
 
-	if (!self->client->ps.fallingToDeath) {
+	if (!self->client->ps.fallingToDeath && !self->client->pers.afjUser.hasWeapon) {
 		if (self->s.eType != ET_NPC)
 		{
 			TossClientItems( self );
