@@ -54,6 +54,8 @@ typedef struct afjUser_s {
 	int			oldForcePowerBaseLevel[NUM_FORCE_POWERS];
 	int			oldForcePowerLevel[NUM_FORCE_POWERS];
 	int			oldForcePowersKnown;
+	int			armorBeforeDuel;
+	int			healthBeforeDuel;
 } afjUser_t;
 
 typedef struct afjLevel_s {

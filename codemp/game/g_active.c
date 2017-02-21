@@ -2495,7 +2495,8 @@ void ClientThink_real( gentity_t *ent ) {
 			{
 				if (ent->health < ent->client->ps.stats[STAT_MAX_HEALTH])
 				{
-					ent->client->ps.stats[STAT_HEALTH] = ent->health = ent->client->ps.stats[STAT_MAX_HEALTH];
+					ent->client->ps.stats[STAT_HEALTH] = ent->health = ent->client->pers.afjUser.healthBeforeDuel/*ent->client->ps.stats[STAT_MAX_HEALTH]*/;
+					ent->client->ps.stats[STAT_ARMOR] = ent->client->pers.afjUser.armorBeforeDuel;
 				}
 
 				if (g_spawnInvulnerability.integer)

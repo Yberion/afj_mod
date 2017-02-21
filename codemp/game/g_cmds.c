@@ -3067,6 +3067,14 @@ void Cmd_EngageDuel_f(gentity_t *ent)
 			G_AddEvent(ent, EV_PRIVATE_DUEL, 1);
 			G_AddEvent(challenged, EV_PRIVATE_DUEL, 1);
 
+			challenged->client->pers.afjUser.healthBeforeDuel = challenged->health;
+			challenged->client->pers.afjUser.armorBeforeDuel = challenged->client->ps.stats[STAT_ARMOR];
+			ent->client->pers.afjUser.healthBeforeDuel = ent->health;
+			ent->client->pers.afjUser.armorBeforeDuel = ent->client->ps.stats[STAT_ARMOR];
+
+			challenged->health = challenged->client->ps.stats[STAT_HEALTH] = ent->health = ent->client->ps.stats[STAT_HEALTH] = afj_duelCustomHealth.integer;
+			challenged->client->ps.stats[STAT_ARMOR] = ent->client->ps.stats[STAT_ARMOR] = afj_duelCustomArmor.integer;
+
 			//Holster their sabers now, until the duel starts (then they'll get auto-turned on to look cool)
 
 			if (!ent->client->ps.saberHolstered)
