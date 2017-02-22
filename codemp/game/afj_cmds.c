@@ -231,11 +231,6 @@ Change the map with cheat enabled
 ==================
 */
 void Cmd_afjDevMap_f(gentity_t *ent) {
-	if (!ent) {
-		trap->Print("Use: /devmap\n");
-		return;
-	}
-
 	if (trap->Argc() < 2) {
 		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjdevmap <map>\n\"");
 		return;
@@ -619,11 +614,6 @@ Change the map
 ==================
 */
 void Cmd_afjMap_f(gentity_t *ent) {
-	if (!ent) {
-		trap->Print("Use: /map\n");
-		return;
-	}
-
 	if (trap->Argc() < 2) {
 		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjmap <map>\n\"");
 		return;
