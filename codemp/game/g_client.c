@@ -3655,7 +3655,7 @@ void ClientSpawn(gentity_t *ent) {
 	}
 
 // nmckenzie: DESERT_SIEGE... or well, siege generally.  This was over-writing the max value, which was NOT good for siege.
-	if ( inSiegeWithClass == qfalse )
+	if ( inSiegeWithClass == qfalse && !client->pers.afjUser.hasWeapons)
 	{
 		client->ps.ammo[AMMO_BLASTER] = 100; //ammoData[AMMO_BLASTER].max; //100 seems fair.
 	}
