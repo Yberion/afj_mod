@@ -1,5 +1,8 @@
 #include "g_local.h"
 
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
+
 /*
 ==================
 Cmd_afjAddbot_f
@@ -184,7 +187,7 @@ Display a message in the center of the screen
 void Cmd_afjCpMsg_f(gentity_t *ent)
 {
 	if ( trap->Argc() < 3 ) {
-		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjcpmsg <client (-1 for everyone)> <message>\n" );
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjcpmsg <client (-1 for everyone)> <message>\n\"" );
 		return;
 	}
 
@@ -234,7 +237,7 @@ void Cmd_afjDevMap_f(gentity_t *ent) {
 	}
 
 	if (trap->Argc() < 2) {
-		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjdevmap <map>\n");
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjdevmap <map>\n\"");
 		return;
 	}
 
@@ -257,7 +260,7 @@ void Cmd_afjDropSaber_f(gentity_t *ent)
 {
 	if (!afj_allowDropSaber.integer)
 	{
-		trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "afjdropsaber not allowed\n");
+		trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "afjdropsaber not allowed\n\"");
 		return;
 	}
 	if (!ent->client->ps.saberEntityNum) {
@@ -280,7 +283,7 @@ Force a player to change his team
 */
 void Cmd_afjForceTeam_f(gentity_t *ent) {
 	if (trap->Argc() < 3) {
-		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjforceteam <client> <team>\n");
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjforceteam <client> <team>\n\"");
 		return;
 	}
 
@@ -382,7 +385,7 @@ Ignore a player
 */
 void Cmd_afjIgnore_f(gentity_t *ent) {
 	if (trap->Argc() < 2) {
-		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjignore <client>\n");
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjignore <client>\n\"");
 		return;
 	}
 	char	arg1Client[MAX_NETNAME] = "";
@@ -432,7 +435,7 @@ Kick a player
 */
 void Cmd_afjKick_f(gentity_t *ent) {
 	if (trap->Argc() < 2) {
-		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjkick <client>\n");
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjkick <client>\n\"");
 		return;
 	}
 	char	arg1Client[MAX_NETNAME] = "";
@@ -443,7 +446,7 @@ void Cmd_afjKick_f(gentity_t *ent) {
 	{
 		if (G_CountBotPlayers(-1) == 0)
 		{
-			trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "No bots on this server\n");
+			trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "No bots on this server\n\"");
 		}
 		else
 		{
@@ -474,7 +477,7 @@ void G_Kill(gentity_t *ent);
 
 void Cmd_afjKill_f(gentity_t *ent) {
 	if (trap->Argc() < 2) {
-		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjkill <client>\n");
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjkill <client>\n\"");
 		return;
 	}
 
@@ -490,7 +493,7 @@ void Cmd_afjKill_f(gentity_t *ent) {
 
 	if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
@@ -501,7 +504,7 @@ void Cmd_afjKill_f(gentity_t *ent) {
 
 	if (level.clients[targetClientNum].pers.afjUser.isSlept)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is slept, you can't kill this client\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is slept, you can't kill this client\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
@@ -528,10 +531,84 @@ void Cmd_afjKnockMeDown_f(gentity_t *ent)
 {
 	if (ent->client->ps.pm_type & PM_DEAD)
 	{
-		trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "You are dead\n");
+		trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "You are dead\n\"");
 		return;
 	}
 	G_Knockdown(ent);
+}
+
+/*
+==================
+Cmd_afjLogIn_f
+
+Admin log in
+==================
+*/
+
+static void Cmd_afjLogin_f(gentity_t *ent) {
+	if (trap->Argc() < 2) {
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjlogin <password>\n\"");
+		return;
+	}
+
+	char			arg1LogInPassword[64] = "";
+	static int		lastTime = 0;
+
+	if (level.time > lastTime + 5000)
+	{
+		lastTime = level.time;
+
+		trap->Argv(1, arg1LogInPassword, sizeof(arg1LogInPassword));
+
+		uint64_t privileges = 0u;
+
+		if (Q_stricmp(afj_logInPassword1.string, arg1LogInPassword) == 0)
+		{
+			sscanf(afj_logInPrivileges1.string, "%" PRId64, &privileges);
+			ent->client->pers.afjUser.privileges = privileges;
+			trap->SendServerCommand(-1, va("print \"%s %s\n\"", ent->client->pers.netname, afj_logInMsg1.string));
+		}
+		else if (Q_stricmp(afj_logInPassword2.string, arg1LogInPassword) == 0)
+		{
+			sscanf(afj_logInPrivileges2.string, "%" PRId64, &privileges);
+			ent->client->pers.afjUser.privileges = privileges;
+			trap->SendServerCommand(-1, va("print \"%s %s\n\"", ent->client->pers.netname, afj_logInMsg2.string));
+		}
+		else if (Q_stricmp(afj_logInPassword3.string, arg1LogInPassword) == 0)
+		{
+			sscanf(afj_logInPrivileges3.string, "%" PRId64, &privileges);
+			ent->client->pers.afjUser.privileges = privileges;
+			trap->SendServerCommand(-1, va("print \"%s %s\n\"", ent->client->pers.netname, afj_logInMsg3.string));
+		}
+		else if (Q_stricmp(afj_logInPassword4.string, arg1LogInPassword) == 0)
+		{
+			sscanf(afj_logInPrivileges4.string, "%" PRId64, &privileges);
+			ent->client->pers.afjUser.privileges = privileges;
+			trap->SendServerCommand(-1, va("print \"%s %s\n\"", ent->client->pers.netname, afj_logInMsg4.string));
+		}
+		else if (Q_stricmp(afj_logInPassword5.string, arg1LogInPassword) == 0)
+		{
+			sscanf(afj_logInPrivileges5.string, "%" PRId64, &privileges);
+			ent->client->pers.afjUser.privileges = privileges;
+			trap->SendServerCommand(-1, va("print \"%s %s\n\"", ent->client->pers.netname, afj_logInMsg5.string));
+		}
+	}
+	else
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s\n\"", afj_waitBeforeNextTry.string));
+	}
+}
+
+/*
+==================
+Cmd_afjLogOut_f
+
+Admin log out
+==================
+*/
+static void Cmd_afjLogOut_f(gentity_t *ent) {
+	ent->client->pers.afjUser.privileges = 0u;
+	trap->SendServerCommand(ent - g_entities, "print \"You have logged out\n\"");
 }
 
 /*
@@ -548,7 +625,7 @@ void Cmd_afjMap_f(gentity_t *ent) {
 	}
 
 	if (trap->Argc() < 2) {
-		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjmap <map>\n");
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjmap <map>\n\"");
 		return;
 	}
 
@@ -648,6 +725,7 @@ void Cmd_afjNotarget_f(gentity_t *ent) {
 		trap->SendServerCommand(-1, va("cp \"%s\nnotarget OFF\n\"", level.clients[targetClientNum].pers.netname));
 		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "notarget OFF\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 	}
+	trap->LinkEntity((sharedEntity_t *)&level.gentities[targetClientNum]);
 }
 
 /*
@@ -657,6 +735,7 @@ Cmd_afjNpc_f
 NPC command
 ==================
 */
+void Cmd_NPC_f(gentity_t *ent);
 void Cmd_afjNpc_f(gentity_t *ent) {
 	Cmd_NPC_f(ent);
 }
@@ -738,7 +817,7 @@ void Cmd_afjEmpower_f(gentity_t *ent) {
 
 	if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
@@ -784,13 +863,13 @@ void Cmd_afjProtect_f(gentity_t *ent) {
 
 	if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
 	if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
@@ -856,7 +935,7 @@ Rename a player
 */
 void Cmd_afjRename_f(gentity_t *ent) {
 	if (trap->Argc() != 3) {
-		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjrename <client> <name>\n");
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjrename <client> <name>\n\"");
 		return;
 	}
 
@@ -907,7 +986,7 @@ Silence a player
 */
 void Cmd_afjSilence_f(gentity_t *ent) {
 	if (trap->Argc() < 2) {
-		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjsilence <client>\n");
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjsilence <client>\n\"");
 		return;
 	}
 
@@ -922,7 +1001,7 @@ void Cmd_afjSilence_f(gentity_t *ent) {
 	}
 	if (level.clients[targetClientNum].pers.afjUser.isSilenced)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s already silenced\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s already silenced\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
@@ -945,7 +1024,7 @@ Slap a player
 */
 void Cmd_afjSlap_f(gentity_t *ent) {
 	if (trap->Argc() < 2) {
-		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjslap <client>\n");
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjslap <client>\n\"");
 		return;
 	}
 	char	arg1Client[MAX_NETNAME] = "";
@@ -960,25 +1039,25 @@ void Cmd_afjSlap_f(gentity_t *ent) {
 
 	if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
 	if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
 	if (level.clients[targetClientNum].pers.afjUser.isSlept)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is slept, you can't slap this client\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is slept, you can't slap this client\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
 	if (level.clients[targetClientNum].ps.forceHandExtend == HANDEXTEND_KNOCKDOWN)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "already knockdown\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "already knockdown\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
@@ -1029,19 +1108,19 @@ void Cmd_afjSleep_f(gentity_t *ent)
 
 	if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
 	if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
 	if (level.clients[targetClientNum].pers.afjUser.isSlept)
 	{
-		trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "Player is already slept\n");
+		trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "Player is already slept\n\"");
 		return;
 	}
 
@@ -1159,13 +1238,13 @@ void Cmd_afjTele_f(gentity_t *ent) {
 
 		if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
 		{
-			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum].pers.netname_nocolor));
+			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 			return;
 		}
 
 		if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
 		{
-			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
+			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 			return;
 		}
 
@@ -1206,13 +1285,13 @@ void Cmd_afjTele_f(gentity_t *ent) {
 
 		if (level.clients[targetClientNum1].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum1].tempSpectate >= level.time)
 		{
-			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum1].pers.netname_nocolor));
+			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n\"", level.clients[targetClientNum1].pers.netname_nocolor));
 			return;
 		}
 
 		if (level.clients[targetClientNum1].ps.pm_type & PM_DEAD)
 		{
-			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum1].pers.netname_nocolor));
+			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n\"", level.clients[targetClientNum1].pers.netname_nocolor));
 			return;
 		}
 
@@ -1246,13 +1325,13 @@ void Cmd_afjTele_f(gentity_t *ent) {
 	{
 		if (ent->client->sess.sessionTeam == TEAM_SPECTATOR || ent->client->tempSpectate >= level.time)
 		{
-			trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "You are a spectator\n");
+			trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "You are a spectator\n\"");
 			return;
 		}
 
 		if (ent->client->ps.pm_type & PM_DEAD)
 		{
-			trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "You are dead\n");
+			trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "You are dead\n\"");
 			return;
 		}
 
@@ -1282,13 +1361,13 @@ void Cmd_afjTele_f(gentity_t *ent) {
 
 		if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
 		{
-			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum].pers.netname_nocolor));
+			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 			return;
 		}
 
 		if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
 		{
-			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
+			trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 			return;
 		}
 
@@ -1364,7 +1443,7 @@ Unsilence a player
 */
 void Cmd_afjUnSilence_f(gentity_t *ent) {
 	if (trap->Argc() < 2) {
-		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjunsilence <client>\n");
+		trap->SendServerCommand(ent - g_entities, "print \"Usage: /afjunsilence <client>\n\"");
 		return;
 	}
 
@@ -1379,7 +1458,7 @@ void Cmd_afjUnSilence_f(gentity_t *ent) {
 	}
 	if (!level.clients[targetClientNum].pers.afjUser.isSilenced)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s already unsilenced\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s already unsilenced\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
@@ -1418,19 +1497,19 @@ void Cmd_afjWake_f(gentity_t *ent)
 
 	if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
 	if (level.clients[targetClientNum].ps.pm_type & PM_DEAD)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is dead\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
 	if (!level.clients[targetClientNum].pers.afjUser.isSlept)
 	{
-		trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "Player is already awake\n");
+		trap->SendServerCommand(ent - g_entities, "print \"" S_COLOR_YELLOW "Player is already awake\n\"");
 		return;
 	}
 
@@ -1498,7 +1577,7 @@ void Cmd_afjWeapon_f(gentity_t *ent) {
 
 	if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
 	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n", level.clients[targetClientNum].pers.netname_nocolor));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n\"", level.clients[targetClientNum].pers.netname_nocolor));
 		return;
 	}
 
@@ -1514,4 +1593,204 @@ void Cmd_afjWeapon_f(gentity_t *ent) {
 		trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_RemWeaponMsg.string));
 		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "%s\n\"", level.clients[targetClientNum].pers.netname_nocolor, afj_RemWeaponMsg.string));
 	}
+}
+
+#define CMD_NOINTERMISSION		(0x0001u)
+#define CMD_CHEAT				(0x0002u)
+#define CMD_ALIVE				(0x0004u)
+
+#define CMDFAIL_NOINTERMISSION	(0x0001u)
+#define CMDFAIL_CHEAT			(0x0002u)
+#define CMDFAIL_ALIVE			(0x0004u)
+
+typedef struct adminCommand_s {
+	const char		*cmd;
+	uint64_t		privilege;
+	void			(*func)(gentity_t *ent);
+	int				flags;
+} adminCommand_t;
+
+static const adminCommand_t adminCommands[] = {
+								{ "afjaddbot",				PRIV_ADDBOT,				Cmd_afjAddbot_f,			CMD_NOINTERMISSION },
+								{ "afjban",					PRIV_BAN,					Cmd_afjBan_f,				CMD_NOINTERMISSION },
+								{ "afjbanlistip",			PRIV_BANLISTIP,				Cmd_afjBanListIp_f,			0 },
+								{ "afjcapturelimit",		PRIV_CAPTURELIMIT,			Cmd_afjCapturelimit_f,		CMD_NOINTERMISSION },
+								{ "afjclanlogin",			PRIV_CLANLOGIN,				Cmd_afjClanLogIn_f,			0 },
+								{ "afjclanlogout",			PRIV_CLANLOGOUT,			Cmd_afjClanLogOut_f,		0 },
+								{ "afjcpmsg",				PRIV_CPMSG,					Cmd_afjCpMsg_f,				CMD_NOINTERMISSION },
+								{ "afjdevmap",				PRIV_DEVMAP,				Cmd_afjDevMap_f,			CMD_NOINTERMISSION },
+								{ "afjdropsaber",			PRIV_DROPSABER,				Cmd_afjDropSaber_f,			CMD_NOINTERMISSION|CMD_ALIVE },
+								{ "afjforceteam",			PRIV_FORCETEAM,				Cmd_afjForceTeam_f,			CMD_NOINTERMISSION },
+								{ "afjfraglimit",			PRIV_FRAGLIMIT,				Cmd_afjFraglimit_f,			CMD_NOINTERMISSION },
+								{ "afjgametype",			PRIV_GAMETYPE,				Cmd_afjGametype_f,			CMD_NOINTERMISSION },
+								{ "afjignore",				PRIV_IGNORE,				Cmd_afjIgnore_f,			0 },
+								{ "afjignorelist",			PRIV_IGNORELIST,			Cmd_afjIgnoreList_f,		0 },
+								{ "afjkick",				PRIV_KICK,					Cmd_afjKick_f,				0 },
+								{ "afjkill",				PRIV_KILL,					Cmd_afjKill_f,				CMD_NOINTERMISSION },
+								{ "afjknockmedown",			PRIV_KNOCKMEDOWN,			Cmd_afjKnockMeDown_f,		CMD_NOINTERMISSION|CMD_ALIVE },
+								{ "afjlogout",				PRIV_LOGOUT,				Cmd_afjLogOut_f,			CMD_NOINTERMISSION },
+								{ "afjmap",					PRIV_MAP,					Cmd_afjMap_f,				CMD_NOINTERMISSION },
+								{ "afjmap_restart",			PRIV_MAP_RESTART,			Cmd_afjMapRestart_f,		CMD_NOINTERMISSION },
+								{ "afjnoclip",				PRIV_NOTCLIP,				Cmd_afjNoclip_f,			CMD_NOINTERMISSION|CMD_ALIVE },
+								{ "afjnotarget",			PRIV_NOTARGET,				Cmd_afjNotarget_f,			CMD_NOINTERMISSION|CMD_ALIVE },
+								{ "afjnpc",					PRIV_NPC,					Cmd_afjNpc_f,				CMD_NOINTERMISSION|CMD_ALIVE },
+								{ "afjorigin",				PRIV_ORIGIN,				Cmd_afjOrigin_f,			CMD_NOINTERMISSION|CMD_ALIVE },
+								{ "afjempower",				PRIV_EMPOWER,				Cmd_afjEmpower_f,			CMD_NOINTERMISSION },
+								{ "afjprotect",				PRIV_PROTECT,				Cmd_afjProtect_f,			CMD_NOINTERMISSION },
+								{ "afjrefusetele",			PRIV_REFUSETELE,			Cmd_afjRefuseTele_f,		0 },
+								{ "afjremoveip",			PRIV_REMOVEIP,				Cmd_afjRemoveIp_f,			CMD_NOINTERMISSION },
+								{ "afjrename",				PRIV_RENAME,				Cmd_afjRename_f,			CMD_NOINTERMISSION },
+								{ "afjsilence",				PRIV_SILENCE,				Cmd_afjSilence_f,			0 },
+								{ "afjslap",				PRIV_SLAP,					Cmd_afjSlap_f,				CMD_NOINTERMISSION },
+								{ "afjsleep",				PRIV_SLEEP,					Cmd_afjSleep_f,				CMD_NOINTERMISSION },
+								{ "afjstatus",				PRIV_STATUS,				Cmd_afjStatus_f,			0 },
+								{ "afjstatusip",			PRIV_STATUSIP,				Cmd_afjStatusIp_f,			0 },
+								{ "afjtele",				PRIV_TELE,					Cmd_afjTele_f,				CMD_NOINTERMISSION },
+								{ "afjtimelimit",			PRIV_TIMELIMIT,				Cmd_afjTimelimit_f,			CMD_NOINTERMISSION },
+								{ "afjunignoreall",			PRIV_UNIGNOREALL,			Cmd_afjUnIgnoreAll_f,		0 },
+								{ "afjunsilence",			PRIV_UNSILENCE,				Cmd_afjUnSilence_f,			0 },
+								{ "afjwake",				PRIV_WAKE,					Cmd_afjWake_f,				0 },
+								{ "afjweapon",				PRIV_WEAPON,				Cmd_afjWeapon_f,			CMD_NOINTERMISSION },
+};
+static const size_t numAdminCommands = ARRAY_LEN(adminCommands);
+
+static int cmdcmp(const void *a, const void *b)
+{
+	return Q_stricmp((const char *)a, ((adminCommand_t*)b)->cmd);
+}
+
+static uint64_t GetPrivileges(const gentity_t *ent)
+{
+	return ent->client->pers.afjUser.privileges;
+}
+
+qboolean AFJ_HasPrivilege(const gentity_t *ent, uint64_t privilege)
+{
+	if (ent->client->pers.afjUser.privileges & privilege)
+	{
+		return qtrue;
+	}
+	return qfalse;
+}
+
+qboolean AFJ_PrivilegesHaveChanged(gentity_t *ent)
+{
+	char privileges[64];
+
+	Com_sprintf(privileges, sizeof(privileges), "%" PRId64 "", ent->client->pers.afjUser.privileges);
+
+	if (Q_stricmp(afj_logInPrivileges1.string, privileges) == 0)
+	{
+		return qfalse;
+	}
+	else if (Q_stricmp(afj_logInPrivileges2.string, privileges) == 0)
+	{
+		return qfalse;
+	}
+	else if (Q_stricmp(afj_logInPrivileges3.string, privileges) == 0)
+	{
+		return qfalse;
+	}
+	else if (Q_stricmp(afj_logInPrivileges4.string, privileges) == 0)
+	{
+		return qfalse;
+	}
+	else if (Q_stricmp(afj_logInPrivileges5.string, privileges) == 0)
+	{
+		return qfalse;
+	}
+	else
+	{
+		ent->client->pers.afjUser.privileges = 0u;
+		trap->SendServerCommand(ent - g_entities, va("print \"%s\n\"", afj_privilegesChangedMsg.string));
+		return qtrue;
+	}
+}
+
+// returns the flags that failed to pass, or 0 if the command is allowed to be executed
+uint32_t G_AfjCmdValid(const gentity_t *ent, const adminCommand_t *cmd)
+{
+	if ((cmd->flags & CMD_NOINTERMISSION) && level.intermissiontime)
+	{
+		return CMDFAIL_NOINTERMISSION;
+	}
+
+	if ((cmd->flags & CMD_CHEAT) && !sv_cheats.integer)
+	{
+		return CMDFAIL_CHEAT;
+	}
+
+	if ((cmd->flags & CMD_ALIVE) && (ent->health <= 0 || ent->client->tempSpectate >= level.time || ent->client->sess.sessionTeam == TEAM_SPECTATOR))
+	{
+		return CMDFAIL_ALIVE;
+	}
+	return 0u;
+}
+
+// handle admin related commands.
+// return true if the command exists and/or everything was handled fine.
+// return false if command didn't exist, so we can tell them.
+qboolean AFJ_HandleCommands(gentity_t *ent, const char *cmd)
+{
+	adminCommand_t *command = NULL;
+
+	/*
+	if (ent == NULL)
+	{ // call from console
+		command = (adminCommand_t *)bsearch(cmd, adminCommands, numAdminCommands, sizeof(adminCommands[0]), cmdcmp);
+		
+		if (command)
+		{
+			command->func(NULL);
+			return qtrue;
+		}
+	}
+	else
+	*/
+
+	if (!Q_stricmp(cmd, "afjlogin"))
+	{
+		Cmd_afjLogin_f(ent);
+		return qtrue;
+	}
+
+	command = (adminCommand_t *)bsearch(cmd, adminCommands, numAdminCommands, sizeof(adminCommands[0]), cmdcmp);
+
+	if (!command)
+	{
+		return qfalse;
+	}
+	else if (!AFJ_HasPrivilege(ent, command->privilege))
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s\n\"", afj_privilegesMsg.string));
+		return qtrue;
+	}
+
+	if (AFJ_PrivilegesHaveChanged(ent))
+	{
+		return qtrue;
+	}
+
+	switch (G_AfjCmdValid(ent, command))
+	{
+	case 0:
+		command->func(ent);
+		break;
+
+	case CMDFAIL_NOINTERMISSION:
+		trap->SendServerCommand(ent - g_entities, va("print \"%s (%s)\n\"", G_GetStringEdString("MP_SVGAME", "CANNOT_TASK_INTERMISSION"), cmd));
+		break;
+
+	case CMDFAIL_CHEAT:
+		trap->SendServerCommand(ent - g_entities, va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "NOCHEATS")));
+		break;
+
+	case CMDFAIL_ALIVE:
+		trap->SendServerCommand(ent - g_entities, va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "MUSTBEALIVE")));
+		break;
+
+	default:
+		break;
+	}
+	return qtrue;
 }

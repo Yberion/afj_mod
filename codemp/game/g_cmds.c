@@ -3354,9 +3354,13 @@ ClientCommand
 =================
 */
 
-#define CMD_NOINTERMISSION		(1<<0)
-#define CMD_CHEAT				(1<<1)
-#define CMD_ALIVE				(1<<2)
+#define CMD_NOINTERMISSION	(0x0001u)
+#define CMD_CHEAT			(0x0002u)
+#define CMD_ALIVE			(0x0004u)
+
+#define CMDFAIL_NOINTERMISSION	(0x0001u)
+#define CMDFAIL_CHEAT			(0x0002u)
+#define CMDFAIL_ALIVE			(0x0004u)
 
 typedef struct command_s {
 	const char	*name;
@@ -3373,7 +3377,7 @@ command_t commands[] = {
 #define EMOTE( x ) { "am" #x, Cmd_Emote_##x, CMD_NOINTERMISSION | CMD_ALIVE },
 	#include "afj_emotes.h"
 #undef EMOTE
-	AFJ_COMMANDS_JAMPGAME
+	//AFJ_COMMANDS_JAMPGAME
 	{ "callteamvote",		Cmd_CallTeamVote_f,			CMD_NOINTERMISSION },
 	{ "callvote",			Cmd_CallVote_f,				CMD_NOINTERMISSION },
 	{ "debugBMove_Back",	Cmd_BotMoveBack_f,			CMD_CHEAT|CMD_ALIVE },
@@ -3415,13 +3419,35 @@ command_t commands[] = {
 };
 static const size_t numCommands = ARRAY_LEN( commands );
 
+// returns the flags that failed to pass, or 0 if the command is allowed to be executed
+uint32_t G_CmdValid(const gentity_t *ent, const command_t *cmd)
+{
+	if ((cmd->flags & CMD_NOINTERMISSION) && level.intermissiontime)
+	{
+		return CMDFAIL_NOINTERMISSION;
+	}
+
+	if ((cmd->flags & CMD_CHEAT) && !sv_cheats.integer)
+	{
+		return CMDFAIL_CHEAT;
+	}
+
+	if ((cmd->flags & CMD_ALIVE) && (ent->health <= 0 || ent->client->tempSpectate >= level.time || ent->client->sess.sessionTeam == TEAM_SPECTATOR))
+	{
+		return CMDFAIL_ALIVE;
+	}
+	return 0u;
+}
+
 void ClientCommand( int clientNum ) {
-	gentity_t	*ent = NULL;
-	char		cmd[MAX_TOKEN_CHARS] = {0};
-	command_t	*command = NULL;
+	gentity_t		*ent = NULL;
+	char			cmd[MAX_TOKEN_CHARS] = {0};
+	command_t		*command = NULL;
 
 	ent = g_entities + clientNum;
-	if ( !ent->client || ent->client->pers.connected != CON_CONNECTED ) {
+
+	if ( !ent->client || ent->client->pers.connected != CON_CONNECTED )
+	{
 		G_SecurityLogPrintf( "ClientCommand(%d) without an active connection\n", clientNum );
 		return;		// not fully in game yet
 	}
@@ -3429,40 +3455,42 @@ void ClientCommand( int clientNum ) {
 	trap->Argv( 0, cmd, sizeof( cmd ) );
 
 	//rww - redirect bot commands
-	if ( strstr( cmd, "bot_" ) && AcceptBotCommand( cmd, ent ) )
+	if (strstr(cmd, "bot_") && AcceptBotCommand(cmd, ent))
+	{
 		return;
-	//end rww
+	}
+	else if (AFJ_HandleCommands(ent, cmd))
+	{
+		return;
+	}
 
 	command = (command_t *)Q_LinearSearch( cmd, commands, numCommands, sizeof( commands[0] ), cmdcmp );
+
 	if ( !command )
 	{
 		trap->SendServerCommand( clientNum, va( "print \"Unknown command %s\n\"", cmd ) );
 		return;
 	}
 
-	else if ( (command->flags & CMD_NOINTERMISSION)
-		&& ( level.intermissionQueued || level.intermissiontime ) )
+	switch (G_CmdValid(ent, command))
 	{
-		trap->SendServerCommand( clientNum, va( "print \"%s (%s)\n\"", G_GetStringEdString( "MP_SVGAME", "CANNOT_TASK_INTERMISSION" ), cmd ) );
-		return;
-	}
+	case 0:
+		command->func(ent);
+		break;
 
-	else if ( (command->flags & CMD_CHEAT)
-		&& !sv_cheats.integer )
-	{
-		trap->SendServerCommand( clientNum, va( "print \"%s\n\"", G_GetStringEdString( "MP_SVGAME", "NOCHEATS" ) ) );
-		return;
-	}
+	case CMDFAIL_NOINTERMISSION:
+		trap->SendServerCommand(clientNum, va("print \"%s (%s)\n\"", G_GetStringEdString("MP_SVGAME", "CANNOT_TASK_INTERMISSION"), cmd));
+		break;
 
-	else if ( (command->flags & CMD_ALIVE)
-		&& (ent->health <= 0
-			|| ent->client->tempSpectate >= level.time
-			|| ent->client->sess.sessionTeam == TEAM_SPECTATOR) )
-	{
-		trap->SendServerCommand( clientNum, va( "print \"%s\n\"", G_GetStringEdString( "MP_SVGAME", "MUSTBEALIVE" ) ) );
-		return;
-	}
+	case CMDFAIL_CHEAT:
+		trap->SendServerCommand(clientNum, va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "NOCHEATS")));
+		break;
 
-	else
-		command->func( ent );
+	case CMDFAIL_ALIVE:
+		trap->SendServerCommand(clientNum, va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "MUSTBEALIVE")));
+		break;
+
+	default:
+		break;
+	}
 }

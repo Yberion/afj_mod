@@ -142,6 +142,7 @@ void G_InitClientSessionData( gclient_t *client, char *userinfo, qboolean isBot 
 	const char *value;
 
 	client->sess.siegeDesiredTeam = TEAM_FREE;
+	client->pers.afjUser.privileges = 0u;
 
 	// initial team determination
 	if ( level.gametype >= GT_TEAM ) {

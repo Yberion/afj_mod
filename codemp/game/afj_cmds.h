@@ -1,47 +1,48 @@
 #pragma once
 
-// WARNING: COMMANDS MUST BE SORTED IN ALPHABETICAL ORDER AND START WITH "afj"
-#define AFJ_COMMANDS_JAMPGAME	{ "afjaddbot",				Cmd_afjAddbot_f,			CMD_NOINTERMISSION },\
-								{ "afjban",					Cmd_afjBan_f,				CMD_NOINTERMISSION },\
-								{ "afjbanlistip",			Cmd_afjBanListIp_f,			0 },\
-								{ "afjcapturelimit",		Cmd_afjCapturelimit_f,		CMD_NOINTERMISSION },\
-								{ "afjclanlogin",			Cmd_afjClanLogIn_f,			0 },\
-								{ "afjclanlogout",			Cmd_afjClanLogOut_f,		0 },\
-								{ "afjcpmsg",				Cmd_afjCpMsg_f,				CMD_NOINTERMISSION },\
-								{ "afjdevmap",				Cmd_afjDevMap_f,			CMD_NOINTERMISSION },\
-								{ "afjdropsaber",			Cmd_afjDropSaber_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
-								{ "afjforceteam",			Cmd_afjForceTeam_f,			CMD_NOINTERMISSION },\
-								{ "afjfraglimit",			Cmd_afjFraglimit_f,			CMD_NOINTERMISSION },\
-								{ "afjgametype",			Cmd_afjGametype_f,			CMD_NOINTERMISSION },\
-								{ "afjignore",				Cmd_afjIgnore_f,			0 },\
-								{ "afjignorelist",			Cmd_afjIgnoreList_f,		0 },\
-								{ "afjkick",				Cmd_afjKick_f,				0 },\
-								{ "afjkill",				Cmd_afjKill_f,				CMD_NOINTERMISSION },\
-								{ "afjknockmedown",			Cmd_afjKnockMeDown_f,		CMD_NOINTERMISSION|CMD_ALIVE },\
-								{ "afjmap",					Cmd_afjMap_f,				CMD_NOINTERMISSION },\
-								{ "afjmap_restart",			Cmd_afjMapRestart_f,		CMD_NOINTERMISSION },\
-								{ "afjnoclip",				Cmd_afjNoclip_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
-								{ "afjnotarget",			Cmd_afjNotarget_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
-								{ "afjnpc",					Cmd_NPC_f,					CMD_NOINTERMISSION|CMD_ALIVE },\
-								{ "afjorigin",				Cmd_afjOrigin_f,			CMD_NOINTERMISSION|CMD_ALIVE },\
-								{ "afjempower",				Cmd_afjEmpower_f,			CMD_NOINTERMISSION },\
-								{ "afjprotect",				Cmd_afjProtect_f,			CMD_NOINTERMISSION },\
-								{ "afjrefusetele",			Cmd_afjRefuseTele_f,		0 },\
-								{ "afjremoveip",			Cmd_afjRemoveIp_f,			CMD_NOINTERMISSION },\
-								{ "afjrename",				Cmd_afjRename_f,			CMD_NOINTERMISSION },\
-								{ "afjsilence",				Cmd_afjSilence_f,			0 },\
-								{ "afjslap",				Cmd_afjSlap_f,				CMD_NOINTERMISSION },\
-								{ "afjsleep",				Cmd_afjSleep_f,				CMD_NOINTERMISSION },\
-								{ "afjstatus",				Cmd_afjStatus_f,			0 },\
-								{ "afjstatusip",			Cmd_afjStatusIp_f,			0 },\
-								{ "afjtele",				Cmd_afjTele_f,				CMD_NOINTERMISSION },\
-								{ "afjtimelimit",			Cmd_afjTimelimit_f,			CMD_NOINTERMISSION },\
-								{ "afjunignoreall",			Cmd_afjUnIgnoreAll_f,		0 },\
-								{ "afjunsilence",			Cmd_afjUnSilence_f,			0 },\
-								{ "afjwake",				Cmd_afjWake_f,				0 },\
-								{ "afjweapon",				Cmd_afjWeapon_f,			CMD_NOINTERMISSION },
+#define PRIV_ADDBOT			(0x0000000000000001u)
+#define PRIV_BAN			(0x0000000000000002u)
+#define PRIV_BANLISTIP		(0x0000000000000004u)
+#define PRIV_CAPTURELIMIT	(0x0000000000000008u)
+#define PRIV_CLANLOGIN		(0x0000000000000010u)
+#define PRIV_CLANLOGOUT		(0x0000000000000020u)
+#define PRIV_CPMSG			(0x0000000000000040u)
+#define PRIV_DEVMAP			(0x0000000000000080u)
+#define PRIV_DROPSABER		(0x0000000000000100u)
+#define PRIV_FORCETEAM		(0x0000000000000200u)
+#define PRIV_FRAGLIMIT		(0x0000000000000400u)
+#define PRIV_GAMETYPE		(0x0000000000000800u)
+#define PRIV_IGNORE			(0x0000000000001000u)
+#define PRIV_IGNORELIST		(0x0000000000002000u)
+#define PRIV_KICK			(0x0000000000004000u)
+#define PRIV_KILL			(0x0000000000008000u)
+#define PRIV_KNOCKMEDOWN	(0x0000000000010000u)
+#define PRIV_LOGOUT			(0x0000000000020000u)
+#define PRIV_MAP			(0x0000000000040000u)
+#define PRIV_MAP_RESTART	(0x0000000000080000u)
+#define PRIV_NOTCLIP		(0x0000000000100000u)
+#define PRIV_NOTARGET		(0x0000000000200000u)
+#define PRIV_NPC			(0x0000000000400000u)
+#define PRIV_ORIGIN			(0x0000000000800000u)
+#define PRIV_EMPOWER		(0x0000000001000000u)
+#define PRIV_PROTECT		(0x0000000002000000u)
+#define PRIV_REFUSETELE		(0x0000000004000000u)
+#define PRIV_REMOVEIP		(0x0000000008000000u)
+#define PRIV_RENAME			(0x0000000010000000u)
+#define PRIV_SILENCE		(0x0000000020000000u)
+#define PRIV_SLAP			(0x0000000040000000u)
+#define PRIV_SLEEP			(0x0000000080000000u)
+#define PRIV_STATUS			(0x0000000100000000u)
+#define PRIV_STATUSIP		(0x0000000200000000u)
+#define PRIV_TELE			(0x0000000400000000u)
+#define PRIV_TIMELIMIT		(0x0000000800000000u)
+#define PRIV_UNIGNOREALL	(0x0000001000000000u)
+#define PRIV_UNSILENCE		(0x0000002000000000u)
+#define PRIV_WAKE			(0x0000004000000000u)
+#define PRIV_WEAPON			(0x0000008000000000u)
 
 typedef struct afjUser_s {
+	uint64_t	privileges;
 	qboolean	isClanMember;
 	int			ignoredClients;
 	qboolean	isSilenced;
@@ -63,46 +64,9 @@ typedef struct afjLevel_s {
 	qboolean	waitingNextGametype;
 } afjLevel_t;
 
+qboolean	 AFJ_HasPrivilege(const gentity_t *ent, uint64_t privilege);
+qboolean	 AFJ_HandleCommands(gentity_t *ent, const char *cmd);
 
-void Cmd_afjAddbot_f(gentity_t *ent);
-void Cmd_afjBan_f(gentity_t *ent);
-void Cmd_afjBanListIp_f(gentity_t *ent);
-void Cmd_afjCapturelimit_f(gentity_t *ent);
-void Cmd_afjClanLogIn_f(gentity_t *ent);
-void Cmd_afjClanLogOut_f(gentity_t *ent);
-void Cmd_afjCpMsg_f(gentity_t *ent);
-void Cmd_afjDevMap_f(gentity_t *ent);
-void Cmd_afjDropSaber_f(gentity_t *ent);
-void Cmd_afjForceTeam_f(gentity_t *ent);
-void Cmd_afjFraglimit_f(gentity_t *ent);
-void Cmd_afjGametype_f(gentity_t *ent);
-void Cmd_afjIgnore_f(gentity_t *ent);
-void Cmd_afjIgnoreList_f(gentity_t *ent);
-void Cmd_afjKick_f(gentity_t *ent);
-void Cmd_afjKill_f(gentity_t *ent);
-void Cmd_afjKnockMeDown_f(gentity_t *ent);
-void Cmd_afjMap_f(gentity_t *ent);
-void Cmd_afjMapRestart_f(gentity_t *ent);
-void Cmd_afjNoclip_f(gentity_t *ent);
-void Cmd_afjNotarget_f(gentity_t *ent);
-void Cmd_NPC_f(gentity_t *ent);
-void Cmd_afjOrigin_f(gentity_t *ent);
-void Cmd_afjEmpower_f(gentity_t *ent);
-void Cmd_afjProtect_f(gentity_t *ent);
-void Cmd_afjRefuseTele_f(gentity_t *ent);
-void Cmd_afjRemoveIp_f(gentity_t *ent);
-void Cmd_afjRename_f(gentity_t *ent);
-void Cmd_afjSilence_f(gentity_t *ent);
-void Cmd_afjSlap_f(gentity_t *ent);
-void Cmd_afjSleep_f(gentity_t *ent);
-void Cmd_afjStatus_f(gentity_t *ent);
-void Cmd_afjStatusIp_f(gentity_t *ent);
-void Cmd_afjTele_f(gentity_t *ent);
-void Cmd_afjTimelimit_f(gentity_t *ent);
-void Cmd_afjUnIgnoreAll_f(gentity_t *ent);
-void Cmd_afjUnSilence_f(gentity_t *ent);
-void Cmd_afjWake_f(gentity_t *ent);
-void Cmd_afjWeapon_f(gentity_t *ent);
 #define EMOTE( x ) void Cmd_Emote_##x( gentity_t *ent );
 #include "afj_emotes.h"
 #undef EMOTE
