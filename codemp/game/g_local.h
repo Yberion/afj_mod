@@ -1472,7 +1472,6 @@ void QDECL G_LogWeaponPowerup(int client, int powerupid);
 void QDECL G_LogWeaponItem(int client, int itemid);
 void QDECL G_LogWeaponInit(void);
 void QDECL G_LogWeaponOutput(void);
-void QDECL G_LogExit( const char *string );
 void QDECL G_ClearClientLog(int client);
 
 // g_siege.c

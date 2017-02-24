@@ -62,6 +62,16 @@ static const emote_t emotes[] = {
 };
 static const size_t numEmotes = ARRAY_LEN(emotes);
 
+const size_t getNumEmotes()
+{
+	return numEmotes;
+}
+
+const char *getNameEmotesByIndex(const int index)
+{
+	return va("am%s", emotes[index].name);
+}
+
 static int emotecmp(const void *a, const void *b) {
 	return strcmp((const char *)a, ((const emote_t *)b)->name);
 }

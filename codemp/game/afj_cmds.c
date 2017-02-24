@@ -1803,12 +1803,86 @@ qboolean AFJ_PrivilegesHaveChanged(gentity_t *ent)
 
 /*
 ==================
+Cmd_afjHelp_f
+==================
+*/
+char *afjBuildCmdList(void) {
+	int i;
+	static char		buffer[2048] = "";
+
+	for (i = 0; i < numAdminCommands; ++i)
+	{
+		Q_strcat(buffer, sizeof(buffer), va("%s ", adminCommands[i].cmd));
+
+		if (i != 0 && i % 10 == 0)
+		{
+			Q_strcat(buffer, sizeof(buffer), "\n");
+		}
+	}
+	return buffer;
+}
+
+char *afjBuildEmoteList(void) {
+	int i;
+	static char		buffer[2048] = "";
+
+	for (i = 0; i < getNumEmotes(); ++i)
+	{
+		Q_strcat(buffer, sizeof(buffer), va("%s ", getNameEmotesByIndex(i)));
+
+		if (i != 0 && i % 10 == 0)
+		{
+			Q_strcat(buffer, sizeof(buffer), "\n");
+		}
+	}
+	return buffer;
+}
+
+char *afjBuildHelp(qboolean firstTime) {
+	static char		buffer[4096] = "";
+	
+	if (firstTime)
+	{
+		Q_strcat(buffer, sizeof(buffer), "\n");
+		Q_strcat(buffer, sizeof(buffer), "afjmod 1.0 - Mod created by " S_COLOR_RED "Yberion & Myway" S_COLOR_WHITE "\n");
+		Q_strcat(buffer, sizeof(buffer), "AFJ Forum: " S_COLOR_CYAN "http://jk-team.forum-actif.net/\n" S_COLOR_WHITE "");
+		Q_strcat(buffer, sizeof(buffer), "Code repository: " S_COLOR_CYAN "https://github.com/Yberion/afjmod\n" S_COLOR_WHITE "");
+		Q_strcat(buffer, sizeof(buffer), "OpenJK used as codebase: " S_COLOR_CYAN "https://github.com/JACoders/OpenJK\n" S_COLOR_WHITE "");
+		Q_strcat(buffer, sizeof(buffer), "\n");
+		Q_strcat(buffer, sizeof(buffer), "" S_COLOR_YELLOW "List of commands:" S_COLOR_WHITE "\n");
+		Q_strcat(buffer, sizeof(buffer), va("%s\n", afjBuildCmdList()));
+		Q_strcat(buffer, sizeof(buffer), "\n");
+		Q_strcat(buffer, sizeof(buffer), "" S_COLOR_YELLOW "List of emotes:" S_COLOR_WHITE "\n");
+		Q_strcat(buffer, sizeof(buffer), va("%s\n", afjBuildEmoteList()));
+	}
+	return buffer;
+}
+
+void Cmd_afjHelp_f(gentity_t *ent)
+{
+	static qboolean firstTime = qtrue;
+	char *privileges = afjBuildHelp(firstTime);
+	char buffer[1012] = "";
+	int statusLength = strlen(privileges);
+	int currentProgress = 0;
+
+	while (currentProgress < statusLength)
+	{
+		Q_strncpyz(buffer, &privileges[currentProgress], sizeof(buffer));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s\"", buffer));
+		currentProgress += strlen(buffer);
+	}
+	trap->SendServerCommand(ent - g_entities, "print \"\n\"");
+	firstTime = qfalse;
+}
+
+/*
+==================
 Cmd_afjMyPrivileges_f
 
 Display current client privileges
 ==================
 */
-
 char *BuildPrivilegesList(gentity_t *ent)
 {
 	static char		buffer[4096] = "";
@@ -1914,6 +1988,12 @@ qboolean AFJ_HandleCommands(gentity_t *ent, const char *cmd)
 	if (!Q_stricmp(cmd, "ammyprivileges"))
 	{
 		Cmd_afjMyPrivileges_f(ent);
+		return qtrue;
+	}
+
+	if (!Q_stricmp(cmd, "amhelp"))
+	{
+		Cmd_afjHelp_f(ent);
 		return qtrue;
 	}
 

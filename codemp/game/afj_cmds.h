@@ -68,6 +68,9 @@ typedef struct afjLevel_s {
 qboolean	 AFJ_HasPrivilege(const gentity_t *ent, uint64_t privilege);
 qboolean	 AFJ_HandleCommands(gentity_t *ent, const char *cmd);
 
+const size_t	getNumEmotes();
+const char		*getNameEmotesByIndex(const int index);
+
 #define EMOTE( x ) void Cmd_Emote_##x( gentity_t *ent );
 #include "afj_emotes.h"
 #undef EMOTE
