@@ -1844,7 +1844,7 @@ char *afjBuildHelp(qboolean firstTime) {
 	if (firstTime)
 	{
 		Q_strcat(buffer, sizeof(buffer), "\n");
-		Q_strcat(buffer, sizeof(buffer), "afjmod 1.0 - Mod created by " S_COLOR_RED "Yberion & Myway" S_COLOR_WHITE "\n");
+		Q_strcat(buffer, sizeof(buffer), ""GAMEVERSION" - Mod created by " S_COLOR_RED "Yberion & Myway" S_COLOR_WHITE "\n");
 		Q_strcat(buffer, sizeof(buffer), "AFJ Forum: " S_COLOR_CYAN "http://jk-team.forum-actif.net/\n" S_COLOR_WHITE "");
 		Q_strcat(buffer, sizeof(buffer), "Code repository: " S_COLOR_CYAN "https://github.com/Yberion/afjmod\n" S_COLOR_WHITE "");
 		Q_strcat(buffer, sizeof(buffer), "OpenJK used as codebase: " S_COLOR_CYAN "https://github.com/JACoders/OpenJK\n" S_COLOR_WHITE "");
