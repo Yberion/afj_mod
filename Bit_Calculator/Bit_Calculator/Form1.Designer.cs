@@ -262,7 +262,7 @@
             this.checkBox11.AutoSize = true;
             this.checkBox11.Location = new System.Drawing.Point(3, 51);
             this.checkBox11.Name = "checkBox11";
-            this.checkBox11.Size = new System.Drawing.Size(87, 17);
+            this.checkBox11.Size = new System.Drawing.Size(83, 17);
             this.checkBox11.TabIndex = 10;
             this.checkBox11.Text = "amempower";
             this.checkBox11.UseVisualStyleBackColor = true;
@@ -273,7 +273,7 @@
             this.checkBox12.AutoSize = true;
             this.checkBox12.Location = new System.Drawing.Point(125, 51);
             this.checkBox12.Name = "checkBox12";
-            this.checkBox12.Size = new System.Drawing.Size(75, 17);
+            this.checkBox12.Size = new System.Drawing.Size(87, 17);
             this.checkBox12.TabIndex = 11;
             this.checkBox12.Text = "amforceteam";
             this.checkBox12.UseVisualStyleBackColor = true;
@@ -284,7 +284,7 @@
             this.checkBox13.AutoSize = true;
             this.checkBox13.Location = new System.Drawing.Point(247, 51);
             this.checkBox13.Name = "checkBox13";
-            this.checkBox13.Size = new System.Drawing.Size(86, 17);
+            this.checkBox13.Size = new System.Drawing.Size(75, 17);
             this.checkBox13.TabIndex = 12;
             this.checkBox13.Text = "amfraglimit";
             this.checkBox13.UseVisualStyleBackColor = true;
@@ -295,7 +295,7 @@
             this.checkBox14.AutoSize = true;
             this.checkBox14.Location = new System.Drawing.Point(369, 51);
             this.checkBox14.Name = "checkBox14";
-            this.checkBox14.Size = new System.Drawing.Size(69, 17);
+            this.checkBox14.Size = new System.Drawing.Size(86, 17);
             this.checkBox14.TabIndex = 13;
             this.checkBox14.Text = "amgametype";
             this.checkBox14.UseVisualStyleBackColor = true;
@@ -306,7 +306,7 @@
             this.checkBox15.AutoSize = true;
             this.checkBox15.Location = new System.Drawing.Point(491, 51);
             this.checkBox15.Name = "checkBox15";
-            this.checkBox15.Size = new System.Drawing.Size(81, 17);
+            this.checkBox15.Size = new System.Drawing.Size(69, 17);
             this.checkBox15.TabIndex = 14;
             this.checkBox15.Text = "amignore";
             this.checkBox15.UseVisualStyleBackColor = true;
@@ -317,7 +317,7 @@
             this.checkBox16.AutoSize = true;
             this.checkBox16.Location = new System.Drawing.Point(3, 75);
             this.checkBox16.Name = "checkBox16";
-            this.checkBox16.Size = new System.Drawing.Size(60, 17);
+            this.checkBox16.Size = new System.Drawing.Size(81, 17);
             this.checkBox16.TabIndex = 15;
             this.checkBox16.Text = "amignorelist";
             this.checkBox16.UseVisualStyleBackColor = true;
@@ -328,7 +328,7 @@
             this.checkBox17.AutoSize = true;
             this.checkBox17.Location = new System.Drawing.Point(125, 75);
             this.checkBox17.Name = "checkBox17";
-            this.checkBox17.Size = new System.Drawing.Size(52, 17);
+            this.checkBox17.Size = new System.Drawing.Size(60, 17);
             this.checkBox17.TabIndex = 16;
             this.checkBox17.Text = "amkick";
             this.checkBox17.UseVisualStyleBackColor = true;
@@ -339,7 +339,7 @@
             this.checkBox18.AutoSize = true;
             this.checkBox18.Location = new System.Drawing.Point(247, 75);
             this.checkBox18.Name = "checkBox18";
-            this.checkBox18.Size = new System.Drawing.Size(110, 17);
+            this.checkBox18.Size = new System.Drawing.Size(52, 17);
             this.checkBox18.TabIndex = 17;
             this.checkBox18.Text = "amkill";
             this.checkBox18.UseVisualStyleBackColor = true;
@@ -350,7 +350,7 @@
             this.checkBox19.AutoSize = true;
             this.checkBox19.Location = new System.Drawing.Point(369, 75);
             this.checkBox19.Name = "checkBox19";
-            this.checkBox19.Size = new System.Drawing.Size(69, 17);
+            this.checkBox19.Size = new System.Drawing.Size(110, 17);
             this.checkBox19.TabIndex = 18;
             this.checkBox19.Text = "amknockmedown";
             this.checkBox19.UseVisualStyleBackColor = true;
@@ -361,7 +361,7 @@
             this.checkBox20.AutoSize = true;
             this.checkBox20.Location = new System.Drawing.Point(491, 75);
             this.checkBox20.Name = "checkBox20";
-            this.checkBox20.Size = new System.Drawing.Size(60, 17);
+            this.checkBox20.Size = new System.Drawing.Size(69, 17);
             this.checkBox20.TabIndex = 19;
             this.checkBox20.Text = "amlogout";
             this.checkBox20.UseVisualStyleBackColor = true;
@@ -383,7 +383,7 @@
             this.checkBox22.AutoSize = true;
             this.checkBox22.Location = new System.Drawing.Point(125, 99);
             this.checkBox22.Name = "checkBox22";
-            this.checkBox22.Size = new System.Drawing.Size(68, 17);
+            this.checkBox22.Size = new System.Drawing.Size(60, 17);
             this.checkBox22.TabIndex = 21;
             this.checkBox22.Text = "ammap";
             this.checkBox22.UseVisualStyleBackColor = true;
@@ -394,7 +394,7 @@
             this.checkBox23.AutoSize = true;
             this.checkBox23.Location = new System.Drawing.Point(247, 99);
             this.checkBox23.Name = "checkBox23";
-            this.checkBox23.Size = new System.Drawing.Size(79, 17);
+            this.checkBox23.Size = new System.Drawing.Size(68, 17);
             this.checkBox23.TabIndex = 22;
             this.checkBox23.Text = "amnoclip";
             this.checkBox23.UseVisualStyleBackColor = true;
@@ -405,7 +405,7 @@
             this.checkBox24.AutoSize = true;
             this.checkBox24.Location = new System.Drawing.Point(369, 99);
             this.checkBox24.Name = "checkBox24";
-            this.checkBox24.Size = new System.Drawing.Size(58, 17);
+            this.checkBox24.Size = new System.Drawing.Size(79, 17);
             this.checkBox24.TabIndex = 23;
             this.checkBox24.Text = "amnotarget";
             this.checkBox24.UseVisualStyleBackColor = true;
@@ -416,7 +416,7 @@
             this.checkBox25.AutoSize = true;
             this.checkBox25.Location = new System.Drawing.Point(491, 99);
             this.checkBox25.Name = "checkBox25";
-            this.checkBox25.Size = new System.Drawing.Size(65, 17);
+            this.checkBox25.Size = new System.Drawing.Size(58, 17);
             this.checkBox25.TabIndex = 24;
             this.checkBox25.Text = "amnpc";
             this.checkBox25.UseVisualStyleBackColor = true;
@@ -427,7 +427,7 @@
             this.checkBox26.AutoSize = true;
             this.checkBox26.Location = new System.Drawing.Point(3, 123);
             this.checkBox26.Name = "checkBox26";
-            this.checkBox26.Size = new System.Drawing.Size(83, 17);
+            this.checkBox26.Size = new System.Drawing.Size(65, 17);
             this.checkBox26.TabIndex = 25;
             this.checkBox26.Text = "amorigin";
             this.checkBox26.UseVisualStyleBackColor = true;
@@ -698,7 +698,7 @@
             this.MinimizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "afjmod 1.0 Bit Calculator 1.0";
+            this.Text = "afjmod 1.1 Bit Calculator 1.1";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
