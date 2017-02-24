@@ -2490,30 +2490,23 @@ void ClientThink_real( gentity_t *ent ) {
 			G_AddEvent(ent, EV_PRIVATE_DUEL, 0);
 			G_AddEvent(duelAgainst, EV_PRIVATE_DUEL, 0);
 
-			//Winner gets full health.. providing he's still alive
+			/*
+			trap->SendServerCommand( ent-g_entities, va("print \"%s %s\n\"", ent->client->pers.netname, G_GetStringEdString("MP_SVGAME", "PLDUELWINNER")) );
+			trap->SendServerCommand( duelAgainst-g_entities, va("print \"%s %s\n\"", ent->client->pers.netname, G_GetStringEdString("MP_SVGAME", "PLDUELWINNER")) );
+			*/
+			//Private duel announcements are now made globally
 			if (ent->health > 0 && ent->client->ps.stats[STAT_HEALTH] > 0)
 			{
-				if (ent->health < ent->client->ps.stats[STAT_MAX_HEALTH])
-				{
-					ent->client->ps.stats[STAT_HEALTH] = ent->health = ent->client->pers.afjUser.healthBeforeDuel/*ent->client->ps.stats[STAT_MAX_HEALTH]*/;
-					ent->client->ps.stats[STAT_ARMOR] = ent->client->pers.afjUser.armorBeforeDuel;
-				}
+				trap->SendServerCommand(-1, va("print \"%s (hp: "S_COLOR_CYAN"%d"S_COLOR_WHITE", armor: "S_COLOR_CYAN"%d"S_COLOR_WHITE") %s %s!\n\"", ent->client->pers.netname, ent->health, ent->client->ps.stats[STAT_ARMOR], G_GetStringEdString("MP_SVGAME", "PLDUELWINNER"), duelAgainst->client->pers.netname));
+
+				ent->client->ps.stats[STAT_HEALTH] = ent->health = ent->client->pers.afjUser.healthBeforeDuel/*ent->client->ps.stats[STAT_MAX_HEALTH]*/;
+				ent->client->ps.stats[STAT_ARMOR] = ent->client->pers.afjUser.armorBeforeDuel;
 
 				if (g_spawnInvulnerability.integer)
 				{
 					ent->client->ps.eFlags |= EF_INVULNERABLE;
 					ent->client->invulnerableTimer = level.time + g_spawnInvulnerability.integer;
 				}
-			}
-
-			/*
-			trap->SendServerCommand( ent-g_entities, va("print \"%s %s\n\"", ent->client->pers.netname, G_GetStringEdString("MP_SVGAME", "PLDUELWINNER")) );
-			trap->SendServerCommand( duelAgainst-g_entities, va("print \"%s %s\n\"", ent->client->pers.netname, G_GetStringEdString("MP_SVGAME", "PLDUELWINNER")) );
-			*/
-			//Private duel announcements are now made globally because we only want one duel at a time.
-			if (ent->health > 0 && ent->client->ps.stats[STAT_HEALTH] > 0)
-			{
-				trap->SendServerCommand( -1, va("cp \"%s %s %s!\n\"", ent->client->pers.netname, G_GetStringEdString("MP_SVGAME", "PLDUELWINNER"), duelAgainst->client->pers.netname) );
 			}
 			else
 			{ //it was a draw, because we both managed to die in the same frame
