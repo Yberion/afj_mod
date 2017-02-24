@@ -425,8 +425,10 @@ void WP_InitForcePowers( gentity_t *ent ) {
 	if (ent->client->pers.afjUser.hasPowers)
 	{
 		ent->client->pers.afjUser.oldForcePowersKnown = ent->client->ps.fd.forcePowersKnown;
-
-		for (int i = 0; i < NUM_FORCE_POWERS; ++i)
+		
+		int i;
+		
+		for (i = 0; i < NUM_FORCE_POWERS; ++i)
 		{
 			ent->client->pers.afjUser.oldForcePowerBaseLevel[i] = ent->client->ps.fd.forcePowerBaseLevel[i];
 			ent->client->ps.fd.forcePowerBaseLevel[i] = 3;

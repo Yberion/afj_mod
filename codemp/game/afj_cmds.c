@@ -104,7 +104,9 @@ void Cmd_afjAdminStatus_f(gentity_t *ent)
 	trap->SendServerCommand(ent - g_entities, "print \"ID Name                \n\"");
 	trap->SendServerCommand(ent - g_entities, "print \"-- --------------------\n\"");
 
-	for (int i = 0; i < level.maxclients; ++i)
+	int i;
+	
+	for (i = 0; i < level.maxclients; ++i)
 	{
 		if (level.clients[i].pers.connected == CON_DISCONNECTED)
 			continue;
@@ -470,8 +472,10 @@ void Cmd_afjIgnoreList_f(gentity_t *ent) {
 	trap->SendServerCommand(ent - g_entities, "print \"\n\"");
 	trap->SendServerCommand(ent - g_entities, "print \"ID Name                \n\"");
 	trap->SendServerCommand(ent - g_entities, "print \"-- --------------------\n\"");
-
-	for (int i = 0; i < level.maxclients; ++i)
+	
+	int i;
+	
+	for (i = 0; i < level.maxclients; ++i)
 	{
 		if (ent->client->pers.afjUser.ignoredClients & ( 1 << i ))
 			trap->SendServerCommand(ent - g_entities, va("print \"%2i %-20.20s\n\"", i, level.clients[i].pers.netname_nocolor));
@@ -813,8 +817,10 @@ static void removeAllWeaponsStatus(gentity_t *target);
 static void giveAllPowerStatus(gentity_t *target)
 {
 	target->client->pers.afjUser.oldForcePowersKnown = target->client->ps.fd.forcePowersKnown;
-
-	for (int i = 0; i < NUM_FORCE_POWERS; ++i)
+	
+	int i;
+	
+	for (i = 0; i < NUM_FORCE_POWERS; ++i)
 	{
 		target->client->pers.afjUser.oldForcePowerBaseLevel[i] = target->client->ps.fd.forcePowerBaseLevel[i];
 		target->client->ps.fd.forcePowerBaseLevel[i] = 3;
@@ -835,8 +841,10 @@ static void giveAllPowerStatus(gentity_t *target)
 static void removeAllPowerStatus(gentity_t *target)
 {
 	target->client->ps.fd.forcePowersKnown = target->client->pers.afjUser.oldForcePowersKnown;
-
-	for (int i = 0; i < NUM_FORCE_POWERS; ++i)
+	
+	int i;
+	
+	for (i = 0; i < NUM_FORCE_POWERS; ++i)
 	{
 		target->client->ps.fd.forcePowerBaseLevel[i] = target->client->pers.afjUser.oldForcePowerBaseLevel[i];
 		target->client->ps.fd.forcePowerLevel[i] = target->client->pers.afjUser.oldForcePowerLevel[i];
@@ -1207,8 +1215,10 @@ void Cmd_afjStatus_f(gentity_t *ent) {
 	trap->SendServerCommand(ent - g_entities, "print \"\n\"");
 	trap->SendServerCommand(ent - g_entities, "print \"ID Ping Name                 Member\n\"");
 	trap->SendServerCommand(ent - g_entities, "print \"-- ---- -------------------- ------\n\"");
-
-	for (int i = 0; i < level.maxclients; ++i)
+	
+	int i;
+	
+	for (i = 0; i < level.maxclients; ++i)
 	{
 		char	state[32] = "", member[32] = "";
 
@@ -1244,8 +1254,10 @@ void Cmd_afjStatusIp_f(gentity_t *ent)
 	trap->SendServerCommand(ent - g_entities, "print \"\n\"");
 	trap->SendServerCommand(ent - g_entities, "print \"ID Name                 IP\n\"");
 	trap->SendServerCommand(ent - g_entities, "print \"-- -------------------- ------------------------------------------------\n\"");
-
-	for (int i = 0; i < level.maxclients; ++i)
+	
+	int i;
+	
+	for (i = 0; i < level.maxclients; ++i)
 	{
 		if (level.clients[i].pers.connected == CON_DISCONNECTED)
 			continue;
@@ -1474,7 +1486,10 @@ Unignore all player
 */
 void Cmd_afjUnIgnoreAll_f(gentity_t *ent) {
 	int nbUnIgnored = 0;
-	for (int i = 0; i < level.maxclients; ++i)
+	
+	int i;
+	
+	for (i = 0; i < level.maxclients; ++i)
 	{
 		if (ent->client->pers.afjUser.ignoredClients & (1 << i))
 		{
@@ -1584,7 +1599,9 @@ void giveAllWeaponsStatus(gentity_t *target)
 	target->client->pers.afjUser.oldWeapons = target->client->ps.stats[STAT_WEAPONS];
 	target->client->ps.stats[STAT_WEAPONS] = (1 << (LAST_USEABLE_WEAPON + 1)) - (1 << WP_NONE);
 
-	for (int i = AMMO_BLASTER; i < AMMO_MAX; ++i)
+	int i;
+	
+	for (i = AMMO_BLASTER; i < AMMO_MAX; ++i)
 	{
 		target->client->pers.afjUser.oldAmmo[i] = target->client->ps.ammo[i];
 		target->client->ps.ammo[i] = 999;
@@ -1598,7 +1615,9 @@ static void removeAllWeaponsStatus(gentity_t *target)
 	target->client->ps.weapon = WP_SABER;
 	target->client->ps.stats[STAT_WEAPONS] = target->client->pers.afjUser.oldWeapons;
 	
-	for (int i = AMMO_BLASTER; i < AMMO_MAX; ++i)
+	int i;
+	
+	for (i = AMMO_BLASTER; i < AMMO_MAX; ++i)
 	{
 		target->client->ps.ammo[i] = target->client->pers.afjUser.oldAmmo[i];
 	}
