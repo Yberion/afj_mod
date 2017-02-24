@@ -484,7 +484,7 @@ void Cmd_afjIgnore_f(gentity_t *ent) {
 		afj_ignoreMsg.string : afj_unIgnoreMsg.string));
 	
 	trap->SendServerCommand(ent - g_entities, va("print \"%s %s\n\"",
-		(ent->client->pers.afjUser.ignoredClients & (1 << targetClientNum)) ? S_COLOR_YELLOW"Ignoring" : S_COLOR_GREEN"Unignoring",
+		(ent->client->pers.afjUser.ignoredClients & (1 << targetClientNum)) ? S_COLOR_YELLOW"Ignoring"S_COLOR_WHITE : S_COLOR_GREEN"Unignoring"S_COLOR_WHITE,
 		level.clients[targetClientNum].pers.netname));
 }
 
@@ -1719,6 +1719,7 @@ static const adminCommand_t adminCommands[] = {
 								{ "amcpmsg",				PRIV_CPMSG,					Cmd_afjCpMsg_f,				CMD_NOINTERMISSION },
 								{ "amdevmap",				PRIV_DEVMAP,				Cmd_afjDevMap_f,			CMD_NOINTERMISSION },
 								{ "amdropsaber",			PRIV_DROPSABER,				Cmd_afjDropSaber_f,			CMD_NOINTERMISSION|CMD_ALIVE },
+								{ "amempower",				PRIV_EMPOWER,				Cmd_afjEmpower_f,			CMD_NOINTERMISSION },
 								{ "amforceteam",			PRIV_FORCETEAM,				Cmd_afjForceTeam_f,			CMD_NOINTERMISSION },
 								{ "amfraglimit",			PRIV_FRAGLIMIT,				Cmd_afjFraglimit_f,			CMD_NOINTERMISSION },
 								{ "amgametype",				PRIV_GAMETYPE,				Cmd_afjGametype_f,			CMD_NOINTERMISSION },
@@ -1728,13 +1729,12 @@ static const adminCommand_t adminCommands[] = {
 								{ "amkill",					PRIV_KILL,					Cmd_afjKill_f,				CMD_NOINTERMISSION },
 								{ "amknockmedown",			PRIV_KNOCKMEDOWN,			Cmd_afjKnockMeDown_f,		CMD_NOINTERMISSION|CMD_ALIVE },
 								{ "amlogout",				PRIV_LOGOUT,				Cmd_afjLogOut_f,			CMD_NOINTERMISSION },
-								{ "ammap",					PRIV_MAP,					Cmd_afjMap_f,				CMD_NOINTERMISSION },
 								{ "ammap_restart",			PRIV_MAP_RESTART,			Cmd_afjMapRestart_f,		CMD_NOINTERMISSION },
+								{ "ammap",					PRIV_MAP,					Cmd_afjMap_f,				CMD_NOINTERMISSION },
 								{ "amnoclip",				PRIV_NOTCLIP,				Cmd_afjNoclip_f,			CMD_NOINTERMISSION|CMD_ALIVE },
 								{ "amnotarget",				PRIV_NOTARGET,				Cmd_afjNotarget_f,			CMD_NOINTERMISSION|CMD_ALIVE },
 								{ "amnpc",					PRIV_NPC,					Cmd_afjNpc_f,				CMD_NOINTERMISSION|CMD_ALIVE },
 								{ "amorigin",				PRIV_ORIGIN,				Cmd_afjOrigin_f,			CMD_NOINTERMISSION|CMD_ALIVE },
-								{ "amempower",				PRIV_EMPOWER,				Cmd_afjEmpower_f,			CMD_NOINTERMISSION },
 								{ "amprotect",				PRIV_PROTECT,				Cmd_afjProtect_f,			CMD_NOINTERMISSION },
 								{ "amrefusetele",			PRIV_REFUSETELE,			Cmd_afjRefuseTele_f,		0 },
 								{ "amremoveip",				PRIV_REMOVEIP,				Cmd_afjRemoveIp_f,			CMD_NOINTERMISSION },
