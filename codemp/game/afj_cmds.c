@@ -1801,6 +1801,69 @@ qboolean AFJ_PrivilegesHaveChanged(gentity_t *ent)
 	}
 }
 
+/*
+==================
+Cmd_afjMyPrivileges_f
+
+Display current client privileges
+==================
+*/
+
+char *BuildPrivilegesList(gentity_t *ent)
+{
+	static char		buffer[4096] = "";
+	static int		lastTime = 0;
+
+	if (level.time > lastTime + 5000) // this will be the time check later.
+	{
+		int				i;
+		qboolean		toggle = qfalse;
+
+		// We're going to rewrite the buffer, clear it.
+		memset(buffer, 0, sizeof(buffer));
+
+		lastTime = level.time;
+
+		for (i = 0; i < numAdminCommands; ++i)
+		{
+			if (ent->client->pers.afjUser.privileges & ((uint64_t)1 << i))
+			{
+				Q_strcat(buffer, sizeof(buffer), va("^%c%s ", toggle ? COLOR_GREEN : COLOR_YELLOW, adminCommands[i].cmd));
+				toggle = !toggle;
+			}
+		}
+	}
+	else
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s\n\"", afj_waitBeforeNextTry.string));
+	}
+	return buffer;
+}
+
+void Cmd_afjMyPrivileges_f(gentity_t *ent)
+{
+	if (ent->client->pers.afjUser.privileges == 0u)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s\n\"", afj_noPrivilegesMsg.string));
+		return;
+	}
+
+	char *privileges =		BuildPrivilegesList(ent);
+	char buffer[1012] =		"";                        // 1012 because max server command length is 1022, and we're using 10 chars for the print portion.
+	int statusLength =		strlen(privileges);
+	int currentProgress =	0;
+
+	trap->SendServerCommand(ent - g_entities, va("print \"\n%s:\n\"", afj_yourPrivilegesMsg.string));
+
+	while (currentProgress < statusLength)
+	{
+		Q_strncpyz(buffer, &privileges[currentProgress], sizeof(buffer));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s\"", buffer));
+		currentProgress += strlen(buffer);
+	}
+	trap->SendServerCommand(ent - g_entities, "print \"\n\"");
+}
+
 // returns the flags that failed to pass, or 0 if the command is allowed to be executed
 uint32_t G_AfjCmdValid(const gentity_t *ent, const adminCommand_t *cmd)
 {
@@ -1845,6 +1908,12 @@ qboolean AFJ_HandleCommands(gentity_t *ent, const char *cmd)
 	if (!Q_stricmp(cmd, "amlogin"))
 	{
 		Cmd_afjLogin_f(ent);
+		return qtrue;
+	}
+
+	if (!Q_stricmp(cmd, "ammyprivileges"))
+	{
+		Cmd_afjMyPrivileges_f(ent);
 		return qtrue;
 	}
 

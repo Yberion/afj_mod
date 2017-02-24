@@ -38,6 +38,7 @@ XCVAR_DEF( afj_logInPrivileges3,			"0",												NULL,				CVAR_ARCHIVE | CVAR_
 XCVAR_DEF( afj_logInPrivileges4,			"0",												NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qfalse)
 XCVAR_DEF( afj_logInPrivileges5,			"0",												NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qfalse)
 XCVAR_DEF( afj_logInWrongPwMsg,				"Wrong password",									NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
+XCVAR_DEF( afj_noPrivilegesMsg,				"You have no privileges",							NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 //XCVAR_DEF( afj_killProtectMsg,			"The Death himself can't kill him",					NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_privilegesChangedMsg,		"Privileges have changed, log in again",			NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_privilegesMsg,				"You don't have enough privileges",					NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
@@ -56,5 +57,6 @@ XCVAR_DEF( afj_unSilenceMsg,				"Has been unsilenced",								NULL,				CVAR_ARCH
 XCVAR_DEF( afj_waitBeforeNextTry,			"Wait before the next try",							NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_wakeMsg,						"Has been woken up",								NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_weaponMsg,					"Has gain all weapons",								NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
+XCVAR_DEF( afj_yourPrivilegesMsg,			"Your privileges are",								NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 
 #undef XCVAR_DEF
