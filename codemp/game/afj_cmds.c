@@ -98,11 +98,39 @@ qboolean isAdmin(const gentity_t *ent)
 	}
 }
 
+char *privilegesString(const gentity_t *ent)
+{
+	char privileges[64];
+
+	Com_sprintf(privileges, sizeof(privileges), "%" PRId64 "", ent->client->pers.afjUser.privileges);
+
+	if (Q_stricmp(afj_logInPrivileges1.string, privileges) == 0)
+	{
+		return afj_logInMsg1.string;
+	}
+	else if (Q_stricmp(afj_logInPrivileges2.string, privileges) == 0)
+	{
+		return afj_logInMsg2.string;
+	}
+	else if (Q_stricmp(afj_logInPrivileges3.string, privileges) == 0)
+	{
+		return afj_logInMsg3.string;
+	}
+	else if (Q_stricmp(afj_logInPrivileges4.string, privileges) == 0)
+	{
+		return afj_logInMsg4.string;
+	}
+	else
+	{
+		return afj_logInMsg5.string;
+	}
+}
+
 void Cmd_afjAdminStatus_f(gentity_t *ent)
 {
 	trap->SendServerCommand(ent - g_entities, "print \"\n\"");
-	trap->SendServerCommand(ent - g_entities, "print \"ID Name                \n\"");
-	trap->SendServerCommand(ent - g_entities, "print \"-- --------------------\n\"");
+	trap->SendServerCommand(ent - g_entities, "print \"ID Name                 Privileges\n\"");
+	trap->SendServerCommand(ent - g_entities, "print \"-- -------------------- --------------------------------------------------\n\"");
 
 	int i;
 	
@@ -113,7 +141,7 @@ void Cmd_afjAdminStatus_f(gentity_t *ent)
 
 		if (isAdmin(&level.gentities[i]))
 		{
-			trap->SendServerCommand(ent - g_entities, va("print \"%2i %-20.20s\n\"", i, level.clients[i].pers.netname_nocolor));
+			trap->SendServerCommand(ent - g_entities, va("print \"%2i %-20.20s %-50.50s\n\"", i, level.clients[i].pers.netname_nocolor, privilegesString(&level.gentities[i])));
 		}
 	}
 }
