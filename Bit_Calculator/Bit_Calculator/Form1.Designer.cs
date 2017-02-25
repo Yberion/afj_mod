@@ -372,9 +372,9 @@
             this.checkBox21.AutoSize = true;
             this.checkBox21.Location = new System.Drawing.Point(3, 99);
             this.checkBox21.Name = "checkBox21";
-            this.checkBox21.Size = new System.Drawing.Size(95, 17);
+            this.checkBox21.Size = new System.Drawing.Size(60, 17);
             this.checkBox21.TabIndex = 20;
-            this.checkBox21.Text = "ammap_restart";
+            this.checkBox21.Text = "ammap";
             this.checkBox21.UseVisualStyleBackColor = true;
             this.checkBox21.CheckedChanged += new System.EventHandler(this.checkBox21_CheckedChanged);
             // 
@@ -383,9 +383,9 @@
             this.checkBox22.AutoSize = true;
             this.checkBox22.Location = new System.Drawing.Point(125, 99);
             this.checkBox22.Name = "checkBox22";
-            this.checkBox22.Size = new System.Drawing.Size(60, 17);
+            this.checkBox22.Size = new System.Drawing.Size(95, 17);
             this.checkBox22.TabIndex = 21;
-            this.checkBox22.Text = "ammap";
+            this.checkBox22.Text = "ammap_restart";
             this.checkBox22.UseVisualStyleBackColor = true;
             this.checkBox22.CheckedChanged += new System.EventHandler(this.checkBox22_CheckedChanged);
             // 

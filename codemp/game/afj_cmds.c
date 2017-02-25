@@ -358,6 +358,94 @@ void Cmd_afjDropSaber_f(gentity_t *ent)
 
 /*
 ==================
+Cmd_afjEmpower_f
+
+Give or remove all power to a player
+==================
+*/
+static void removeAllWeaponsStatus(gentity_t *target);
+static void giveAllPowerStatus(gentity_t *target)
+{
+	target->client->pers.afjUser.oldForcePowersKnown = target->client->ps.fd.forcePowersKnown;
+
+	int i;
+
+	for (i = 0; i < NUM_FORCE_POWERS; ++i)
+	{
+		target->client->pers.afjUser.oldForcePowerBaseLevel[i] = target->client->ps.fd.forcePowerBaseLevel[i];
+		target->client->ps.fd.forcePowerBaseLevel[i] = 3;
+		target->client->pers.afjUser.oldForcePowerLevel[i] = target->client->ps.fd.forcePowerLevel[i];
+		target->client->ps.fd.forcePowerLevel[i] = 3;
+		target->client->ps.fd.forcePowersKnown |= (1 << i);
+	}
+
+	if (target->client->pers.afjUser.hasWeapons)
+	{
+		removeAllWeaponsStatus(target);
+	}
+
+	target->client->pers.afjUser.hasPowers = qtrue;
+	target->client->ps.eFlags |= EF_BODYPUSH;
+}
+
+static void removeAllPowerStatus(gentity_t *target)
+{
+	target->client->ps.fd.forcePowersKnown = target->client->pers.afjUser.oldForcePowersKnown;
+
+	int i;
+
+	for (i = 0; i < NUM_FORCE_POWERS; ++i)
+	{
+		target->client->ps.fd.forcePowerBaseLevel[i] = target->client->pers.afjUser.oldForcePowerBaseLevel[i];
+		target->client->ps.fd.forcePowerLevel[i] = target->client->pers.afjUser.oldForcePowerLevel[i];
+	}
+
+	target->client->pers.afjUser.hasPowers = qfalse;
+	target->client->ps.eFlags &= ~EF_BODYPUSH;
+}
+
+void Cmd_afjEmpower_f(gentity_t *ent) {
+	char arg1Client[MAX_NETNAME] = "";
+	int targetClientNum;
+
+	trap->Argv(1, arg1Client, sizeof(arg1Client));
+
+	if (trap->Argc() > 1)
+	{
+		trap->Argv(1, arg1Client, sizeof(arg1Client));
+		targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
+	}
+	else
+	{
+		targetClientNum = ent - g_entities;
+	}
+
+	if (targetClientNum == -1) {
+		return;
+	}
+
+	if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n\"", level.clients[targetClientNum].pers.netname_nocolor));
+		return;
+	}
+
+	if (!level.clients[targetClientNum].pers.afjUser.hasPowers)
+	{
+		giveAllPowerStatus(&level.gentities[targetClientNum]);
+		trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_empowerMsg.string));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "%s\n\"", level.clients[targetClientNum].pers.netname_nocolor, afj_empowerMsg.string));
+	}
+	else
+	{
+		removeAllPowerStatus(&level.gentities[targetClientNum]);
+		trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_remEmpowerMsg.string));
+		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "%s\n\"", level.clients[targetClientNum].pers.netname_nocolor, afj_remEmpowerMsg.string));
+	}
+}
+
+/*
+==================
 Cmd_afjForceTeam_f
 
 Force a player to change his team
@@ -733,7 +821,7 @@ void Cmd_afjMapRestart_f(gentity_t *ent) {
 	{
 		trap->Argv(1, arg1TimeRestart, sizeof(arg1TimeRestart));
 	}
-	
+
 	trap->SendConsoleCommand(EXEC_APPEND, va("map_restart %s\n", arg1TimeRestart));
 }
 
@@ -832,94 +920,6 @@ Display current player origin
 */
 void Cmd_afjOrigin_f(gentity_t *ent) {
 	trap->SendServerCommand(ent - g_entities, va("print \"Origin: %s\n\"", vtos(ent->client->ps.origin)));
-}
-
-/*
-==================
-Cmd_afjEmpower_f
-
-Give or remove all power to a player
-==================
-*/
-static void removeAllWeaponsStatus(gentity_t *target);
-static void giveAllPowerStatus(gentity_t *target)
-{
-	target->client->pers.afjUser.oldForcePowersKnown = target->client->ps.fd.forcePowersKnown;
-	
-	int i;
-	
-	for (i = 0; i < NUM_FORCE_POWERS; ++i)
-	{
-		target->client->pers.afjUser.oldForcePowerBaseLevel[i] = target->client->ps.fd.forcePowerBaseLevel[i];
-		target->client->ps.fd.forcePowerBaseLevel[i] = 3;
-		target->client->pers.afjUser.oldForcePowerLevel[i] = target->client->ps.fd.forcePowerLevel[i];
-		target->client->ps.fd.forcePowerLevel[i] = 3;
-		target->client->ps.fd.forcePowersKnown |= (1 << i);
-	}
-
-	if (target->client->pers.afjUser.hasWeapons)
-	{
-		removeAllWeaponsStatus(target);
-	}
-
-	target->client->pers.afjUser.hasPowers = qtrue;
-	target->client->ps.eFlags |= EF_BODYPUSH;
-}
-
-static void removeAllPowerStatus(gentity_t *target)
-{
-	target->client->ps.fd.forcePowersKnown = target->client->pers.afjUser.oldForcePowersKnown;
-	
-	int i;
-	
-	for (i = 0; i < NUM_FORCE_POWERS; ++i)
-	{
-		target->client->ps.fd.forcePowerBaseLevel[i] = target->client->pers.afjUser.oldForcePowerBaseLevel[i];
-		target->client->ps.fd.forcePowerLevel[i] = target->client->pers.afjUser.oldForcePowerLevel[i];
-	}
-
-	target->client->pers.afjUser.hasPowers = qfalse;
-	target->client->ps.eFlags &= ~EF_BODYPUSH;
-}
-
-void Cmd_afjEmpower_f(gentity_t *ent) {
-	char arg1Client[MAX_NETNAME] = "";
-	int targetClientNum;
-
-	trap->Argv(1, arg1Client, sizeof(arg1Client));
-
-	if (trap->Argc() > 1)
-	{
-		trap->Argv(1, arg1Client, sizeof(arg1Client));
-		targetClientNum = G_ClientFromString(ent, arg1Client, FINDCL_SUBSTR | FINDCL_PRINT);
-	}
-	else
-	{
-		targetClientNum = ent - g_entities;
-	}
-
-	if (targetClientNum == -1) {
-		return;
-	}
-
-	if (level.clients[targetClientNum].sess.sessionTeam == TEAM_SPECTATOR || level.clients[targetClientNum].tempSpectate >= level.time)
-	{
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "is a spectator\n\"", level.clients[targetClientNum].pers.netname_nocolor));
-		return;
-	}
-
-	if (!level.clients[targetClientNum].pers.afjUser.hasPowers)
-	{
-		giveAllPowerStatus(&level.gentities[targetClientNum]);
-		trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_empowerMsg.string));
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "%s\n\"", level.clients[targetClientNum].pers.netname_nocolor, afj_empowerMsg.string));
-	}
-	else
-	{
-		removeAllPowerStatus(&level.gentities[targetClientNum]);
-		trap->SendServerCommand(-1, va("cp \"%s" S_COLOR_WHITE "\n%s\n\"", level.clients[targetClientNum].pers.netname, afj_remEmpowerMsg.string));
-		trap->SendServerCommand(ent - g_entities, va("print \"%s " S_COLOR_YELLOW "%s\n\"", level.clients[targetClientNum].pers.netname_nocolor, afj_remEmpowerMsg.string));
-	}
 }
 
 /*
@@ -1729,8 +1729,8 @@ static const adminCommand_t adminCommands[] = {
 								{ "amkill",					PRIV_KILL,					Cmd_afjKill_f,				CMD_NOINTERMISSION },
 								{ "amknockmedown",			PRIV_KNOCKMEDOWN,			Cmd_afjKnockMeDown_f,		CMD_NOINTERMISSION|CMD_ALIVE },
 								{ "amlogout",				PRIV_LOGOUT,				Cmd_afjLogOut_f,			CMD_NOINTERMISSION },
-								{ "ammap_restart",			PRIV_MAP_RESTART,			Cmd_afjMapRestart_f,		CMD_NOINTERMISSION },
 								{ "ammap",					PRIV_MAP,					Cmd_afjMap_f,				CMD_NOINTERMISSION },
+								{ "ammap_restart",			PRIV_MAP_RESTART,			Cmd_afjMapRestart_f,		CMD_NOINTERMISSION },
 								{ "amnoclip",				PRIV_NOTCLIP,				Cmd_afjNoclip_f,			CMD_NOINTERMISSION|CMD_ALIVE },
 								{ "amnotarget",				PRIV_NOTARGET,				Cmd_afjNotarget_f,			CMD_NOINTERMISSION|CMD_ALIVE },
 								{ "amnpc",					PRIV_NPC,					Cmd_afjNpc_f,				CMD_NOINTERMISSION|CMD_ALIVE },
