@@ -46,7 +46,7 @@ extern vec3_t gPainPoint;
 //==================================================================
 
 // the "gameversion" client command will print this plus compile date
-#define	GAMEVERSION	"afjmod 1.2"
+#define	GAMEVERSION	"afjmod 1.2.1"
 
 #define SECURITY_LOG "security.log"
 
