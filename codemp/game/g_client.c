@@ -3514,6 +3514,10 @@ void ClientSpawn(gentity_t *ent) {
 			{
 				client->ps.stats[STAT_WEAPONS] |= ( 1 << WP_BRYAR_PISTOL );
 			}
+			if (!(wDisable & (1 << WP_MELEE)) && level.gametype == GT_FFA)
+			{
+				client->ps.stats[STAT_WEAPONS] |= (1 << WP_MELEE);
+			}
 		}
 
 		if (level.gametype == GT_JEDIMASTER)
