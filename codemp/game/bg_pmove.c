@@ -7656,7 +7656,7 @@ static void PM_Weapon( void )
 	#endif
 #endif
 			}
-			else if (pm->debugMelee &&
+			else if (/*pm->debugMelee &&*/
 				(pm->cmd.buttons & BUTTON_ALT_ATTACK))
 			{ //kicks
 				if (!BG_KickingAnim(pm->ps->torsoAnim) &&
