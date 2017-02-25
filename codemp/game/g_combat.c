@@ -4442,7 +4442,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 	if (!targ)
 		return;
 
-	if (targ->client && (targ->client->ps.eFlags & EF_TALK))
+	if (targ->client && (targ->client->ps.eFlags & EF_TALK) && targ->client->ps.duelInProgress == qfalse)
 		return;
 
 	if (targ->client && (targ->client->pers.afjUser.isSlept))
