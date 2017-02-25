@@ -17,6 +17,7 @@ XCVAR_DEF( afj_clanPassword,				"",													NULL,				CVAR_ARCHIVE | CVAR_NOR
 XCVAR_DEF( afj_duelCustomArmor,				"100",												NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_duelCustomHealth,			"100",												NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_empowerMsg,					"Has gain all powers",								NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
+XCVAR_DEF( afj_ffaDuelForceRegenTime,		"200",												NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_hookSpeed,					"5000",												NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_ignoreMsg,					"Ignored you",										NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)
 XCVAR_DEF( afj_kickMsg,						"You've been kicked from the server",				NULL,				CVAR_ARCHIVE | CVAR_NORESTART,					qtrue)

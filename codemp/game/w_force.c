@@ -5471,7 +5471,16 @@ void WP_ForcePowersUpdate( gentity_t *self, usercmd_t *ucmd )
 						self->client->ps.fd.forcePowerRegenDebounceTime += Q_max(g_forceRegenTime.integer*0.7, 1);
 				}
 				else
-					self->client->ps.fd.forcePowerRegenDebounceTime += Q_max(g_forceRegenTime.integer, 1);
+				{
+					if (level.gametype == GT_FFA && self->client->ps.duelInProgress)
+					{
+						self->client->ps.fd.forcePowerRegenDebounceTime += Q_max(afj_ffaDuelForceRegenTime.integer, 1);
+					}
+					else
+					{
+						self->client->ps.fd.forcePowerRegenDebounceTime += Q_max(g_forceRegenTime.integer, 1);
+					}
+				}
 			}
 		}
 	}
